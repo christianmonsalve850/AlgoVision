@@ -39,6 +39,18 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-difficulty-easy: var(--difficulty-easy);
+  --color-difficulty-easy-foreground: var(--difficulty-easy-foreground);
+  --color-difficulty-easy-border: var(--difficulty-easy-border);
+  --color-difficulty-medium: var(--difficulty-medium);
+  --color-difficulty-medium-foreground: var(--difficulty-medium-foreground);
+  --color-difficulty-medium-border: var(--difficulty-medium-border);
+  --color-difficulty-hard: var(--difficulty-hard);
+  --color-difficulty-hard-foreground: var(--difficulty-hard-foreground);
+  --color-difficulty-hard-border: var(--difficulty-hard-border);
+  --color-pill: var(--pill);
+  --color-pill-foreground: var(--pill-foreground);
+  --color-pill-border: var(--pill-border);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -81,6 +93,18 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --difficulty-easy: oklch(0.97 0 0);
+  --difficulty-easy-foreground: oklch(0.488 0.243 142.376);
+  --difficulty-easy-border: oklch(0.87 0 0);
+  --difficulty-medium: oklch(0.97 0 0);
+  --difficulty-medium-foreground: oklch(0.541 0.181 83.677);
+  --difficulty-medium-border: oklch(0.87 0 0);
+  --difficulty-hard: oklch(0.97 0 0);
+  --difficulty-hard-foreground: oklch(0.577 0.245 27.325);
+  --difficulty-hard-border: oklch(0.87 0 0);
+  --pill: oklch(0.97 0 0);
+  --pill-foreground: oklch(0.205 0 0);
+  --pill-border: oklch(0.922 0 0);
 }
 
 .dark {
@@ -115,6 +139,18 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --difficulty-easy: oklch(0.269 0 0);
+  --difficulty-easy-foreground: oklch(0.769 0.233 142.376);
+  --difficulty-easy-border: oklch(1 0 0 / 10%);
+  --difficulty-medium: oklch(0.269 0 0);
+  --difficulty-medium-foreground: oklch(0.769 0.188 83.677);
+  --difficulty-medium-border: oklch(1 0 0 / 10%);
+  --difficulty-hard: oklch(0.269 0 0);
+  --difficulty-hard-foreground: oklch(0.704 0.191 22.216);
+  --difficulty-hard-border: oklch(1 0 0 / 10%);
+  --pill: oklch(0.269 0 0);
+  --pill-foreground: oklch(0.985 0 0);
+  --pill-border: oklch(1 0 0 / 10%);
 }
 
 @layer base {
