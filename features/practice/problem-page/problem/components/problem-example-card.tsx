@@ -1,8 +1,4 @@
-import type { ProblemExample } from "./types";
-
-type ProblemExampleCardProps = {
-  example: ProblemExample;
-};
+import type { ProblemExampleCardProps } from "../types";
 
 export function ProblemExampleCard({ example }: ProblemExampleCardProps) {
   return (

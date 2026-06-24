@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Header from "@/components/layout/header";
+import { AppChrome } from "@/components/layout/app-chrome";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ThemeScript } from "@/components/theme/theme-script";
 
@@ -37,8 +37,9 @@ export default function RootLayout({
       <body className="h-full flex flex-col bg-background text-foreground">
         <ThemeScript />
         <ThemeProvider>
-          <Header />
-          {children}
+          <AppChrome>
+            {children}
+          </AppChrome>
         </ThemeProvider>
       </body>
     </html>

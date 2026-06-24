@@ -22,13 +22,14 @@ export function Problems({ selectedPattern, problems }: ProblemsProps) {
 
     const filteredProblems = useMemo(() => {
         const query = search.trim().toLowerCase()
-
+        
         return problems
             .filter((problem) => {
                 const matchesPattern =
-                    selectedPattern === "All" || selectedPattern === "Recommended"
+                    selectedPattern === "All"
                         ? true
-                        : problem.pattern === selectedPattern;
+                        : problem.pattern === selectedPattern 
+                        || selectedPattern === "Recommended" && problem.is_recommended;
 
                 const matchesSearch = query.length === 0 || problem.title.toLowerCase().includes(query);
 

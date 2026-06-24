@@ -1,25 +1,11 @@
-import type { Difficulty } from "@/features/practice/components/difficulty-badge";
-import type { PatternName } from "@/features/practice/types/pattern-types";
+export type PlaybackSpeed = 0.5 | 1 | 2 | 4;
 
-export type ProblemExample = {
-  id: string;
-  problem_id: string;
-  example_number: number;
-  input: string | null;
-  output: string | null;
-  explanation: string | null;
-};
-
-export type ProblemRecord = {
-  id: string;
-  title: string;
-  description: string;
-  difficulty: Difficulty;
-  pattern: PatternName;
-  constraints: string[];
-};
-
-export type ProblemPageData = {
-  problem: ProblemRecord;
-  examples: ProblemExample[];
+export type PlaybackControlsProps = {
+  currentStep: number;
+  totalSteps: number;
+  isPlaying: boolean;
+  speed: PlaybackSpeed;
+  onStepChange: (step: number) => void;
+  onPlayPauseToggle: () => void;
+  onSpeedChange: (speed: PlaybackSpeed) => void;
 };

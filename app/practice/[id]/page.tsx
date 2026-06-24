@@ -1,15 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
 
 import { ProblemPageShell } from "@/features/practice/problem-page/problem-page-shell";
-import type { ProblemExample, ProblemRecord } from "@/features/practice/problem-page/types";
+import type { Language } from "@/features/practice/problem-page/code-editor/types";
+import type { ProblemRecord, ProblemExample  } from "@/features/practice/problem-page/problem/types";
 
-type PostPageProps = {
+type ProblemPageProps = {
     params: Promise<{ id: string }>;
 }
 
-export default async function ProblemPage({ params } : PostPageProps) {
+export default async function ProblemPage({ params } : ProblemPageProps) {
     const { id } = await params;
-
+    
     const supabase = await createClient();
 
     const { data: problem, error: problemError } = await supabase
@@ -38,7 +39,27 @@ export default async function ProblemPage({ params } : PostPageProps) {
         console.log(exampleError);
     }
 
-    const typedExamples = (examples ?? []) as ProblemExample[];
+    const { data: starterCode, error: starterCodeError } = await supabase
+        .from("problem_starter_code")
+        .select("language, starter_code")
+        .eq("problem_id", id);
 
-    return <ProblemPageShell problem={typedProblem} examples={typedExamples} />;
+    if (starterCodeError) {
+        console.log(starterCodeError)
+    }
+
+    const starterCodeMap = Object.fromEntries(
+        (starterCode ?? []).map((row) => [
+            row.language,
+            row.starter_code.replace(/\\n/g, "\n"),
+        ])
+    ) as Partial<Record<Language, string>>;
+
+    return (
+        <ProblemPageShell
+            problem={problem as ProblemRecord} 
+            examples={(examples ?? []) as ProblemExample[]} 
+            starterCodeMap={starterCodeMap}
+        />
+    )
 }

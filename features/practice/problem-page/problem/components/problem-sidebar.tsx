@@ -1,21 +1,28 @@
+'use client'
+
 import { DifficultyBadge } from "@/features/practice/components/difficulty-badge";
 import { PatternBadge } from "@/features/practice/components/pattern-badge";
-
 import { ProblemConstraintsList } from "./problem-constraints-list";
 import { ProblemExampleCard } from "./problem-example-card";
-import type { ProblemPageData } from "./types";
-
-type ProblemSidebarProps = ProblemPageData;
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import type { ProblemSidebarProps } from "../types";
 
 export function ProblemSidebar({ problem, examples }: ProblemSidebarProps) {
+  const router = useRouter()
+
   return (
-    <aside className="col-span-4 flex h-[calc(100vh-4rem)] flex-col border-r border-border bg-background/95 text-foreground">
-      <div className="flex h-full flex-col overflow-y-auto p-6">
+    <aside className="col-span-3 flex h-full min-h-0 flex-col border-r border-border bg-background/95 text-foreground overflow-y-auto">
+      <div className="flex h-full flex-col p-6">
         <div className="space-y-4 border-b border-border pb-6">
           <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              Problem
-            </p>
+            <button 
+              className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground"
+              onClick={() => router.push("/practice")}
+            >
+              <ArrowLeft size={14} />
+              Back
+            </button>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">{problem.title}</h1>
           </div>
 

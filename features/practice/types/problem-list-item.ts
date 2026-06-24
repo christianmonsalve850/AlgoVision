@@ -6,5 +6,6 @@ export type ProblemListItem = {
   title: string;
   difficulty: Difficulty;
   pattern: PatternName;
+  is_recommended: boolean | null;
   solved?: boolean | null;
 };

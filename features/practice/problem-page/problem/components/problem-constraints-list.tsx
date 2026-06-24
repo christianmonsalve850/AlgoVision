@@ -1,6 +1,4 @@
-type ProblemConstraintsListProps = {
-  constraints: string[];
-};
+import { ProblemConstraintsListProps } from "../types";
 
 export function ProblemConstraintsList({ constraints }: ProblemConstraintsListProps) {
   return (
