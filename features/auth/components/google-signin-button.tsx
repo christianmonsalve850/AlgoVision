@@ -1,6 +1,6 @@
 'use client';
 
-import { signInWithGoogle } from '../actions/sign-in-google';
+import { signInWithGoogle } from '@/features/auth/actions/sign-in-google';
 
 export function GoogleSignInButton() {
   return (

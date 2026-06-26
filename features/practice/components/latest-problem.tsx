@@ -1,7 +1,7 @@
 'use client'
 
-import { type ProblemListItem } from "../types/problem-list-item"
-import { patternItems } from "../data/pattern-items"
+import { type ProblemListItem } from "@/features/practice/types/problem-list-item"
+import { patternItems } from "@/features/practice/data/pattern-items"
 import { ArrowRight } from "lucide-react"
 import { useRouter } from "next/navigation"
 

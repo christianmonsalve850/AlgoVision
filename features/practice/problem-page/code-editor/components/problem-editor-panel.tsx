@@ -2,10 +2,9 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Code2, Play, RotateCcw } from "lucide-react";
-import { ProblemCodeEditor } from "./problem-code-editor";
-import { ProblemTestCasesPanel } from "./problem-test-cases-panel";
-import type { Language, ProblemEditorPanelProps } from "../types";
-import { ExecutionTrace } from "../../visualization/types";
+import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
+import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
+import type { Language, ProblemEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
 
 function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
   let timeoutId: ReturnType<typeof setTimeout>;
@@ -18,9 +17,6 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
 export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditorPanelProps) {
   const [language, setLanguage] = useState<Language>("Python");
   const [code, setCode] = useState(starterCodeMap[language] ?? "");
-
-  const [traceSteps, setTraceSteps] = useState<ExecutionTrace[]>([]);
-  const [isRunning, setIsRunning] = useState(false);
 
   const codeRef = useRef<string>("");
   const compositeKey = `problem:${problem_id}:${language}`;
@@ -51,6 +47,41 @@ export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditor
     debouncedSave(currentCode);
   };
 
+  const worker = useRef<Worker | null>(null);
+
+  useEffect(() => {
+    console.log("Creating worker...");
+
+    worker.current = new Worker(
+      new URL(
+        "../../../../../workers/python/pyodide-worker.js",
+        import.meta.url
+      ),
+      { type: "module" }
+    );
+
+    worker.current.onmessage = (event) => {
+      console.log("Message from worker:", event.data);
+
+      const { type, payload } = event.data;
+
+      if (type === "EXECUTION_COMPLETE") {
+        console.log(payload);
+      }
+    };
+
+    worker.current.onerror = (error) => {
+      console.error("Worker error:", error);
+    };
+
+    worker.current.onmessageerror = (error) => {
+      console.error("Worker message error:", error);
+    };
+
+    return () => worker.current?.terminate();
+  }, []);
+
+
   useEffect(() => {
     const savedCode = localStorage.getItem(compositeKey);
 
@@ -60,7 +91,6 @@ export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditor
       setCode(starterCodeMap[language] || "");
     }
   }, [problem_id, language]);
-
 
   return (
     <section className="col-span-6 flex h-full min-h-0 flex-col border-r border-border bg-background overflow-y-auto">
@@ -84,7 +114,7 @@ export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditor
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-lg bg-foreground px-3 py-2 text-sm font-medium text-background transition-colors hover:opacity-90"
-            onClick={() => console.log()}
+            onClick={() => console.log("Run")}
           >
             <Play className="size-4" />
             Run

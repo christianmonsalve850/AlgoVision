@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
-import { getTestCaseMeta } from "../utils/test-case-utils";
-import { ProblemTestCaseTabProps } from "../types";
+import { getTestCaseMeta } from "@/features/practice/problem-page/code-editor/utils/test-case-utils";
+import { ProblemTestCaseTabProps } from "@/features/practice/problem-page/code-editor/types";
 
 export function ProblemTestCaseTab({ testCase, selected, onSelect }: ProblemTestCaseTabProps) {
   const meta = getTestCaseMeta(testCase.status);

@@ -1,5 +1,5 @@
 import { GitCommit, StepForward, StepBack } from "lucide-react";
-import type { ExecutionTraceProps } from "../types"
+import type { ExecutionTraceProps } from "@/features/practice/problem-page/visualization/types"
 
 export function ExecutionTrace({ currentStep, totalSteps, onStepChange, children }: ExecutionTraceProps) {
   return (

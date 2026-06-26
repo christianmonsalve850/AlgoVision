@@ -10,7 +10,7 @@ import {
   ChevronUp 
 } from "lucide-react";
 
-import type { PlaybackControlsProps, PlaybackSpeed } from "./types";
+import type { PlaybackControlsProps, PlaybackSpeed } from "@/features/practice/problem-page/types";
 
 export function PlaybackControls({
   currentStep,

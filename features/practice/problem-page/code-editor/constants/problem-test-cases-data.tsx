@@ -1,4 +1,4 @@
-import { TestCaseItem } from "../types";
+import { TestCaseItem } from "@/features/practice/problem-page/code-editor/types";
 
 export const testCases: TestCaseItem[] = [
   { id: 1, 

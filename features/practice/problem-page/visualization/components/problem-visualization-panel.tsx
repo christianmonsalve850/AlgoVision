@@ -1,10 +1,10 @@
 'use client' // Remove later
 
 import { BrainCircuit, Maximize2 } from "lucide-react";
-import { CallFrame } from "./call-frame";
-import { VariableState } from "./variable-state";
-import { ExecutionStep } from "./execution-step";
-import { ExecutionTrace } from "./execution-trace";
+import { CallFrame } from "@/features/practice/problem-page/visualization/components/call-frame";
+import { VariableState } from "@/features/practice/problem-page/visualization/components/variable-state";
+import { ExecutionStep } from "@/features/practice/problem-page/visualization/components/execution-step";
+import { ExecutionTrace } from "@/features/practice/problem-page/visualization/components/execution-trace";
 
 export function ProblemVisualizationPanel() {
   return (

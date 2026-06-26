@@ -1,4 +1,4 @@
-import { ProblemConstraintsListProps } from "../types";
+import { ProblemConstraintsListProps } from "@/features/practice/problem-page/problem/types";
 
 export function ProblemConstraintsList({ constraints }: ProblemConstraintsListProps) {
   return (

@@ -1,4 +1,4 @@
-import type { ProblemExampleCardProps } from "../types";
+import type { ProblemExampleCardProps } from "@/features/practice/problem-page/problem/types";
 
 export function ProblemExampleCard({ example }: ProblemExampleCardProps) {
   return (

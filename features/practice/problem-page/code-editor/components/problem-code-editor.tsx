@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import Editor from "@monaco-editor/react";
 import { ChevronDown, FileCode2 } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
-import { languageOptions } from "../constants/languages";
-import type { Language, ProblemCodeEditorProps } from "../types";
+import { languageOptions } from "@/features/practice/problem-page/code-editor/constants/languages";
+import type { Language, ProblemCodeEditorProps } from "@/features/practice/problem-page/code-editor/types";
 
 export function ProblemCodeEditor({
   language,

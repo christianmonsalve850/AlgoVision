@@ -1,5 +1,5 @@
 import { Terminal, HelpCircle } from "lucide-react";
-import type { ExecutionStep } from "../types";
+import type { ExecutionStep } from "@/features/practice/problem-page/visualization/types";
 
 export function ExecutionStep({ 
     stepNumber, 

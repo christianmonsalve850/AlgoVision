@@ -1,7 +1,7 @@
 'use client'
 
 import { patternItems } from "@/features/practice/data/pattern-items";
-import { PatternName } from "../types/pattern-types";
+import { PatternName } from "@/features/practice/types/pattern-types";
 import { PatternSidebarItem } from "@/features/practice/components/pattern-sidebar-item";
 
 type PatternSidebarProps = {

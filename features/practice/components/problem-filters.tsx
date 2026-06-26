@@ -1,7 +1,7 @@
 'use client';
 
 import { Search } from "lucide-react";
-import { type Difficulty } from "./difficulty-badge";
+import { type Difficulty } from "@/features/practice/components/difficulty-badge";
 
 type ProblemFiltersProps = {
   search: string;

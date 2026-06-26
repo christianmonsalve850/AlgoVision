@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-import Header from "./header";
+import Header from "@/components/layout/header";
 
 type AppChromeProps = {
   children: React.ReactNode;
