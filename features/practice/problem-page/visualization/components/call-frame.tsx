@@ -1,4 +1,4 @@
-import type { CallFrameProps } from "../types"
+import type { CallFrameProps } from "@/features/practice/problem-page/visualization/types"
 
 export function CallFrame({ name, args, isActive }: CallFrameProps) {
   return (

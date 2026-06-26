@@ -1,6 +1,6 @@
 'use client';
 
-import { signInWithGitHub } from "../actions/sign-in-github";
+import { signInWithGitHub } from "@/features/auth/actions/sign-in-github";
 
 export function GitHubSignInButton() {
   return (

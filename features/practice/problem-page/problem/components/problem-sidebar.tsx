@@ -2,11 +2,11 @@
 
 import { DifficultyBadge } from "@/features/practice/components/difficulty-badge";
 import { PatternBadge } from "@/features/practice/components/pattern-badge";
-import { ProblemConstraintsList } from "./problem-constraints-list";
-import { ProblemExampleCard } from "./problem-example-card";
+import { ProblemConstraintsList } from "@/features/practice/problem-page/problem/components/problem-constraints-list";
+import { ProblemExampleCard } from "@/features/practice/problem-page/problem/components/problem-example-card";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import type { ProblemSidebarProps } from "../types";
+import type { ProblemSidebarProps } from "@/features/practice/problem-page/problem/types";
 
 export function ProblemSidebar({ problem, examples }: ProblemSidebarProps) {
   const router = useRouter()

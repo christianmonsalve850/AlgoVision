@@ -1,5 +1,5 @@
-import type { Difficulty } from "../../components/difficulty-badge";
-import type { PatternName } from "../../types/pattern-types";
+import type { Difficulty } from "@/features/practice/components/difficulty-badge";
+import type { PatternName } from "@/features/practice/types/pattern-types";
 
 export type Language = "Python" | "JavaScript" | "Java";
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import { cn } from "@/lib/utils";
 import { AppChrome } from "@/components/layout/app-chrome";
 import { ThemeProvider } from "@/components/theme/theme-provider";

@@ -1,4 +1,4 @@
-import type { Language } from "../types";
+import type { Language } from "@/features/practice/problem-page/code-editor/types";
 
 export const languageOptions: { label: Language; value: Language; fileName: string; extension: string }[] =
   [

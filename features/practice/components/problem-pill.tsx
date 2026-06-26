@@ -1,7 +1,7 @@
 import { CircleCheck } from "lucide-react"
 import Link from "next/link"
 import { DifficultyBadge } from "@/features/practice/components/difficulty-badge"
-import { PatternBadge } from "./pattern-badge"
+import { PatternBadge } from "@/features/practice/components/pattern-badge"
 
 export function ProblemPill() {
     return (

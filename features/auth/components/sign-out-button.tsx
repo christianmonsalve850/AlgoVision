@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import { signOut } from "../actions/sign-out";
+import { signOut } from "@/features/auth/actions/sign-out";
 
 export function SignOutButton() {
   const router = useRouter();

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ProblemTestCaseDetail } from "./problem-test-case-detail";
-import { ProblemTestCaseTab } from "./problem-test-case-tab";
-import { testCases } from "../constants/problem-test-cases-data";
+import { ProblemTestCaseDetail } from "@/features/practice/problem-page/code-editor/components/problem-test-case-detail";
+import { ProblemTestCaseTab } from "@/features/practice/problem-page/code-editor/components/problem-test-case-tab";
+import { testCases } from "@/features/practice/problem-page/code-editor/constants/problem-test-cases-data";
 
 export function ProblemTestCasesPanel() {
   const [selectedCaseId, setSelectedCaseId] = useState(testCases[0].id);

@@ -1,4 +1,4 @@
-import { PatternItem } from "../types/pattern-types";
+import { PatternItem } from "@/features/practice/types/pattern-types";
 
 import {
   ArrowLeftRight,

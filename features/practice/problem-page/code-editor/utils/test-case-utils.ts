@@ -1,4 +1,4 @@
-import { TestCaseStatus } from "../types";
+import { TestCaseStatus } from "@/features/practice/problem-page/code-editor/types";
 
 export function getTestCaseMeta(status: TestCaseStatus) {
   if (status === "passed") {

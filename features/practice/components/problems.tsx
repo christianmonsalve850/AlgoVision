@@ -2,13 +2,13 @@
 
 import { useMemo, useState } from "react"
 
-import { ProblemFilters } from "./problem-filters"
-import { ProblemRow } from "./problem-row"
+import { ProblemFilters } from "@/features/practice/components/problem-filters"
+import { ProblemRow } from "@/features/practice/components/problem-row"
 import type { PatternName } from "@/features/practice/types/pattern-types"
-import type { Difficulty } from "./difficulty-badge";
-import { PracticeHeader } from "./practice-header";
+import type { Difficulty } from "@/features/practice/components/difficulty-badge";
+import { PracticeHeader } from "@/features/practice/components/practice-header";
 import type { ProblemListItem } from "@/features/practice/types/problem-list-item";
-import { LatestProblem } from "./latest-problem";
+import { LatestProblem } from "@/features/practice/components/latest-problem";
 
 type ProblemsProps = {
     selectedPattern: PatternName

@@ -1,4 +1,4 @@
-import { PatternName } from "../types/pattern-types"
+import { PatternName } from "@/features/practice/types/pattern-types"
 
 interface PatternBadgeProps {
     pattern: PatternName;

@@ -1,4 +1,4 @@
-import { ProblemTestCaseOutputProps } from "../types";
+import { ProblemTestCaseOutputProps } from "@/features/practice/problem-page/code-editor/types";
 
 export function ProblemTestCaseOutput({ value }: ProblemTestCaseOutputProps) {
   return (
