@@ -4,7 +4,7 @@ import { HeaderNav } from "@/components/layout/header-nav"
 
 export default function Header() {
     return (
-        <header className="sticky top-0 flex h-16 w-full items-center border-b border-border bg-background/90 px-6 backdrop-blur justify-between">
+        <header className="sticky top-0 flex h-16 w-full items-center border-b border-border bg-background/90 px-6 backdrop-blur justify-between py-5">
             
             <Brand />
             
