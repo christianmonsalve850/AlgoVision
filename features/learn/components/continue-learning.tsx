@@ -1,48 +1,53 @@
 import { Progress } from "@/components/ui/progress"
-import { Play } from "lucide-react"
-import { ArrowLeftRight } from "lucide-react"
-
+import { Play, ArrowLeftRight, ArrowRight } from "lucide-react"
 
 export default function ContinueLearning() {
-    return (
-        <div className="border border-border w-90 p-6 flex-col rounded-xl">
-            <div className="flex items-center">
-                <div className="w-5 h-5 flex items-center justify-center border-2 border-sky-500/80 rounded-3xl p-1 mr-2 text-sky-500/80">
-                    <Play strokeWidth={5} className="w-full h-full"/>
-                </div>
-                <h3 className="text-lg font-semibold text-foreground">
-                    Continue Learning
-                </h3>
-            </div>
-            
-            <div className="border border-border mt-5 rounded-xl p-4 flex-col">
-                <div className="flex items-stretch gap-3">
-                    <div className="flex items-center justify-center bg-sky-500/10 border border-border p-2 rounded-lg text-sky-500/80">
-                        <ArrowLeftRight className="w-full h-full" />
-                    </div>
-                    <div className="flex-col">
-                        <h3 className="text-lg font-semibold text-foreground">
-                            Two Pointers
-                        </h3>
-                        <p className="text-xs text-muted-foreground">
-                            Array & Strings
-                        </p>
-                    </div>
-                </div>
-                <div className="flex flex-col mt-4 gap-y-3">
-                    <div className="flex justify-between items-center text-xs">
-                        <p className="text-muted-foreground">
-                            Progress
-                        </p>
-                        <span className="text-sky-500/80 font-semibold tabular-nums">
-                            65%
-                        </span> 
-                    </div>
-                    <div>
-                        <Progress value={65} />
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="space-y-4">
+      {/* Section Header */}
+      <div className="flex items-center gap-2">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-sky-500/80 p-1 text-sky-500/80">
+          <Play strokeWidth={3} className="h-full w-full fill-sky-500/20" />
         </div>
-    )
+        <h2 className="text-lg font-semibold tracking-tight text-foreground">
+          Continue Learning
+        </h2>
+      </div>
+
+      {/* Main Learning Card */}
+      <div className="group relative overflow-hidden rounded-xl border border-border bg-card p-5 transition-all hover:border-sky-500/30">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+          
+          {/* Left: Lesson Info */}
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-sky-500/20 bg-sky-500/10 text-sky-500/80">
+              <ArrowLeftRight className="h-6 w-6" />
+            </div>
+            <div className="space-y-0.5">
+              <h3 className="font-semibold text-foreground">Two Pointers</h3>
+              <p className="text-xs text-muted-foreground">Arrays &amp; Strings</p>
+            </div>
+          </div>
+
+          {/* Right: Action Button */}
+          <button
+            type="button"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all hover:opacity-90 active:scale-[0.98]"
+          >
+            Continue Practice
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Progress Bar Section */}
+        <div className="mt-5 space-y-2 pt-1 border-t border-border/50">
+          <div className="flex items-center justify-between text-xs">
+            <span className="font-medium text-muted-foreground">Lesson Progress</span>
+            <span className="font-semibold tabular-nums text-sky-500/80">65%</span>
+          </div>
+          <Progress value={65} />
+        </div>
+      </div>
+    </div>
+  )
 }

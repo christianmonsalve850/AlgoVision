@@ -1,8 +1,8 @@
 'use client'
 
 import { patternItems } from "@/features/practice/data/pattern-items";
-import { PatternName } from "@/features/practice/types/pattern-types";
 import { PatternSidebarItem } from "@/features/practice/components/pattern-sidebar-item";
+import { PatternName } from "../types/pattern-types";
 
 type PatternSidebarProps = {
     selectedPattern: PatternName;
@@ -12,7 +12,7 @@ type PatternSidebarProps = {
 export function PatternSidebar({ selectedPattern, onSelectPattern }: PatternSidebarProps) {
 
     return (
-        <aside className="max-w-66 shrink-0 border-r border-border bg-background p-4 flex h-[calc(100vh-4rem)] flex-col gap-4">
+        <aside className="w-66 shrink-0 border-r border-border bg-background p-4 flex h-[calc(100vh-4rem)] flex-col gap-4">
             <div className="px-2">
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Patterns
