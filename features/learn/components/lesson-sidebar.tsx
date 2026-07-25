@@ -1,12 +1,12 @@
 'use client'
 
-import { LessonName } from "../types";
+import { LessonCategory } from "../types";
 import { LessonSidebarItem } from "./lesson-sidebar-item";
 import { lessonCategoryItems } from "../data/lesson-category-items";
 
 type LessonSidebarProps = {
-    selectedLesson: LessonName;
-    onSelectLesson: (lesson: LessonName) => void;
+    selectedLesson: LessonCategory;
+    onSelectLesson: (lesson: LessonCategory) => void;
 };
 
 export function LessonSidebar({ selectedLesson, onSelectLesson }: LessonSidebarProps) {

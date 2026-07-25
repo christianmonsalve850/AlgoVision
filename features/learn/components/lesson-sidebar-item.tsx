@@ -2,12 +2,12 @@
 
 import clsx from "clsx";
 
-import type { LessonName, LessonCategoryItem } from "../types";
+import type { LessonCategory, LessonCategoryItem } from "../types";
 
 type LessonSidebarItemProps = {
   item: LessonCategoryItem;
   selected: boolean;
-  onSelect: (lesson: LessonName) => void;
+  onSelect: (lesson: LessonCategory) => void;
 };
 
 export function LessonSidebarItem({ item, selected, onSelect }: LessonSidebarItemProps) {
@@ -27,7 +27,7 @@ export function LessonSidebarItem({ item, selected, onSelect }: LessonSidebarIte
     >
       <span
         className={clsx(
-          "flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border transition-transform group-hover:scale-105",
+          "flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border transition-transform group-hover:scale-105 p-1",
           meta.bg,
           meta.color
         )}

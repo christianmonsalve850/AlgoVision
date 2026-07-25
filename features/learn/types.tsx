@@ -1,4 +1,4 @@
-export type LessonName =
+export type LessonCategory =
   | "Recommended"
   | "All"
   | "Arrays"
@@ -20,9 +20,18 @@ export type LessonMetadata = {
   icon: React.ReactNode;
   bg: string;
   color: string;
+  progressColor?: string;
 };
 
 export type LessonCategoryItem = {
-  name: LessonName;
+  name: LessonCategory,
   meta: LessonMetadata;
+};
+
+export type LessonListItem = {
+  id: string,
+  title: string,
+  category: LessonCategory,
+  is_recommended: boolean | null,
+  progress: number;
 };

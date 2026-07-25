@@ -1,68 +1,61 @@
 'use client';
 
-import { useMemo, useState } from "react"
-
-import { ProblemFilters } from "@/features/practice/components/problem-filters"
-import { ProblemRow } from "@/features/practice/components/problem-row"
-import type { PatternName } from "@/features/practice/types/pattern-types"
-import type { Difficulty } from "@/features/practice/components/difficulty-badge";
-import type { ProblemListItem } from "@/features/practice/types/problem-list-item";
-import { LatestProblem } from "@/features/practice/components/latest-problem";
 import LearnHeader from "./learn-header";
-import { LessonCategoryItem, LessonName } from "../types";
+import { LessonListItem, LessonCategory } from "../types";
 import ContinueLearning from "./continue-learning";
+import { LessonSearch } from "./lesson-search";
+import { useState, useMemo } from "react";
+import { LessonRow } from "./lesson-row";
+
 
 type LessonsProps = {
-    selectedLesson: LessonName
-    problems: LessonCategoryItem[]
+    selectedCategory: LessonCategory,
+    lessons: LessonListItem[]
 }
 
-export function Lessons() {
+export function Lessons({ selectedCategory, lessons }: LessonsProps) {
 
-    // const [search, setSearch] = useState("")
-    // const [filter, setFilter] = useState<Difficulty | "All Difficulties">("All Difficulties")
+    const [search, setSearch] = useState("")
 
-    // const filteredProblems = useMemo(() => {
-    //     const query = search.trim().toLowerCase()
+    const filteredLessons = useMemo(() => {
+        const query = search.trim().toLowerCase()
         
-    //     return problems
-    //         .filter((problem) => {
-    //             const matchesPattern =
-    //                 selectedPattern === "All"
-    //                     ? true
-    //                     : problem.pattern === selectedPattern 
-    //                     || selectedPattern === "Recommended" && problem.is_recommended;
+        return lessons
+            .filter((lesson) => {
+                const matchesCategory =
+                    selectedCategory === "All"
+                        ? true
+                        : lesson.category === selectedCategory
+                        || selectedCategory === "Recommended" && lesson.is_recommended;
 
-    //             const matchesSearch = query.length === 0 || problem.title.toLowerCase().includes(query);
+                const matchesSearch = query.length === 0 || lesson.title.toLowerCase().includes(query);
 
-    //             const matchesDifficulty = filter === "All Difficulties" || problem.difficulty === filter
-
-    //             return matchesPattern && matchesSearch && matchesDifficulty
-    //         })
-    // }, [search, selectedPattern, filter, problems])
+                return matchesCategory && matchesSearch
+            })
+    }, [search, selectedCategory, lessons])
 
     return (
         <div className="mx-auto w-full max-w-5xl px-4 py-8">
             <div className="mb-6 px-1">
                 <LearnHeader />
-                <ContinueLearning />
-                {/* <h3 className="mt-1 text-lg font-semibold text-foreground">{selectedPattern}</h3> */}
+                <ContinueLearning lessons={lessons} />
+                <h3 className="mt-1 text-lg font-semibold text-foreground">{selectedCategory}</h3>
             </div>
 
-            {/* <div className="mb-4">
-                <ProblemFilters
+            <div className="mb-4">
+                <LessonSearch
                     search={search}
                     onSearchChange={setSearch}
-                    filter={filter}
-                    onFilterChange={setFilter}
                 />
             </div>
 
+
             <div className="flex flex-col gap-2.5">
-                {filteredProblems.map((problem) => (
-                    <ProblemRow key={problem.id} problem={problem} />
+                {filteredLessons.map((lesson) => (
+                    <LessonRow key={lesson.id} lesson={lesson} />
                 ))}
-            </div> */}
+            </div>
+
         </div>
     )
 }
