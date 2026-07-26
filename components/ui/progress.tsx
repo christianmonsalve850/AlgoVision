@@ -12,7 +12,7 @@ export function Progress({ value, bg, color }: ProgressProps) {
       className={`relative h-2 w-full overflow-hidden rounded-full ${bg ?? "bg-primary/20"}`}
     >
       <ProgressPrimitive.Indicator
-        className={`h-full w-full flex-1 transition-all duration-300 ${color ?? "bg-primary"}`}
+        className={`h-full w-full flex-1 transition-all duration-300 ${color ?? "bg-primary/80"}`}
         style={{ transform: `translateX(-${100 - (Number(value) || 0)}%)` }}
       />
     </ProgressPrimitive.Root>
