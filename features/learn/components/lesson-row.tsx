@@ -10,10 +10,10 @@ type LessonRowProps = {
 }
 
 export function LessonRow({ lesson }: LessonRowProps) {
-
+  const lessonUrl = lesson.title.toLowerCase().replace(" ", "_")
   return (
     <Link
-      href={`/example`}
+      href={`/learn/${lessonUrl}`}
       className="group grid grid-cols-12 items-center gap-4 rounded-xl border border-border bg-background px-4 py-3.5 text-sm font-medium shadow-sm transition-all duration-200 hover:border-border hover:bg-muted"
     >
       <div className={`

@@ -13,7 +13,7 @@ export default async function Learn() {
         .eq("user_id", user?.id);
           
       const { data: lessons, error: lessonError } = await supabase
-          .from("lesson")
+          .from("lessons")
           .select("id, title, steps, category, is_recommended")
           .order("title", { ascending: true });
   
