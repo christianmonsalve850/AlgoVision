@@ -1,11 +1,26 @@
 import { Callout } from '@/features/lessons/components/callout'
 import { AnnotatedCode } from '@/features/lessons/components/annotated-code'
+import { ContextCard } from '@/features/lessons/components/context-card'
 
-{/* Header Section */}
-<div className="mb-6 border-b border-neutral-800 pb-4">
-  <h1 className="text-2xl font-bold tracking-tight text-neutral-100 sm:text-3xl">Implementation</h1>
-  <p className="mt-2 text-sm text-neutral-400"> Below is the standard Two Pointers template for sorted array search problems.</p>
-</div>
+<ContextCard
+  title="The Problem: Two Sum II"
+  difficulty="Medium"
+  subtitle="1-indexed Array"
+  description={
+    <p>
+      Given a <strong className="text-white">1-indexed array of integers</strong> that is already{' '}
+      <strong className="text-emerald-400">sorted in non-decreasing order</strong>, find two numbers that add up to a specific target number.
+    </p>
+  }
+  example={{
+    input: "numbers = [2, 7, 11, 15], target = 9",
+    output: "[1, 2]",
+    note: "Index 1 + Index 2 = 2 + 7 = 9"
+  }}
+  keyDifference="Unlike standard Two Sum, the array is pre-sorted. This allows us to use two pointers in O(n) time and O(1) extra space without a hash map."
+/>
+
+---
 
 <AnnotatedCode
   language="python"

@@ -1,0 +1,52 @@
+import { Summary } from '@/features/lessons/components/summary'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { RecommendedProblems } from '@/features/lessons/components/recommended-problems'
+import { NextLesson } from '@/features/lessons/components/next-lesson'
+
+<h1 className="mt-1 text-2xl font-bold tracking-tight text-white">Summary</h1>
+
+<Summary>
+
+- Use Two Pointers on ordered data
+- Every movement should eliminate search space
+- Never move pointers randomly
+- Think before coding
+
+</Summary>
+
+---
+
+<h2 className="text-lg font-semibold text-neutral-200 flex items-center gap-2 mt-4">
+    <span className="text-amber-400"></span> Common Mistakes
+</h2>
+
+<Mistake>
+
+Moving both pointers every iteration.
+
+</Mistake>
+
+<Mistake>
+
+Ignoring why a pointer moves.
+
+</Mistake>
+
+<Mistake>
+
+Using nested loops anyway.
+
+</Mistake>
+
+---
+
+<RecommendedProblems
+problems={[
+"Two Sum II",
+"Valid Palindrome",
+"Container With Most Water",
+"3Sum",
+"Remove Duplicates From Sorted Array"
+]}
+/>
+

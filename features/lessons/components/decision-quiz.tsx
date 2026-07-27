@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { HelpCircle, CheckCircle2, XCircle, RotateCcw } from 'lucide-react';
+import { HelpCircle, CheckCircle2, XCircle, RotateCcw, ArrowRight } from 'lucide-react';
 
-interface QuizProps {
+interface DecisionQuizProps {
   question: string;
   options: string[];
   answer: number;
@@ -9,12 +9,12 @@ interface QuizProps {
   title?: string;
 }
 
-export const Quiz: React.FC<QuizProps> = ({
+export const DecisionQuiz: React.FC<DecisionQuizProps> = ({
   question,
   options = [],
   answer,
   explanation,
-  title = 'Quick Quiz',
+  title = 'Decision Check',
 }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
@@ -44,16 +44,16 @@ export const Quiz: React.FC<QuizProps> = ({
             className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            Try Again
+            Reset
           </button>
         )}
       </div>
 
-      {/* Question */}
+      {/* Question Prompt */}
       <p className="mb-4 text-sm font-medium text-neutral-200">{question}</p>
 
-      {/* Options List */}
-      <div className="space-y-2.5">
+      {/* Options Grid */}
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
         {options.map((option, index) => {
           const isSelected = selectedIndex === index;
           const isCorrect = index === answer;
@@ -61,19 +61,19 @@ export const Quiz: React.FC<QuizProps> = ({
 
           let btnStyles =
             'border-neutral-800 bg-neutral-950/40 text-neutral-300 hover:border-neutral-700 hover:bg-neutral-800/40';
-          let IconComponent = null;
+          let IconComponent = <ArrowRight className="h-4 w-4 text-neutral-500 flex-shrink-0" />;
 
           if (showResults) {
             if (isCorrect) {
               btnStyles =
-                'border-neutral-600 bg-neutral-800/80 text-neutral-100 font-medium';
+                'border-neutral-600 bg-neutral-800/90 text-neutral-100 font-medium';
               IconComponent = <CheckCircle2 className="h-4 w-4 text-neutral-300 flex-shrink-0" />;
             } else if (isSelected) {
               btnStyles =
                 'border-neutral-700 bg-neutral-900 text-neutral-400 line-through';
               IconComponent = <XCircle className="h-4 w-4 text-neutral-500 flex-shrink-0" />;
             } else {
-              btnStyles = 'border-neutral-800/50 bg-neutral-950/20 text-neutral-500 opacity-60';
+              btnStyles = 'border-neutral-800/50 bg-neutral-950/20 text-neutral-500 opacity-50';
             }
           }
 
@@ -82,14 +82,9 @@ export const Quiz: React.FC<QuizProps> = ({
               key={index}
               disabled={showResults}
               onClick={() => handleSelect(index)}
-              className={`flex w-full items-center justify-between rounded-lg border px-4 py-3 text-left text-sm transition-all ${btnStyles}`}
+              className={`flex items-center justify-between rounded-lg border px-4 py-3 text-left text-sm transition-all ${btnStyles}`}
             >
-              <div className="flex items-center gap-3">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full border border-neutral-700 bg-neutral-800 text-xs font-semibold text-neutral-400">
-                  {String.fromCharCode(65 + index)}
-                </span>
-                <span>{option}</span>
-              </div>
+              <span>{option}</span>
               {IconComponent}
             </button>
           );
@@ -98,8 +93,8 @@ export const Quiz: React.FC<QuizProps> = ({
 
       {/* Explanation Box */}
       {selectedIndex !== null && explanation && (
-        <div className="mt-4 rounded-lg border border-neutral-800 bg-neutral-950/60 p-3 text-xs text-neutral-400">
-          <span className="font-semibold text-neutral-300">Explanation: </span>
+        <div className="mt-4 rounded-lg border border-neutral-800 bg-neutral-950/60 p-3.5 text-xs text-neutral-300 leading-relaxed">
+          <span className="font-semibold text-neutral-200">Explanation: </span>
           {explanation}
         </div>
       )}
@@ -107,4 +102,4 @@ export const Quiz: React.FC<QuizProps> = ({
   );
 };
 
-export default Quiz;
+export default DecisionQuiz;
