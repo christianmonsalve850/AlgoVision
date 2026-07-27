@@ -1,14 +1,13 @@
-
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import LessonMdxSteps from '@/features/learn/components/lesson-mdx-steps';
 
-interface LessonPageProps {
-  params: Promise<{ title: string }>;
+interface StepPageProps {
+  params: Promise<{ title: string; step: string }>;
 }
 
-export default async function LessonPage({ params }: LessonPageProps) {
-  const { title } = await params;
+export default async function StepPage({ params }: StepPageProps) {
+  const { title, step } = await params;
   const originalTitle = title
     .toString()
     .split('_')
@@ -16,7 +15,6 @@ export default async function LessonPage({ params }: LessonPageProps) {
     .join(' ');
 
   const supabase = await createClient();
-
   const { data: lesson, error: lessonError } = await supabase
     .from('lessons')
     .select()
@@ -30,9 +28,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
   if (!lesson) {
     notFound();
   }
-  
+
   return (
-    <main className="mx-auto w-187.5 px-4 py-8 ">
+    <main className="max-w-187.5 w-full mx-auto px-4 py-8">
       <div className="mb-8 border-b border-border pb-6">
         <span className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
           {lesson.category}
@@ -41,7 +39,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
         <p className="mt-1 text-neutral-400">{lesson.description}</p>
       </div>
 
-      <LessonMdxSteps slug={title.toString()} />
+      <LessonMdxSteps slug={title.toString()} step={step} />
     </main>
   );
 }

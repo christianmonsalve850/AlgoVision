@@ -3,12 +3,11 @@ import { Callout } from '@/features/lessons/components/callout'
 import { PatternCard } from '@/features/lessons/components/pattern-card'
 import { Checkpoint } from '@/features/lessons/components/checkpoint'
 
-Welcome!
-
-Two Pointers is one of the most common interview techniques you'll encounter.
-
-Instead of checking every possible combination, we use two indices that move intelligently through the data.
-
+<div className="my-6 rounded-xl border border-neutral-800 bg-neutral-900/60 p-5 shadow-sm">
+  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-400">Welcome</p>
+  <p className="mt-2 text-lg leading-relaxed text-neutral-200">Two Pointers is one of the most common interview techniques you'll encounter.</p>
+  <p className="mt-3 text-sm leading-relaxed text-neutral-400">Instead of checking every possible combination, we use two indices that move intelligently through the data.</p>
+</div>
 <LearningObjectives 
     objectives = {[
         'Recognize Two Pointer problems',
@@ -23,22 +22,20 @@ Instead of checking every possible combination, we use two indices that move int
 ---
 
 <Callout type="success">
-
-Mastering Two Pointers will immediately help with dozens of LeetCode problems.
-
+    Mastering Two Pointers will immediately help with dozens of LeetCode problems.
 </Callout>
 
 ---
 
 <PatternCard
-title="Where You'll See It"
-items={[
-"Sorted arrays",
-"Pairs",
-"Triplets",
-"Palindromes",
-"Searching from both ends"
-]}
+    title="Where You'll See It"
+    items={[
+        "Sorted arrays",
+        "Pairs",
+        "Triplets",
+        "Palindromes",
+        "Searching from both ends"
+    ]}
 />
 
 ---

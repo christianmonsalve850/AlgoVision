@@ -1,5 +1,5 @@
 import Step1 from "./step-1-introduction.mdx"
-// import Step2 from "./step-2-pattern-recognition.mdx"
+import Step2 from "./step-2-pattern-recognition.mdx"
 // import Step3 from "./step-3-core-idea.mdx"
 // import Step4 from "./step-4-annotated-code.mdx"
 // import Step5 from "./step-5-walkthrough.mdx"
@@ -9,7 +9,7 @@ import Step1 from "./step-1-introduction.mdx"
 
 export default [
     Step1,
-    // Step2,
+    Step2,
     // Step3,
     // Step4,
     // Step5,
