@@ -1,0 +1,46 @@
+import { Callout } from '@/features/lessons/components/callout'
+import { AnnotatedCode } from '@/features/lessons/components/annotated-code'
+
+{/* Header Section */}
+<div className="mb-6 border-b border-neutral-800 pb-4">
+  <h1 className="text-2xl font-bold tracking-tight text-neutral-100 sm:text-3xl">Implementation</h1>
+  <p className="mt-2 text-sm text-neutral-400"> Below is the standard Two Pointers template for sorted array search problems.</p>
+</div>
+
+<AnnotatedCode
+  language="python"
+  title="Two Sum II"
+  code={`left = 0
+right = len(numbers)-1
+
+while left < right:
+    total = numbers[left] + numbers[right]
+
+    if total == target:
+        return [left+1, right+1]
+
+    elif total < target:
+        left += 1
+
+    else:
+        right -= 1`}
+  annotations={{
+    1: "Initialize left pointer",
+    2: "Initialize right pointer",
+    4: "Continue until pointers cross",
+    5: "Calculate current sum",
+    7: "Found solution",
+    10: "Need a larger sum",
+    13: "Need a smaller sum",
+  }}
+/>
+
+---
+
+<Callout type="info">
+
+Don't memorize the code.
+
+Understand WHY each pointer moves.
+
+</Callout>
