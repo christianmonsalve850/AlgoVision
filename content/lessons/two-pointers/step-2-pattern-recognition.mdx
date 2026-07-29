@@ -1,0 +1,64 @@
+import { DecisionTree } from '@/features/lessons/components/desicion-tree'
+import { PatternSignals } from '@/features/lessons/components/pattern-signals'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { Quiz } from '@/features/lessons/components/quiz'
+
+<h1 className="text-2xl font-semibold tracking-tight text-foreground">Recognizing the Pattern</h1>
+
+<div className="lesson-surface my-6 p-5">
+  <p className="text-base leading-relaxed text-foreground/80">Before writing code, we should recognize when Two Pointers is the correct tool.</p>
+</div>
+
+<DecisionTree
+  decisionSteps={{
+    1: {
+      question: 'Is the input array/string sorted (or can it be sorted easily)?',
+      yesOption: { label: 'Yes, it is sorted', nextStepId: 2 },
+      noOption: { label: 'No, order must be preserved', result: 'Consider Hash Map or Sliding Window' },
+    },
+    2: {
+      question: 'Are you searching for pairs, triplets, or comparing elements from both ends?',
+      yesOption: { label: 'Yes (e.g. sum, palindrome)', result: 'Use Two Pointers! (Left & Right pointers)' },
+      noOption: { label: 'No, looking for contiguous subarray', result: 'Consider Sliding Window' },
+    },
+  }}
+/>
+
+---
+
+<div className="lesson-surface-muted mt-8 px-4 py-3">
+  <h2 className="text-lg font-semibold tracking-tight text-foreground">Common Signals</h2>
+</div>
+
+<PatternSignals
+  signals={[
+    'Input is sorted',
+    'Need a pair',
+    'Need a triplet',
+    'Searching from both ends',
+    'Comparing symmetric values',
+  ]}
+/>
+
+---
+
+<div className="lesson-surface-muted mt-8 px-4 py-3">
+  <h2 className="text-lg font-semibold tracking-tight text-foreground">Red Flags</h2>
+</div>
+
+<Mistake>
+Using Two Pointers on an unsorted array without understanding why ordering matters.
+</Mistake>
+
+---
+
+<Quiz
+  question="Which problem is MOST likely to use Two Pointers?"
+  options={[
+    'Binary Tree Level Order Traversal',
+    'Reverse Linked List',
+    'Two Sum II',
+    'Course Schedule',
+  ]}
+  answer={2}
+/>

@@ -1,0 +1,61 @@
+import { Callout } from '@/features/lessons/components/callout'
+import { AnnotatedCode } from '@/features/lessons/components/annotated-code'
+import { ContextCard } from '@/features/lessons/components/context-card'
+
+<ContextCard
+  title="The Problem: Two Sum II"
+  difficulty="Medium"
+  subtitle="1-indexed Array"
+  description={
+    <p>
+      Given a <strong className="text-white">1-indexed array of integers</strong> that is already{' '}
+      <strong className="text-emerald-400">sorted in non-decreasing order</strong>, find two numbers that add up to a specific target number.
+    </p>
+  }
+  example={{
+    input: "numbers = [2, 7, 11, 15], target = 9",
+    output: "[1, 2]",
+    note: "Index 1 + Index 2 = 2 + 7 = 9"
+  }}
+  keyDifference="Unlike standard Two Sum, the array is pre-sorted. This allows us to use two pointers in O(n) time and O(1) extra space without a hash map."
+/>
+
+---
+
+<AnnotatedCode
+  language="python"
+  title="Two Sum II"
+  code={`left = 0
+right = len(numbers)-1
+
+while left < right:
+    total = numbers[left] + numbers[right]
+
+    if total == target:
+        return [left+1, right+1]
+
+    elif total < target:
+        left += 1
+
+    else:
+        right -= 1`}
+  annotations={{
+    1: "Initialize left pointer",
+    2: "Initialize right pointer",
+    4: "Continue until pointers cross",
+    5: "Calculate current sum",
+    7: "Found solution",
+    10: "Need a larger sum",
+    13: "Need a smaller sum",
+  }}
+/>
+
+---
+
+<Callout type="info">
+
+Don't memorize the code.
+
+Understand WHY each pointer moves.
+
+</Callout>

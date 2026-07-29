@@ -1,0 +1,44 @@
+import { ComplexityTable } from '@/features/lessons/components/complexity-table'
+import { Hint } from '@/features/lessons/components/hint'
+
+<section className="lesson-surface my-8 p-6">
+  <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">Core Idea</h2>
+
+  <p className="mt-3 text-base text-foreground/80">Imagine two people searching through a hallway:</p>
+
+  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+    <div className="lesson-surface-muted flex items-center gap-3 p-3.5">
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+        L
+      </span>
+      <span className="text-sm font-medium text-foreground/80">One starts on the left.</span>
+    </div>
+
+    <div className="lesson-surface-muted flex items-center gap-3 p-3.5">
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-teal-500/20 bg-teal-500/10 text-xs font-semibold text-teal-700 dark:text-teal-300">
+        R
+      </span>
+      <span className="text-sm font-medium text-foreground/80">The other starts on the right.</span>
+    </div>
+  </div>
+
+  <p className="mt-4 rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-3 text-xs font-medium text-emerald-700 dark:text-emerald-300">Each movement eliminates impossible answers.</p>
+</section>
+
+---
+
+<ComplexityTable
+  before={{ time: 'O(n²)', space: 'O(1)' }}
+  after={{ time: 'O(n)', space: 'O(1)' }}
+  title="Complexity Comparison"
+  beforeLabel="Brute Force"
+  afterLabel="Two Pointers"
+/>
+
+---
+
+<Hint>
+Every pointer movement should eliminate search space.
+
+If it doesn't, reconsider your algorithm.
+</Hint>

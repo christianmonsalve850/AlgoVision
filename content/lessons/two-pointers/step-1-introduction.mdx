@@ -1,0 +1,49 @@
+import { Welcome } from '@/features/lessons/components/welcome'
+import { LearningObjectives } from '@/features/lessons/components/learning-objectives'
+import { Callout } from '@/features/lessons/components/callout'
+import { PatternCard } from '@/features/lessons/components/pattern-card'
+import { Checkpoint } from '@/features/lessons/components/checkpoint'
+
+<Welcome 
+    title="Two Pointers is one of the most common interview techniques you'll encounter."
+    text="Instead of checking every possible combination, we use two indices that move intelligently through the data."
+/>
+<LearningObjectives 
+    objectives = {[
+        'Recognize Two Pointer problems',
+        'Understand why the technique works',
+        'Implement the pattern effectively',
+        'Debug pointer movement',
+        'Avoid common edge cases and mistakes',
+    ]}
+    title = {"What You'll Learn"}
+/>
+
+---
+
+<Callout type="success">
+    Mastering Two Pointers will immediately help with dozens of LeetCode problems.
+</Callout>
+
+---
+
+<PatternCard
+    title="Where You'll See It"
+    items={[
+        "Sorted arrays",
+        "Pairs",
+        "Triplets",
+        "Palindromes",
+        "Searching from both ends"
+    ]}
+/>
+
+---
+
+<Checkpoint>
+
+Before continuing, ask yourself:
+
+"Could two positions solve this problem faster than checking every pair?"
+
+</Checkpoint>

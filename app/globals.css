@@ -167,3 +167,17 @@
     @apply font-sans;
   }
 }
+
+@layer utilities {
+  .lesson-surface {
+    @apply rounded-xl border border-border bg-card/95 shadow-sm;
+  }
+
+  .lesson-surface-muted {
+    @apply rounded-lg border border-border bg-muted/80;
+  }
+
+  .lesson-surface-accent {
+    @apply rounded-lg border border-primary/15 bg-primary/10;
+  }
+}

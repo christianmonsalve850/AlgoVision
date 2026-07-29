@@ -1,0 +1,74 @@
+import { DecisionQuiz } from '@/features/lessons/components/decision-quiz'
+
+<section className="lesson-surface my-8 p-6">
+  <div className="flex items-center gap-2">
+    <span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-600 dark:bg-emerald-400" />
+    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">
+      Interactive Prompt
+    </span>
+  </div>
+  <h2 className="mt-1 text-2xl font-bold tracking-tight text-foreground">Your Turn</h2>
+
+  <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div className="lesson-surface-muted p-3.5 text-center">
+      <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Left Pointer</span>
+      <div className="mt-1 font-mono text-lg font-bold text-emerald-700 dark:text-emerald-300">2</div>
+    </div>
+
+    <div className="lesson-surface-muted p-3.5 text-center">
+      <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Right Pointer</span>
+      <div className="mt-1 font-mono text-lg font-bold text-teal-700 dark:text-teal-300">11</div>
+    </div>
+
+    <div className="lesson-surface-muted p-3.5 text-center">
+      <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Current Sum</span>
+      <div className="mt-1 font-mono text-lg font-bold text-foreground">13</div>
+    </div>
+
+    <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3.5 text-center">
+      <span className="text-xs font-mono uppercase tracking-wider text-emerald-700 dark:text-emerald-300">Target</span>
+      <div className="mt-1 font-mono text-lg font-bold text-emerald-700 dark:text-emerald-300">15</div>
+    </div>
+  </div>
+
+  <p className="mt-5 text-sm font-medium text-foreground/80">Which pointer should move next, and in what direction?</p>
+</section>
+
+<DecisionQuiz
+  question="Which pointer moves?"
+  options={['Move Left', 'Move Right', 'Move Both', 'Neither']}
+  answer={0}
+  explanation="The sum is too small, so we need a larger value."
+/>
+
+---
+
+<section className="my-8 space-y-3">
+  <div className="flex items-center gap-2">
+    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Another Example</span>
+  </div>
+
+  <div className="lesson-surface flex items-center justify-between p-4 font-mono text-sm">
+    <div className="flex items-center gap-3">
+      <span className="text-xs uppercase tracking-wider text-muted-foreground">Current Sum</span>
+      <span className="rounded border border-amber-500/20 bg-amber-500/10 px-3 py-1 font-bold text-amber-700 dark:text-amber-300">
+        19
+      </span>
+    </div>
+
+    <span className="text-lg font-bold text-muted-foreground">&gt;</span>
+
+    <div className="flex items-center gap-3">
+      <span className="text-xs uppercase tracking-wider text-muted-foreground">Target</span>
+      <span className="rounded border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 font-bold text-emerald-700 dark:text-emerald-300">
+        15
+      </span>
+    </div>
+  </div>
+</section>
+
+<DecisionQuiz
+  question="What should happen?"
+  options={['Move Left', 'Move Right', 'Return Answer', 'Restart']}
+  answer={1}
+/>
