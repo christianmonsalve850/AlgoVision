@@ -38,12 +38,12 @@ export default function LessonMdxSteps({ slug, step }: LessonMdxStepsProps) {
 
   return (
     <div className="space-y-6 w-full">
-      <div className="flex items-center justify-between gap-4 rounded-xl border border-neutral-800/80 bg-neutral-900/40 px-3 py-2">
+      <div className="flex items-center justify-between rounded-xl border border-border bg-card/95 shadow-sm gap-4 px-3 py-2">
         <div className="flex flex-1 items-center">
           {previousHref ? (
             <Link
               href={previousHref}
-              className="inline-flex items-center gap-2 text-sm text-neutral-400 transition-colors hover:text-neutral-200"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-muted-foreground/60"
             >
               <ArrowLeft className="h-4 w-4" />
               Back
@@ -59,7 +59,7 @@ export default function LessonMdxSteps({ slug, step }: LessonMdxStepsProps) {
           {nextHref ? (
             <Link
               href={nextHref}
-              className="inline-flex items-center gap-2 text-sm text-neutral-400 transition-colors hover:text-neutral-200"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-muted-foreground/60"
             >
               Next
               <ArrowRight className="h-4 w-4" />

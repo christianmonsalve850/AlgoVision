@@ -11,12 +11,12 @@ export const Mistake: React.FC<MistakeProps> = ({
   title = 'Common Mistake',
 }) => {
   return (
-    <div className="my-5 flex items-start gap-3 rounded-xl border border-neutral-800 bg-neutral-900/60 p-4 text-sm text-neutral-300 shadow-sm">
-      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-800 text-neutral-400">
+    <div className="my-5 flex items-start gap-3 rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive shadow-sm">
+      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-destructive/20 text-destructive">
         <AlertCircle className="h-4 w-4" />
       </div>
       <div className="flex-1">
-        <span className="block text-xs font-semibold uppercase tracking-wider text-neutral-400">
+        <span className="block text-xs font-semibold uppercase tracking-wider text-destructive">
           {title}
         </span>
         <div className="mt-1 leading-relaxed [&>p]:m-0">{children}</div>

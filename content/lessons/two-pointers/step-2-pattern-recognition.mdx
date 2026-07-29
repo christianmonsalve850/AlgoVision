@@ -3,12 +3,10 @@ import { PatternSignals } from '@/features/lessons/components/pattern-signals'
 import { Mistake } from '@/features/lessons/components/mistake'
 import { Quiz } from '@/features/lessons/components/quiz'
 
-<div className="mb-6 rounded-xl border border-emerald-500/20 bg-emerald-950/20 px-4 py-3 shadow-sm">
-  <h1 className="text-2xl font-semibold tracking-tight text-emerald-300">Recognizing the Pattern</h1>
-</div>
+<h1 className="text-2xl font-semibold tracking-tight text-foreground">Recognizing the Pattern</h1>
 
-<div className="my-6 rounded-xl border border-neutral-800 bg-neutral-900/60 p-5 shadow-sm">
-  <p className="text-base leading-relaxed text-neutral-300">Before writing code, we should recognize when Two Pointers is the correct tool.</p>
+<div className="lesson-surface my-6 p-5">
+  <p className="text-base leading-relaxed text-foreground/80">Before writing code, we should recognize when Two Pointers is the correct tool.</p>
 </div>
 
 <DecisionTree
@@ -28,41 +26,39 @@ import { Quiz } from '@/features/lessons/components/quiz'
 
 ---
 
-<div className="mt-8 rounded-xl border border-neutral-800/70 bg-neutral-900/40 px-4 py-3">
-  <h2 className="text-lg font-semibold tracking-tight text-neutral-200">Common Signals</h2>
+<div className="lesson-surface-muted mt-8 px-4 py-3">
+  <h2 className="text-lg font-semibold tracking-tight text-foreground">Common Signals</h2>
 </div>
 
 <PatternSignals
-    signals={[
-        "Input is sorted",
-        "Need a pair",
-        "Need a triplet",
-        "Searching from both ends",
-        "Comparing symmetric values"
-    ]}
+  signals={[
+    'Input is sorted',
+    'Need a pair',
+    'Need a triplet',
+    'Searching from both ends',
+    'Comparing symmetric values',
+  ]}
 />
 
 ---
 
-<div className="mt-8 rounded-xl border border-neutral-800/70 bg-neutral-900/40 px-4 py-3">
-  <h2 className="text-lg font-semibold tracking-tight text-neutral-200">Red Flags</h2>
+<div className="lesson-surface-muted mt-8 px-4 py-3">
+  <h2 className="text-lg font-semibold tracking-tight text-foreground">Red Flags</h2>
 </div>
 
 <Mistake>
-
 Using Two Pointers on an unsorted array without understanding why ordering matters.
-
 </Mistake>
 
 ---
 
 <Quiz
-question="Which problem is MOST likely to use Two Pointers?"
-options={[
-"Binary Tree Level Order Traversal",
-"Reverse Linked List",
-"Two Sum II",
-"Course Schedule"
-]}
-answer={2}
+  question="Which problem is MOST likely to use Two Pointers?"
+  options={[
+    'Binary Tree Level Order Traversal',
+    'Reverse Linked List',
+    'Two Sum II',
+    'Course Schedule',
+  ]}
+  answer={2}
 />
