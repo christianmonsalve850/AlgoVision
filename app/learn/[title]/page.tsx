@@ -26,7 +26,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
   if (lessonError) {
     console.log(lessonError);
   }
-
+  
   if (!lesson) {
     notFound();
   }
