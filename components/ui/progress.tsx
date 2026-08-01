@@ -13,7 +13,7 @@ export function Progress({ value, bg, color }: ProgressProps) {
     >
       <ProgressPrimitive.Indicator
         className={`h-full w-full flex-1 transition-all duration-300 ${color ?? "bg-primary/80"}`}
-        style={{ transform: `translateX(-${100 - (Number(value) || 0)}%)` }}
+        style={{ transform: `translateX(-${(100 - (Number(value) || 0))}%)` }}
       />
     </ProgressPrimitive.Root>
   )
