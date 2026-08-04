@@ -2,8 +2,10 @@ import DashboardHeader from "@/features/dashboard/components/dashboard-header";
 import ProblemsSolved from "@/features/dashboard/components/problems-solved";
 import SmallWidget from "@/features/dashboard/components/small-widget";
 import { TrendingUp, Flame, Clock, BookOpen } from "lucide-react";
+import CategoryMastery from "@/features/dashboard/components/category-mastery";
 
-export default function Dashboard() {
+
+export default async function Dashboard() {
 
   return ( 
     <main className="flex min-h-[calc(100vh-4rem)] flex-col bg-background p-6 gap-5">
@@ -44,7 +46,7 @@ export default function Dashboard() {
         />
       </div>
       <div className="grid grid-cols-2 gap-4">
-
+        <CategoryMastery />
       </div>
     </main>
   );
