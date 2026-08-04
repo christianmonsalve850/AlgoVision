@@ -9,7 +9,7 @@ type ProgressProps = {
 export function Progress({ value, bg, color }: ProgressProps) {
   return (
     <ProgressPrimitive.Root
-      className={`relative h-2 w-full overflow-hidden rounded-full ${bg ?? "bg-primary/20"}`}
+      className={`relative h-2.5 w-full overflow-hidden rounded-full ${bg ?? "bg-primary/20"}`}
     >
       <ProgressPrimitive.Indicator
         className={`h-full w-full flex-1 transition-all duration-300 ${color ?? "bg-primary/80"}`}
