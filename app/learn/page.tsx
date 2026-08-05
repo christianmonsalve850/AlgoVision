@@ -1,5 +1,4 @@
 import { LessonShell } from "@/features/learn/components/lesson-shell";
-import { LessonListItem } from "@/features/learn/types";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function Learn() {

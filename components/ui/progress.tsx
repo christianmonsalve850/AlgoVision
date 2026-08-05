@@ -4,12 +4,13 @@ type ProgressProps = {
   value: number | string,
   bg?: string,
   color?: string,
+  barHeight?: string
 };
 
-export function Progress({ value, bg, color }: ProgressProps) {
+export function Progress({ value, bg, color, barHeight }: ProgressProps) {
   return (
     <ProgressPrimitive.Root
-      className={`relative h-2.5 w-full overflow-hidden rounded-full ${bg ?? "bg-primary/20"}`}
+      className={`relative w-full overflow-hidden rounded-full ${barHeight ?? "h-2.5"} ${bg ?? "bg-primary/20"}`}
     >
       <ProgressPrimitive.Indicator
         className={`h-full w-full flex-1 transition-all duration-300 ${color ?? "bg-primary/80"}`}
