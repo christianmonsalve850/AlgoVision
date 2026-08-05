@@ -3,6 +3,7 @@ import ProblemsSolved from "@/features/dashboard/components/problems-solved";
 import SmallWidget from "@/features/dashboard/components/small-widget";
 import { TrendingUp, Flame, Clock, BookOpen } from "lucide-react";
 import CategoryMastery from "@/features/dashboard/components/category-mastery";
+import RecentActivity from "@/features/dashboard/components/recent-activity";
 
 
 export default async function Dashboard() {
@@ -47,6 +48,7 @@ export default async function Dashboard() {
       </div>
       <div className="grid grid-cols-2 gap-4">
         <CategoryMastery />
+        <RecentActivity />
       </div>
     </main>
   );
