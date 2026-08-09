@@ -2,7 +2,7 @@
 
 import { ProblemEditorPanel } from "@/features/practice/problem-page/code-editor/components/problem-editor-panel";
 import { ProblemSidebar } from "@/features/practice/problem-page/problem/components/problem-sidebar";
-import { ProblemVisualizationPanel } from "@/features/practice/problem-page/visualization/components/problem-visualization-panel";
+import { ProblemVisualizationPanel } from "@/features/practice/problem-page/visualization/components/common/problem-visualization-panel";
 import type { ProblemPageData } from "@/features/practice/problem-page/problem/types";
 import { PlaybackControls } from "@/features/practice/problem-page/playback-controls";
 

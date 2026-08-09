@@ -15,12 +15,12 @@ export type ExecutionStep = {
   variables: Record<string, any>;
 };
 
-// export type ExecutionTraceProps = {
-//   currentStep: number;
-//   totalSteps: number;
-//   onStepChange: (step: number) => void;
-//   children: React.ReactNode; // Instantiates the stacks, loops, and VariableState collections
-// };
+export type ExecutionTraceProps = {
+  currentStep: number;
+  totalSteps: number;
+  onStepChange: (step: number) => void;
+  children: React.ReactNode; // Instantiates the stacks, loops, and VariableState collections
+};
 
 export type ExecutionTrace = {
   steps: ExecutionStep[];
