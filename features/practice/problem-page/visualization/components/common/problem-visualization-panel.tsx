@@ -1,12 +1,37 @@
-'use client' // Remove later
+"use client"; // Remove later
 
 import { BrainCircuit, Maximize2 } from "lucide-react";
-import { CallFrame } from "@/features/practice/problem-page/visualization/components/call-frame";
-import { VariableState } from "@/features/practice/problem-page/visualization/components/variable-state";
-import { ExecutionStep } from "@/features/practice/problem-page/visualization/components/execution-step";
-import { ExecutionTrace } from "@/features/practice/problem-page/visualization/components/execution-trace";
+import { CallFrame } from "@/features/practice/problem-page/visualization/components/common/call-frame";
+import { VariableState } from "@/features/practice/problem-page/visualization/components/common/variable-state";
+import { ExecutionStep } from "@/features/practice/problem-page/visualization/components/common/execution-step";
+import { ExecutionTrace } from "@/features/practice/problem-page/visualization/components/common/execution-trace";
+import { Canvas } from "./canvas";
+import ArrayVisualizer from "@/features/practice/problem-page/visualization/components/visualizers/array-visualizer";
+import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace-store";
 
 export function ProblemVisualizationPanel() {
+  const trace = useTraceStore((state) => state.trace);
+  const currentStepIndex = useTraceStore((state) => state.currentStepIndex);
+  const setCurrentStepIndex = useTraceStore(
+    (state) => state.setCurrentStepIndex,
+  );
+
+  const currentStep = trace[currentStepIndex];
+
+  const dummyVariables = [
+    { name: "left", type: "number", value: 0, updated: false },
+    { name: "right", type: "number", value: 4, updated: false },
+    { name: "target", type: "number", value: 9, updated: true },
+    { name: "nums", type: "array", value: [2, 7, 11, 15], updated: false },
+  ];
+
+  const stepVariables = {
+    left: 0,
+    right: 4,
+    target: 9,
+    nums: [2, 7, 11, 15],
+  };
+
   return (
     <section className="col-span-3 flex h-full min-h-0 flex-col bg-background overflow-y-auto">
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
@@ -26,16 +51,27 @@ export function ProblemVisualizationPanel() {
         </button>
       </div>
 
-      {/* <div className="flex flex-1 items-center justify-center p-5">
-          
-        <ExecutionTrace currentStep={1} totalSteps={8} onStepChange={(step: number) => console.log(step)}>
-          <ExecutionStep stepNumber={1} line={1} expression="class Solution:" explanation="Explanation" functionName="search" />
-          {/* <CallFrame name="Variable Name 1" args="Arg Name 1" isActive={true} />
-          <CallFrame name="Variable Name 2" args="Arg Name 2" isActive={true} />
-          <VariableState variables={[{name: "Name", type: "Type", value: "Value", updated: true}]} /> */}
-        {/* </ExecutionTrace> */}
-
-      {/* </div> */}
+      {currentStep && (
+        <div className="flex flex-1 p-4">
+          <ExecutionTrace
+            currentStep={currentStepIndex + 1}
+            totalSteps={trace.length}
+            onStepChange={(step) => setCurrentStepIndex(step - 1)}
+          >
+            <ExecutionStep
+              stepNumber={currentStep.step}
+              line={currentStep.line}
+              functionName={currentStep.function}
+              expression={currentStep.expression}
+              variables={currentStep.variables}
+            />
+            <VariableState variables={currentStep.variables} />
+            <Canvas>
+              <ArrayVisualizer />
+            </Canvas>
+          </ExecutionTrace>
+        </div>
+      )}
     </section>
   );
 }

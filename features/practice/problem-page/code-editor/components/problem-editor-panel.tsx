@@ -6,6 +6,8 @@ import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
 import type { Language, ProblemEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
 import { executeTrace } from "@/lib/algovision-harness/src/script";
+import { useTraceStore } from "../../stores/use-trace-store";
+import type { ExecutionOutcome, TraceStep } from "@/lib/algovision-harness/src/runtime/types";
 
 function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
   let timeoutId: ReturnType<typeof setTimeout>;
@@ -18,6 +20,9 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
 export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditorPanelProps) {
   const [language, setLanguage] = useState<Language>("Python");
   const [code, setCode] = useState(starterCodeMap[language] ?? "");
+
+  const setTrace = useTraceStore((state) => state.setTrace);
+  const setIsRunning = useTraceStore((state) => state.setIsRunning);
 
   const compositeKey = `problem:${problem_id}:${language}`;
 
@@ -49,12 +54,18 @@ export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditor
   const handleRun = useCallback(async () => {
     console.log("Run clicked");
     try {
-      const result = await executeTrace(code);
-      console.log("executeTrace result:", result);
+      setIsRunning(true);
+      const outcome: ExecutionOutcome = await executeTrace(code);
+
+      if (outcome?.trace) {
+        setTrace(outcome.trace as TraceStep[]);
+      }
     } catch (error) {
       console.error("executeTrace error:", error);
+    } finally {
+      setIsRunning(false);
     }
-  }, [code]);
+  }, [code, setIsRunning, setTrace]);
 
   useEffect(() => {
     const savedCode = localStorage.getItem(compositeKey);

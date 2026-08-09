@@ -1,15 +1,34 @@
 export type SupportedLanguage = "python";
 
+export type TraceEventType =
+  | "assignment"
+  | "line"
+  | "call"
+  | "return"
+  | "expression"
+  | "exception";
+
+export type VariableValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | VariableValue[]
+  | { [key: string]: VariableValue };
+
+export type VariablesMap = Record<string, VariableValue>;
+
 export interface TraceStep {
   step: number;
-  event: string;
+  event: TraceEventType;
   line: number;
   expression: string;
   function: string;
   call_depth: number;
-  variables: Record<string, any>;
+  variables: VariablesMap;
   changedVariables: string[];
-  target?: string;
+  target?: string | null;
   return_value?: any;
 }
 
