@@ -1,5 +1,6 @@
 import { Braces } from "lucide-react";
 import type { VariablesMap, VariableValue } from "@/lib/algovision-harness/src/runtime/types";
+import { getDisplayVariables } from "@/features/practice/problem-page/visualization/utils";
 
 type VariableStateProps = {
   variables: VariablesMap | null | undefined;
@@ -14,7 +15,8 @@ function formatValue(value: VariableValue): string {
 }
 
 export function VariableState({ variables }: VariableStateProps) {
-  const variableEntries = variables ? Object.entries(variables) : [];
+
+  const variableEntries = getDisplayVariables(variables);
 
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/20 p-4">

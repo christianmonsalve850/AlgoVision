@@ -8,29 +8,17 @@ import { ExecutionTrace } from "@/features/practice/problem-page/visualization/c
 import { Canvas } from "./canvas";
 import ArrayVisualizer from "@/features/practice/problem-page/visualization/components/visualizers/array-visualizer";
 import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace-store";
+import { filterUserTrace } from "@/features/practice/problem-page/visualization/utils";
 
 export function ProblemVisualizationPanel() {
-  const trace = useTraceStore((state) => state.trace);
+
+  const trace = filterUserTrace(useTraceStore((state) => state.trace));
   const currentStepIndex = useTraceStore((state) => state.currentStepIndex);
   const setCurrentStepIndex = useTraceStore(
     (state) => state.setCurrentStepIndex,
   );
 
   const currentStep = trace[currentStepIndex];
-
-  const dummyVariables = [
-    { name: "left", type: "number", value: 0, updated: false },
-    { name: "right", type: "number", value: 4, updated: false },
-    { name: "target", type: "number", value: 9, updated: true },
-    { name: "nums", type: "array", value: [2, 7, 11, 15], updated: false },
-  ];
-
-  const stepVariables = {
-    left: 0,
-    right: 4,
-    target: 9,
-    nums: [2, 7, 11, 15],
-  };
 
   return (
     <section className="col-span-3 flex h-full min-h-0 flex-col bg-background overflow-y-auto">
@@ -58,6 +46,8 @@ export function ProblemVisualizationPanel() {
             totalSteps={trace.length}
             onStepChange={(step) => setCurrentStepIndex(step - 1)}
           >
+            {" "}
+            Thursday 2:30pm 13th
             <ExecutionStep
               stepNumber={currentStep.step}
               line={currentStep.line}
