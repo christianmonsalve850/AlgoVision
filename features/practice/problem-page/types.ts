@@ -4,6 +4,7 @@ export type PlaybackControlsProps = {
   currentStep: number;
   totalSteps: number;
   isPlaying: boolean;
+  isDisabled: boolean;
   speed: PlaybackSpeed;
   onStepChange: (step: number) => void;
   onPlayPauseToggle: () => void;

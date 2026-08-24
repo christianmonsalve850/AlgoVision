@@ -39,7 +39,7 @@ export function ArrayVisualizer({
   pointers = [],
   keepPointers = false,
   highlightedIndices = [],
-  mode = "cells",
+  mode = "bars",
   maxBarHeight = 180,
   className = "",
 }: ArrayVisualizerProps) {
