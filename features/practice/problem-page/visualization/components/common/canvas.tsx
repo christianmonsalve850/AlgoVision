@@ -68,7 +68,7 @@ export function Canvas({
           {subtitle && (
             <>
               <span className="text-zinc-700">|</span>
-              <span className="text-xs text-muted-foreground truncate max-w-[300px]">
+              <span className="text-xs text-muted-foreground truncate max-w-75">
                 {subtitle}
               </span>
             </>

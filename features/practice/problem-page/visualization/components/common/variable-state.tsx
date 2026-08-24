@@ -1,22 +1,35 @@
 import { Braces } from "lucide-react";
 import type { VariablesMap, VariableValue } from "@/lib/algovision-harness/src/runtime/types";
-import { getDisplayVariables } from "@/features/practice/problem-page/visualization/utils";
+import { getDisplayVariables, formatValue, getTypeLabel } from "@/features/practice/problem-page/visualization/utils";
+import { useEffect, useMemo, useState } from "react";
 
 type VariableStateProps = {
   variables: VariablesMap | null | undefined;
+  changedVariables?: string[] | null;
 };
 
-function formatValue(value: VariableValue): string {
-  if (typeof value === "object" && value !== null) {
-    return JSON.stringify(value);
-  }
+export function VariableState({ variables, changedVariables }: VariableStateProps) {
+  const [highlighted, setHighlighted] = useState<Set<string>>(new Set());
 
-  return String(value);
-}
+  useEffect(() => {
+    if (!changedVariables || changedVariables.length === 0) return;
 
-export function VariableState({ variables }: VariableStateProps) {
+    const set = new Set(changedVariables);
+    setHighlighted(set);
 
-  const variableEntries = getDisplayVariables(variables);
+    const id = setTimeout(() => setHighlighted(new Set()), 1400);
+    return () => clearTimeout(id);
+  }, [changedVariables]);
+
+  const variableEntries = useMemo(() => {
+    const entries = getDisplayVariables(variables);
+    return entries.slice().sort((a, b) => {
+      const aHighlighted = highlighted.has(a[0]);
+      const bHighlighted = highlighted.has(b[0]);
+      if (aHighlighted === bHighlighted) return a[0].localeCompare(b[0]);
+      return aHighlighted ? -1 : 1;
+    });
+  }, [variables, highlighted]);
 
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/20 p-4">
@@ -28,20 +41,25 @@ export function VariableState({ variables }: VariableStateProps) {
       </div>
 
       <div className="flex flex-col gap-1.5 font-mono text-xs">
-        {variableEntries.map(([name, value]) => (
-          <div
-            key={name}
-            className="grid grid-cols-12 items-center rounded-md px-2 py-1.5 transition-colors hover:bg-zinc-900/40"
-          >
-            <span className="col-span-4 truncate font-medium text-zinc-200">{name}</span>
-            <span className="col-span-3 text-[10px] uppercase tracking-wide text-zinc-500">
-              {typeof value}
-            </span>
-            <span className="col-span-5 truncate text-right font-semibold text-emerald-400">
-              {formatValue(value)}
-            </span>
-          </div>
-        ))}
+        {variableEntries.map(([name, value]) => {
+          const isHighlighted = highlighted.has(name);
+          return (
+            <div
+              key={name}
+              className={`grid grid-cols-12 items-center rounded-md px-2 py-1.5 transition-all duration-300 ${
+                isHighlighted ? "bg-emerald-900/30 ring-1 ring-emerald-400/40" : "hover:bg-zinc-900/40"
+              }`}
+            >
+              <span className="col-span-4 truncate font-medium text-zinc-200">{name}</span>
+              <span className="col-span-3 text-[10px] uppercase tracking-wide text-zinc-500">
+                {getTypeLabel(value)}
+              </span>
+              <span className="col-span-5 truncate text-right font-semibold text-emerald-400">
+                {formatValue(value)}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -1,15 +1,14 @@
-"use client"; // Remove later
 
+import { useMemo } from "react";
 import { BrainCircuit, Maximize2 } from "lucide-react";
 import { CallFrame } from "@/features/practice/problem-page/visualization/components/common/call-frame";
 import { VariableState } from "@/features/practice/problem-page/visualization/components/common/variable-state";
 import { ExecutionStep } from "@/features/practice/problem-page/visualization/components/common/execution-step";
 import { ExecutionTrace } from "@/features/practice/problem-page/visualization/components/common/execution-trace";
 import { Canvas } from "./canvas";
-import ArrayVisualizer from "@/features/practice/problem-page/visualization/components/visualizers/array-visualizer";
+import { ArrayVisualizer } from "@/features/practice/problem-page/visualization/components/visualizers/array-visualizer";
 import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace-store";
-import { filterUserTrace } from "@/features/practice/problem-page/visualization/utils";
-
+import { filterUserTrace, arrayVariable, expressionPointers, returnVisualizer } from "@/features/practice/problem-page/visualization/utils";
 export function ProblemVisualizationPanel() {
 
   const trace = filterUserTrace(useTraceStore((state) => state.trace));
@@ -19,6 +18,12 @@ export function ProblemVisualizationPanel() {
   );
 
   const currentStep = trace[currentStepIndex];
+  const array = useMemo(() => arrayVariable(currentStep), [currentStep]);
+  const pointers = useMemo(
+    () => (currentStep ? expressionPointers(currentStep) : []),
+    [currentStep],
+  );
+  const highlightedIndices = useMemo(() => [], []); // placeholder for step-specific highlights
 
   return (
     <section className="col-span-3 flex h-full min-h-0 flex-col bg-background overflow-y-auto">
@@ -46,19 +51,19 @@ export function ProblemVisualizationPanel() {
             totalSteps={trace.length}
             onStepChange={(step) => setCurrentStepIndex(step - 1)}
           >
-            {" "}
-            Thursday 2:30pm 13th
             <ExecutionStep
-              stepNumber={currentStep.step}
+              stepNumber={currentStepIndex + 1}
               line={currentStep.line}
               functionName={currentStep.function}
               expression={currentStep.expression}
               variables={currentStep.variables}
             />
-            <VariableState variables={currentStep.variables} />
             <Canvas>
-              <ArrayVisualizer />
+              <div className="w-full">
+                { returnVisualizer(currentStep) }
+              </div> 
             </Canvas>
+            <VariableState variables={currentStep.variables} changedVariables={currentStep.changedVariables} />
           </ExecutionTrace>
         </div>
       )}

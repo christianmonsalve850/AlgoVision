@@ -25,6 +25,7 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "lucide-react": "^1.17.0",
+    "motion": "^13.1.0",
     "next": "16.2.7",
     "pyodide": "^314.0.0",
     "radix-ui": "^1.5.0",
