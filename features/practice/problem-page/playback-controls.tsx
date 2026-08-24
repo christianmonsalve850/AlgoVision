@@ -50,7 +50,7 @@ export function PlaybackControls({
             type="button"
             disabled={currentStep <= 1}
             onClick={() => onStepChange(1)}
-            className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-background-muted disabled:opacity-30 disabled:hover:bg-transparent"
+            className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent"
             title="Rewind to Start"
           >
             <SkipBack className="size-4 fill-current" />
