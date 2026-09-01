@@ -51,7 +51,7 @@ export function ProblemSidebar({ problem, examples }: ProblemSidebarProps) {
           </div>
         </section>
 
-        <section className="space-y-3 pt-6">
+        <section className="space-y-3 py-6">
           <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-foreground">
             Constraints
           </h2>
