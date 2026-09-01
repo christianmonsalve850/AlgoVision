@@ -42,7 +42,6 @@ export function ProblemVisualizationPanel() {
         >
           <div className="flex flex-1 flex-col h-full w-full min-h-0 p-3 gap-3 overflow-hidden">
             {/* Minimalist Top Execution Step Header */}
-            <div className="shrink-0 rounded-lg border border-border/60 bg-zinc-900/60 px-3 py-2 backdrop-blur-xs">
               <ExecutionStep
                 stepNumber={currentStepIndex + 1}
                 line={currentStep.line}
@@ -50,7 +49,6 @@ export function ProblemVisualizationPanel() {
                 expression={currentStep.expression}
                 variables={currentStep.variables}
               />
-            </div>
 
             <div className="flex-1 flex flex-col gap-3 w-full min-h-0 overflow-y-auto rounded-xl border border-border/60 bg-zinc-950/80 p-3 shadow-inner">
               {dataStructures &&
@@ -81,12 +79,10 @@ export function ProblemVisualizationPanel() {
             </div>
 
             {/* Bottom Variable State Dock */}
-            <div className="shrink-0 rounded-lg border border-border/60 bg-zinc-900/60 px-3 py-2 backdrop-blur-xs">
               <VariableState
                 variables={currentStep.variables}
                 changedVariables={currentStep.changedVariables}
               />
-            </div>
           </div>
         </ExecutionTrace>
       )}
