@@ -15,9 +15,9 @@ export function ExecutionTrace({
   children,
 }: ExecutionTraceProps) {
   return (
-    <div className="flex flex-col gap-3 w-full">
+    <div className="flex flex-col gap-1 w-full">
       {/* TIMELINE CONTROL BAR */}
-      <div className="flex items-center justify-between rounded-lg border border-border/60 bg-zinc-950/60 px-3 py-1.5 shadow-xs">
+      <div className="flex items-center justify-between rounded-lg border border-border/60 bg-zinc-950/60 px-3 py-1.5 shadow-xs mx-3 mt-4">
         <div className="flex items-center gap-2">
           <GitCommit className="size-3.5 text-emerald-400 rotate-90" />
           <span className="font-mono text-xs font-semibold uppercase tracking-wider text-zinc-300">
