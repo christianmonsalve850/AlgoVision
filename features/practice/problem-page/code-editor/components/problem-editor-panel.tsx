@@ -78,7 +78,7 @@ export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditor
   }, [problem_id, language]);
 
   return (
-    <section className="col-span-6 flex h-full min-h-0 flex-col border-r border-border bg-background overflow-y-auto">
+    <section className="col-span-5 flex h-full min-h-0 flex-col border-r border-border bg-background overflow-y-auto">
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div className="flex items-center gap-2">
           <Code2 className="size-4 text-muted-foreground" />

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -72,7 +71,6 @@ export function ArrayVisualizer({
       ? lastHighlightedIndices
       : highlightedIndices;
 
-  // Group pointers by index so multiple pointers pointing to the same element stack cleanly
   const pointersByIndex = useMemo(() => {
     const map = new Map<number, Pointer[]>();
     displayedPointers.forEach((p) => {
@@ -93,18 +91,20 @@ export function ArrayVisualizer({
   }
 
   return (
-    <div className={`flex flex-col items-center justify-center p-4 ${className}`}>
-      {/* ARRAY CONTAINER */}
-      <div className="flex items-end justify-center gap-2.5 sm:gap-3.5">
+    <div className={`flex flex-col items-center justify-center w-full min-w-0 p-2 ${className}`}>
+      <div className="flex items-end justify-center gap-1 sm:gap-2 w-full min-w-0 max-w-full pt-12">
         {data.map((value, idx) => {
           const isHighlighted = displayedHighlightedIndices.includes(idx);
           const attachedPointers = pointersByIndex.get(idx) || [];
           const barHeightPct = Math.max((value / maxVal) * 100, 10);
 
           return (
-            <div key={idx} className="relative flex flex-col items-center group">
-              {/* STACKED POINTER BADGES ABOVE ELEMENT */}
-              <div className="absolute -top-10 flex flex-col items-center gap-1 z-10">
+            <div
+              key={idx}
+              className="relative flex-1 min-w-0 max-w-[44px] flex flex-col items-center group"
+            >
+              {/* STACKED POINTER BADGES */}
+              <div className="absolute -top-9 flex flex-col items-center gap-0.5 z-10 w-full min-w-0">
                 <AnimatePresence>
                   {attachedPointers.map((pointer) => {
                     const colorStyle =
@@ -116,10 +116,10 @@ export function ArrayVisualizer({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -6, scale: 0.8 }}
                         transition={{ duration: 0.2 }}
-                        className={`flex items-center gap-1 rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase shadow-xs ${colorStyle}`}
+                        className={`flex items-center gap-0.5 rounded px-1 py-0.2 font-mono text-[9px] font-bold uppercase shadow-xs truncate max-w-full ${colorStyle}`}
                       >
-                        <span>{pointer.name}</span>
-                        <span className="text-[8px] opacity-70">↓</span>
+                        <span className="truncate">{pointer.name}</span>
+                        <span className="text-[7px] opacity-70">↓</span>
                       </motion.div>
                     );
                   })}
@@ -132,13 +132,13 @@ export function ArrayVisualizer({
                   layout
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   style={{ height: `${(barHeightPct * maxBarHeight) / 100}px` }}
-                  className={`relative flex w-9 sm:w-11 flex-col items-center justify-between rounded-lg border p-1 transition-colors ${
+                  className={`relative flex w-full flex-col items-center justify-between rounded-md border p-0.5 transition-colors ${
                     isHighlighted
                       ? "border-purple-400 bg-purple-500/20 shadow-md shadow-purple-500/10"
                       : "border-border/80 bg-zinc-900/90 hover:border-zinc-700"
                   }`}
                 >
-                  <span className="font-mono text-xs font-bold text-zinc-100">
+                  <span className="font-mono text-[10px] font-bold text-zinc-100 truncate">
                     {value}
                   </span>
                 </motion.div>
@@ -146,18 +146,18 @@ export function ArrayVisualizer({
                 <motion.div
                   layout
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  className={`flex size-11 items-center justify-center rounded-lg border font-mono text-sm font-bold transition-colors ${
+                  className={`flex w-full aspect-square items-center justify-center rounded-md border font-mono text-xs font-bold transition-colors ${
                     isHighlighted
                       ? "border-purple-400 bg-purple-500/20 text-purple-200"
                       : "border-border/80 bg-zinc-900/90 text-zinc-200"
                   }`}
                 >
-                  {value}
+                  <span className="truncate">{value}</span>
                 </motion.div>
               )}
 
               {/* INDEX LABEL AT BOTTOM */}
-              <span className="mt-2 font-mono text-[10px] text-zinc-500">
+              <span className="mt-1 font-mono text-[9px] text-zinc-500 truncate w-full text-center">
                 [{idx}]
               </span>
             </div>
