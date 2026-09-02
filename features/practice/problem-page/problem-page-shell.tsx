@@ -9,6 +9,7 @@ import type { PlaybackSpeed } from "@/features/practice/problem-page/types";
 import { filterUserTrace } from "@/features/practice/problem-page/visualization/utils";
 import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace-store";
 import { useEffect, useState } from "react";
+import { Panel, Group, Separator } from "react-resizable-panels";
 
 export function ProblemPageShell({
   problem,
@@ -26,7 +27,7 @@ export function ProblemPageShell({
 
   const lastStepIndex = trace.length - 1;
   const isAtEnd = trace.length === 0 || currentStepIndex >= lastStepIndex;
-  
+
   const isDisabled = isAtEnd;
 
   useEffect(() => {
@@ -56,14 +57,22 @@ export function ProblemPageShell({
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background">
-      <div className="grid min-h-0 flex-1 grid-cols-12 bg-background">
-        <ProblemSidebar problem={problem} examples={examples} />
-        <ProblemEditorPanel
-          problem_id={problem.id}
-          starterCodeMap={starterCodeMap}
-        />
-        <ProblemVisualizationPanel />
-      </div>
+      <Group orientation="horizontal">
+          <Panel defaultSize={25}>
+            <ProblemSidebar problem={problem} examples={examples} />
+          </Panel>
+          <Separator />
+          <Panel defaultSize={50}>
+            <ProblemEditorPanel
+              problem_id={problem.id}
+              starterCodeMap={starterCodeMap}
+            />
+          </Panel>
+          <Separator />
+          <Panel defaultSize={25}>
+            <ProblemVisualizationPanel />
+          </Panel>
+      </Group>
       <PlaybackControls
         currentStep={currentStepIndex + 1}
         totalSteps={trace.length}
