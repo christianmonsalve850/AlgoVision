@@ -12,7 +12,7 @@ export function ProblemSidebar({ problem, examples }: ProblemSidebarProps) {
   const router = useRouter()
 
   return (
-    <aside className="col-span-3 flex h-full min-h-0 flex-col border-r border-border bg-background/95 text-foreground overflow-y-auto">
+    <aside className="flex h-full min-h-0 flex-col border-r border-border bg-background/95 text-foreground overflow-y-auto">
       <div className="flex h-full flex-col p-6">
         <div className="space-y-4 border-b border-border pb-6">
           <div className="space-y-2">
