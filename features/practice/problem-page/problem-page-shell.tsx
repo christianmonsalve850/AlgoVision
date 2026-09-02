@@ -9,6 +9,12 @@ import type { PlaybackSpeed } from "@/features/practice/problem-page/types";
 import { filterUserTrace } from "@/features/practice/problem-page/visualization/utils";
 import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace-store";
 import { useEffect, useState } from "react";
+import {
+  Panel,
+  Group,
+  Separator,
+  useDefaultLayout,
+} from "react-resizable-panels";
 
 export function ProblemPageShell({
   problem,
@@ -26,7 +32,7 @@ export function ProblemPageShell({
 
   const lastStepIndex = trace.length - 1;
   const isAtEnd = trace.length === 0 || currentStepIndex >= lastStepIndex;
-  
+
   const isDisabled = isAtEnd;
 
   useEffect(() => {
@@ -56,14 +62,33 @@ export function ProblemPageShell({
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background">
-      <div className="grid min-h-0 flex-1 grid-cols-12 bg-background">
-        <ProblemSidebar problem={problem} examples={examples} />
-        <ProblemEditorPanel
-          problem_id={problem.id}
-          starterCodeMap={starterCodeMap}
-        />
-        <ProblemVisualizationPanel />
-      </div>
+      <Group
+        orientation="horizontal"
+        defaultLayout={{
+          "problem-sidebar": 25,
+          "problem-editor": 50,
+          "problem-visualization": 25,
+        }}
+      >
+        <Panel id="problem-sidebar" defaultSize={25} minSize="15%" maxSize="25%">
+          <ProblemSidebar problem={problem} examples={examples} />
+        </Panel>
+        <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40">
+          <div className="h-8 w-1 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
+        </Separator>
+        <Panel id="problem-editor" defaultSize={50}>
+          <ProblemEditorPanel
+            problem_id={problem.id}
+            starterCodeMap={starterCodeMap}
+          />
+        </Panel>
+        <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40">
+          <div className="h-8 w-1 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
+        </Separator>
+        <Panel id="problem-visualization" defaultSize={25} minSize="20%" maxSize="40%">
+          <ProblemVisualizationPanel />
+        </Panel>
+      </Group>
       <PlaybackControls
         currentStep={currentStepIndex + 1}
         totalSteps={trace.length}

@@ -5,7 +5,6 @@ import { ExecutionTrace } from "@/features/practice/problem-page/visualization/c
 import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace-store";
 import {
   filterUserTrace,
-  getVisualizers,
   returnVisualizer,
 } from "@/features/practice/problem-page/visualization/utils";
 
@@ -33,7 +32,7 @@ export function ProblemVisualizationPanel() {
   }, [currentStep]);
 
   return (
-    <section className="col-span-4 flex h-full min-h-0 flex-col overflow-y-auto bg-background">
+    <section className="flex h-full min-h-0 flex-col overflow-y-auto bg-background">
       {currentStep && (
         <ExecutionTrace
           currentStep={currentStepIndex + 1}
