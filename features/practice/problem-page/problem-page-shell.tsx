@@ -73,14 +73,18 @@ export function ProblemPageShell({
         <Panel id="problem-sidebar" defaultSize={25}>
           <ProblemSidebar problem={problem} examples={examples} />
         </Panel>
-        <Separator />
+        <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40">
+          <div className="h-8 w-1 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
+        </Separator>
         <Panel id="problem-editor" defaultSize={50}>
           <ProblemEditorPanel
             problem_id={problem.id}
             starterCodeMap={starterCodeMap}
           />
         </Panel>
-        <Separator />
+        <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40">
+          <div className="h-8 w-1 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
+        </Separator>
         <Panel id="problem-visualization" defaultSize={25}>
           <ProblemVisualizationPanel />
         </Panel>
