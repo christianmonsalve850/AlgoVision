@@ -49,13 +49,13 @@ export function ProblemVisualizationPanel() {
                 variables={currentStep.variables}
               />
 
-            <div className="flex-1 flex flex-col gap-3 w-full min-h-0 overflow-y-auto rounded-xl border border-border/60 bg-zinc-950/80 p-3 shadow-inner">
+            <div className="flex-1 flex flex-col gap-3 w-full min-h-0 overflow-y-auto rounded-xl border border-border bg-background p-3 shadow-inner">
               {dataStructures &&
                 dataStructures.length > 0 &&
                 dataStructures.map((dataStructure) => (
                   <div
                     key={dataStructure.name}
-                    className="w-full flex-1 min-h-40 flex flex-col rounded-lg border border-border/50 bg-zinc-900/40 p-3 backdrop-blur-xs transition-all overflow-hidden"
+                    className="w-full flex-1 min-h-40 flex flex-col rounded-lg border border-border bg-background p-3 backdrop-blur-xs transition-all overflow-hidden"
                   >
                     <div className="flex items-center justify-between gap-2 mb-2 shrink-0">
                       <div className="flex items-center gap-2">
@@ -65,7 +65,7 @@ export function ProblemVisualizationPanel() {
                         </span>
                       </div>
 
-                      <span className="font-mono text-[10px] uppercase px-1.5 py-0.5 rounded border border-border/60 bg-zinc-800/60 text-zinc-400 font-medium tracking-wide">
+                      <span className="font-mono text-[10px] uppercase px-1.5 py-0.5 rounded border border-border bg-accent text-muted-foreground font-medium tracking-wide">
                         {dataStructure.type}
                       </span>
                     </div>
