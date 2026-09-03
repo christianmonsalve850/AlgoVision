@@ -101,7 +101,7 @@ export function ArrayVisualizer({
           return (
             <div
               key={idx}
-              className="relative flex-1 min-w-0 max-w-[44px] flex flex-col items-center group"
+              className="relative flex-1 min-w-0 max-w-11 flex flex-col items-center group"
             >
               {/* STACKED POINTER BADGES */}
               <div className="absolute -top-9 flex flex-col items-center gap-0.5 z-10 w-full min-w-0">
@@ -135,10 +135,10 @@ export function ArrayVisualizer({
                   className={`relative flex w-full flex-col items-center justify-between rounded-md border p-0.5 transition-colors ${
                     isHighlighted
                       ? "border-purple-400 bg-purple-500/20 shadow-md shadow-purple-500/10"
-                      : "border-border/80 bg-zinc-900/90 hover:border-zinc-700"
+                      : "border-border bg-muted hover:border-muted"
                   }`}
                 >
-                  <span className="font-mono text-[10px] font-bold text-zinc-100 truncate">
+                  <span className="font-mono text-[10px] font-bold text-foreground truncate">
                     {value}
                   </span>
                 </motion.div>
@@ -157,7 +157,7 @@ export function ArrayVisualizer({
               )}
 
               {/* INDEX LABEL AT BOTTOM */}
-              <span className="mt-1 font-mono text-[9px] text-zinc-500 truncate w-full text-center">
+              <span className="mt-1 font-mono text-[9px] text-muted-foreground truncate w-full text-center">
                 [{idx}]
               </span>
             </div>
