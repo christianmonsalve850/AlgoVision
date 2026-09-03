@@ -32,10 +32,10 @@ export function VariableState({ variables, changedVariables }: VariableStateProp
   }, [variables, highlighted]);
 
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900/20 p-4">
-      <div className="mb-3 flex items-center gap-2 border-b border-zinc-800 pb-2">
-        <Braces className="size-4 text-zinc-400" />
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+    <div className="rounded-xl border border-border bg-background p-4">
+      <div className="mb-3 flex items-center gap-2 border-b border-border pb-2">
+        <Braces className="size-4 text-muted-foreground" />
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Variables In Scope
         </h3>
       </div>
@@ -47,11 +47,11 @@ export function VariableState({ variables, changedVariables }: VariableStateProp
             <div
               key={name}
               className={`grid grid-cols-12 items-center rounded-md px-2 py-1.5 transition-all duration-300 ${
-                isHighlighted ? "bg-emerald-900/30 ring-1 ring-emerald-400/40" : "hover:bg-zinc-900/40"
+                isHighlighted ? "bg-emerald-700/50 ring-1 ring-emerald-400/40" : "hover:bg-card-foreground/20"
               }`}
             >
-              <span className="col-span-4 truncate font-medium text-zinc-200">{name}</span>
-              <span className="col-span-3 text-[10px] uppercase tracking-wide text-zinc-500">
+              <span className="col-span-4 truncate font-medium text-muted-foreground">{name}</span>
+              <span className="col-span-3 text-[10px] uppercase tracking-wide text-muted-foreground/60">
                 {getTypeLabel(value)}
               </span>
               <span className="col-span-5 truncate text-right font-semibold text-emerald-400">
