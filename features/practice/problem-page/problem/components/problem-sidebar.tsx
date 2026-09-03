@@ -32,7 +32,7 @@ export function ProblemSidebar({ problem, examples }: ProblemSidebarProps) {
             <PatternBadge pattern={problem.pattern} />
           </div>
 
-          <p className="whitespace-pre-line text-sm leading-6 text-muted-foreground break-words">
+          <p className="whitespace-pre-line text-sm leading-6 text-muted-foreground wrap-break-words">
             {problem.description}
           </p>
         </div>
