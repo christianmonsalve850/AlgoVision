@@ -10,7 +10,7 @@ export function ProblemTestCasesPanel() {
   const selectedCase = testCases.find((testCase) => testCase.id === selectedCaseId) ?? testCases[0];
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-background shadow-sm">
+    <div className="flex h-full flex-col overflow-hidden bg-background shadow-sm">
       <div className="border-b border-border px-3 py-2.5 space-y-2">
         <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-foreground">
           Test Session

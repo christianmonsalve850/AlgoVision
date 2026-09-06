@@ -13,7 +13,6 @@ import {
   Panel,
   Group,
   Separator,
-  useDefaultLayout,
 } from "react-resizable-panels";
 
 export function ProblemPageShell({
@@ -73,7 +72,7 @@ export function ProblemPageShell({
         <Panel id="problem-sidebar" defaultSize={25} minSize="15%" maxSize="25%">
           <ProblemSidebar problem={problem} examples={examples} />
         </Panel>
-        <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40">
+        <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-x border-border">
           <div className="h-8 w-1 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
         </Separator>
         <Panel id="problem-editor" defaultSize={50}>
@@ -82,7 +81,7 @@ export function ProblemPageShell({
             starterCodeMap={starterCodeMap}
           />
         </Panel>
-        <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40">
+        <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-x border-border">
           <div className="h-8 w-1 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
         </Separator>
         <Panel id="problem-visualization" defaultSize={25} minSize="20%" maxSize="40%">
