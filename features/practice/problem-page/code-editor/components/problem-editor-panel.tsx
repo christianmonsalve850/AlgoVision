@@ -88,7 +88,7 @@ export function ProblemEditorPanel({
   }, [problem_id, language]);
 
   return (
-    <section className="flex h-full min-h-0 flex-col border-r border-border bg-background overflow-y-auto">
+    <section className="flex h-full min-h-0 flex-col bg-background overflow-y-auto">
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div className="flex items-center gap-2">
           <Code2 className="size-4 text-muted-foreground" />
@@ -133,7 +133,7 @@ export function ProblemEditorPanel({
               onCodeChange={handleEditorChange}
             />
           </Panel>
-          <Separator className="group relative flex w-full h-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40">
+          <Separator className="group relative flex w-full h-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-y border-border">
             <div className="h-1 w-8 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
           </Separator>
           <Panel id="test-cases" defaultSize={25}>
