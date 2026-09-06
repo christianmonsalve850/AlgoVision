@@ -13,7 +13,6 @@ import {
   Panel,
   Group,
   Separator,
-  useDefaultLayout,
 } from "react-resizable-panels";
 
 export function ProblemPageShell({

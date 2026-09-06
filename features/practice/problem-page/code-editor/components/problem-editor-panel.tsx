@@ -1,13 +1,20 @@
-'use client'
+"use client";
 
 import { useState, useCallback, useEffect } from "react";
 import { Code2, Play, RotateCcw } from "lucide-react";
 import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
-import type { Language, ProblemEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
+import type {
+  Language,
+  ProblemEditorPanelProps,
+} from "@/features/practice/problem-page/code-editor/types";
 import { executeTrace } from "@/lib/algovision-harness/src/script";
 import { useTraceStore } from "../../stores/use-trace-store";
-import type { ExecutionOutcome, TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import type {
+  ExecutionOutcome,
+  TraceStep,
+} from "@/lib/algovision-harness/src/runtime/types";
+import { Group, Separator, Panel } from "react-resizable-panels";
 
 function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
   let timeoutId: ReturnType<typeof setTimeout>;
@@ -17,7 +24,10 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
   };
 }
 
-export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditorPanelProps) {
+export function ProblemEditorPanel({
+  problem_id,
+  starterCodeMap,
+}: ProblemEditorPanelProps) {
   const [language, setLanguage] = useState<Language>("Python");
   const [code, setCode] = useState(starterCodeMap[language] ?? "");
 
@@ -32,7 +42,7 @@ export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditor
 
   const handleReset = () => {
     setCode(starterCodeMap[language] ?? "");
-    localStorage.setItem(compositeKey, starterCodeMap[language] ?? "")
+    localStorage.setItem(compositeKey, starterCodeMap[language] ?? "");
   };
 
   const debouncedSave = useCallback(
@@ -41,7 +51,7 @@ export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditor
       localStorage.setItem(compositeKey, value);
       console.log("Buffered code autosaved safely.");
     }, 400),
-    [compositeKey]
+    [compositeKey],
   );
 
   const handleEditorChange = (value: string | undefined) => {
@@ -108,17 +118,28 @@ export function ProblemEditorPanel({ problem_id, starterCodeMap }: ProblemEditor
       </div>
 
       <div className="flex flex-1 min-h-0 flex-col gap-4 p-5">
-        <div className="min-h-0 flex-[1.3]">
-          <ProblemCodeEditor
-            language={language}
-            code={code}
-            onLanguageChange={handleLanguageChange}
-            onCodeChange={handleEditorChange}
-          />
-        </div>
-        <div className="min-h-0 flex-[0.8]">
-          <ProblemTestCasesPanel />
-        </div>
+        <Group
+          orientation="vertical"
+          defaultLayout={{
+            "code-editor": 75,
+            "test-cases": 25,
+          }}
+        >
+          <Panel id="code-editor" defaultSize={75} minSize="50%" maxSize="75%">
+            <ProblemCodeEditor
+              language={language}
+              code={code}
+              onLanguageChange={handleLanguageChange}
+              onCodeChange={handleEditorChange}
+            />
+          </Panel>
+          <Separator className="group relative flex w-full h-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40">
+            <div className="h-1 w-8 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
+          </Separator>
+          <Panel id="test-cases" defaultSize={25}>
+            <ProblemTestCasesPanel />
+          </Panel>
+        </Group>
       </div>
     </section>
   );
