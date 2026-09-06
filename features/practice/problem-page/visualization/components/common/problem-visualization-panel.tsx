@@ -7,6 +7,7 @@ import {
   filterUserTrace,
   returnVisualizer,
 } from "@/features/practice/problem-page/visualization/utils";
+import { VisualizationPlaceholder } from "@/features/practice/problem-page/visualization/components/common/visualization-placeholder";
 
 export function ProblemVisualizationPanel() {
   const trace = filterUserTrace(useTraceStore((state) => state.trace));
@@ -33,7 +34,7 @@ export function ProblemVisualizationPanel() {
 
   return (
     <section className="flex h-full min-h-0 flex-col overflow-y-auto bg-background">
-      {currentStep && (
+      {currentStep ? (
         <ExecutionTrace
           currentStep={currentStepIndex + 1}
           totalSteps={trace.length}
@@ -84,7 +85,7 @@ export function ProblemVisualizationPanel() {
               />
           </div>
         </ExecutionTrace>
-      )}
+      ): <VisualizationPlaceholder />}
     </section>
   );
 }
