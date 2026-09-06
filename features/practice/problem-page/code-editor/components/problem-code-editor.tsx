@@ -25,7 +25,7 @@ export function ProblemCodeEditor({
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-border bg-background shadow-sm">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl bg-background shadow-sm">
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-muted text-muted-foreground">
@@ -57,13 +57,9 @@ export function ProblemCodeEditor({
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col bg-muted/20">
-        <div className="flex items-center justify-between border-b border-border px-4 py-2 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-          <span>{language}</span>
-          <span>Monaco editor</span>
-        </div>
 
-        <div className="min-h-0 flex-1 p-3">
-          <div className="h-full overflow-hidden rounded-lg border border-border bg-background">
+        <div className="min-h-0 flex-1">
+          <div className="h-full overflow-hidden bg-background">
             <Editor
               height="100%"
               defaultLanguage="python"
