@@ -221,7 +221,7 @@ export function ProblemEditorPanel({
 
             {/* Console Content */}
             <div className="min-h-0 flex-1">
-              <ProblemTestCasesPanel />
+              { isTestCaseSelected ? <ProblemTestCasesPanel /> : <div></div> }
             </div>
           </Panel>
         </Group>
