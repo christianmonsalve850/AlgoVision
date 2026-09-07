@@ -30,7 +30,7 @@ export type ProblemTestCaseTabProps = {
 };
 
 export type ProblemTestCaseOutputProps = {
-  value: string;
+  value?: string;
 };
 
 export type ProblemTestCaseDetailProps = {

@@ -28,6 +28,7 @@ import {
   Panel,
   PanelImperativeHandle,
 } from "react-resizable-panels";
+import { ProblemTestCaseOutput } from "@/features/practice/problem-page/code-editor/components/problem-test-case-output";
 
 function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
   let timeoutId: ReturnType<typeof setTimeout>;
@@ -111,7 +112,7 @@ export function ProblemEditorPanel({
         if (panel.isCollapsed()) {
           panel.expand();
         }
-        panel.resize(250);
+        panel.resize(300);
       } else {
         if (!panel.isCollapsed()) {
           panel.collapse();
@@ -180,8 +181,8 @@ export function ProblemEditorPanel({
             collapsible
             collapsedSize="40px"
             minSize="40px"
-            maxSize="300px"
-            defaultSize="250px"
+            maxSize="400px"
+            defaultSize="300px"
             onResize={(size) => {
               setIsOpenConsole(size.inPixels > 40);
             }}
@@ -221,7 +222,7 @@ export function ProblemEditorPanel({
 
             {/* Console Content */}
             <div className="min-h-0 flex-1">
-              { isTestCaseSelected ? <ProblemTestCasesPanel /> : <div></div> }
+              { isTestCaseSelected ? <ProblemTestCasesPanel /> : <ProblemTestCaseOutput /> }
             </div>
           </Panel>
         </Group>
