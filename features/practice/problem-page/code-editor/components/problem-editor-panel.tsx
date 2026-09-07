@@ -153,8 +153,8 @@ export function ProblemEditorPanel({
         <Group
           orientation="vertical"
           defaultLayout={{
-            "code-editor": 70,
-            "test-cases": 0,
+            "code-editor": 94.5,
+            "console": 5.5,
           }}
         >
           {/* Code Editor */}
@@ -175,10 +175,15 @@ export function ProblemEditorPanel({
           {/* Console */}
           <Panel
             panelRef={panelRef}
-            id="test-cases"
+            id="console"
             collapsible
-            collapsedSize={40}
-            minSize={40}
+            collapsedSize="40px"
+            minSize="40px"
+            maxSize="300px"
+            defaultSize="250px"
+            onResize={(size) => {
+              setIsOpenConsole(size.inPixels > 40);
+            }}
             className="flex min-h-0 flex-col"
           >
             {/* Console Header */}
