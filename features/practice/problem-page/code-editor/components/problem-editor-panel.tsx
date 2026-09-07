@@ -1,7 +1,15 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { Code2, Play, RotateCcw } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import {
+  Code2,
+  Play,
+  RotateCcw,
+  ChevronDown,
+  ChevronUp,
+  SquareCheck,
+  Terminal,
+} from "lucide-react";
 import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
 import type {
@@ -14,7 +22,12 @@ import type {
   ExecutionOutcome,
   TraceStep,
 } from "@/lib/algovision-harness/src/runtime/types";
-import { Group, Separator, Panel } from "react-resizable-panels";
+import {
+  Group,
+  Separator,
+  Panel,
+  PanelImperativeHandle,
+} from "react-resizable-panels";
 
 function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
   let timeoutId: ReturnType<typeof setTimeout>;
@@ -30,9 +43,12 @@ export function ProblemEditorPanel({
 }: ProblemEditorPanelProps) {
   const [language, setLanguage] = useState<Language>("Python");
   const [code, setCode] = useState(starterCodeMap[language] ?? "");
+  const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
 
   const setTrace = useTraceStore((state) => state.setTrace);
   const setIsRunning = useTraceStore((state) => state.setIsRunning);
+
+  const panelRef = useRef<PanelImperativeHandle>(null);
 
   const compositeKey = `problem:${problem_id}:${language}`;
 
@@ -87,6 +103,22 @@ export function ProblemEditorPanel({
     }
   }, [problem_id, language]);
 
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (panel) {
+      if (isOpenConsole) {
+        if (panel.isCollapsed()) {
+          panel.expand();
+        }
+        panel.resize(250);
+      } else {
+        if (!panel.isCollapsed()) {
+          panel.collapse();
+        }
+      }
+    }
+  }, [isOpenConsole]);
+
   return (
     <section className="flex h-full min-h-0 flex-col bg-background overflow-y-auto">
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
@@ -121,11 +153,12 @@ export function ProblemEditorPanel({
         <Group
           orientation="vertical"
           defaultLayout={{
-            "code-editor": 75,
-            "test-cases": 25,
+            "code-editor": 70,
+            "test-cases": 0,
           }}
         >
-          <Panel id="code-editor" defaultSize={75} minSize="50%" maxSize="75%">
+          {/* Code Editor */}
+          <Panel id="code-editor" defaultSize={70}>
             <ProblemCodeEditor
               language={language}
               code={code}
@@ -133,11 +166,51 @@ export function ProblemEditorPanel({
               onCodeChange={handleEditorChange}
             />
           </Panel>
+
+          {/* Resize Handle */}
           <Separator className="group relative flex w-full h-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-y border-border">
             <div className="h-1 w-8 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
           </Separator>
-          <Panel id="test-cases" defaultSize={25}>
-            <ProblemTestCasesPanel />
+
+          {/* Console */}
+          <Panel
+            panelRef={panelRef}
+            id="test-cases"
+            collapsible
+            collapsedSize={40}
+            minSize={40}
+            className="flex min-h-0 flex-col"
+          >
+            {/* Console Header */}
+            <div className="flex shrink-0 justify-between border-b border-border p-1">
+              <div className="group flex items-center">
+                <button className="flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent">
+                  <SquareCheck className="p-0.5 text-emerald-400" />
+                  Testcase
+                </button>
+
+                <div className="h-4 border-r border-border transition-opacity duration-150 group-hover:opacity-0" />
+
+                <button className="flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent">
+                  <Terminal className="p-0.5 text-emerald-400" />
+                  Output
+                </button>
+              </div>
+
+              <div className="flex items-center pr-2">
+                <button
+                  className="rounded-sm text-muted-foreground hover:bg-accent"
+                  onClick={() => setIsOpenConsole(!isOpenConsole)}
+                >
+                  {isOpenConsole ? <ChevronDown /> : <ChevronUp />}
+                </button>
+              </div>
+            </div>
+
+            {/* Console Content */}
+            <div className="min-h-0 flex-1">
+              <ProblemTestCasesPanel />
+            </div>
           </Panel>
         </Group>
       </div>

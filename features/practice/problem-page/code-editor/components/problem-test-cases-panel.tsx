@@ -4,7 +4,6 @@ import { useState } from "react";
 import { ProblemTestCaseDetail } from "@/features/practice/problem-page/code-editor/components/problem-test-case-detail";
 import { ProblemTestCaseTab } from "@/features/practice/problem-page/code-editor/components/problem-test-case-tab";
 import { testCases } from "@/features/practice/problem-page/code-editor/constants/problem-test-cases-data";
-import { SquareCheck, Terminal, ChevronDown, ChevronUp } from "lucide-react";
 
 export function ProblemTestCasesPanel() {
   const [selectedCaseId, setSelectedCaseId] = useState(testCases[0].id);
@@ -12,18 +11,8 @@ export function ProblemTestCasesPanel() {
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-background shadow-sm">
-      <div className="flex justify-between border-b border-border p-1">
-        <div className="group flex items-center">
-          <button className="flex text-foreground hover:bg-accent py-1 px-2 gap-1 text-sm items-center rounded-sm"><SquareCheck className="text-emerald-400 p-0.5" /> Testcase</button>
-          <div className="h-4 border-r border-border transition-opacity duration-150 group-hover:opacity-0" />
-          <button className="flex text-foreground hover:bg-accent py-1 px-2 gap-1 text-sm items-center rounded-sm"><Terminal className="text-emerald-400 p-0.5" /> Output</button>
-        </div>
-        <div className="flex items-center pr-2">
-          <button className="text-muted-foreground hover:bg-accent rounded-sm"><ChevronDown /></button>
-        </div>
-      </div>
       <div className="border-b border-border px-3 py-2.5 space-y-2">
-        <div className=" overflow-x-auto pb-1">
+        <div className="overflow-x-auto pb-1">
           <div className="flex min-w-max gap-1.5">
             {testCases.map((testCase) => {
               const isSelected = testCase.id === selectedCaseId;
