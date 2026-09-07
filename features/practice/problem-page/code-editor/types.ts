@@ -18,7 +18,7 @@ export type TestCaseStatus = "idle" | "passed" | "failed";
 
 export type TestCaseItem = {
   id: number;
-  input: string;
+  input: Record<string, string>;
   expected: string;
   status: TestCaseStatus;
 };

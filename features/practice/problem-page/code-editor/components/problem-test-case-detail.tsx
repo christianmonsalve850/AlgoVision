@@ -1,23 +1,25 @@
 import { ProblemTestCaseDetailProps } from "@/features/practice/problem-page/code-editor/types";
 
-export function ProblemTestCaseDetail({ testCase }: ProblemTestCaseDetailProps) {
+export function ProblemTestCaseDetail({
+  testCase,
+}: ProblemTestCaseDetailProps) {
   return (
-    <div className="rounded-lg  bg-background p-3">
-    
-        <div className="space-y-1">
-          <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Input</p>
-          <pre className="overflow-x-auto whitespace-pre-wrap text-xs text-foreground">
-            {testCase.input}
-          </pre>
-        </div>
-
-        <div className="space-y-1">
-          <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground mt-4">Expected</p>
-          <pre className="overflow-x-auto whitespace-pre-wrap text-xs text-foreground">
-            {testCase.expected}
-          </pre>
-        </div>
-    
+    <div className="bg-background">
+      <div className="space-y-3">
+        {Object.entries(testCase.input).map(([key, value]) => (
+          <div key={key} className="flex flex-col gap-1">
+            <span
+              className="overflow-x-auto whitespace-pre-wrap text-xs text-muted-foreground"
+            >
+              {`${key} =`}
+            </span>
+            <span 
+              className="mt-1 block w-full rounded-md bg-accent px-4 py-3 text-xs text-foreground font-mono">
+              {`${value}`}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
