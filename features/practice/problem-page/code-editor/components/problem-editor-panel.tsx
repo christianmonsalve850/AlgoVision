@@ -44,6 +44,7 @@ export function ProblemEditorPanel({
   const [language, setLanguage] = useState<Language>("Python");
   const [code, setCode] = useState(starterCodeMap[language] ?? "");
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
+  const [isTestCaseSelected, setIsTestCaseSelected] = useState<boolean>(true);
 
   const setTrace = useTraceStore((state) => state.setTrace);
   const setIsRunning = useTraceStore((state) => state.setIsRunning);
@@ -154,7 +155,7 @@ export function ProblemEditorPanel({
           orientation="vertical"
           defaultLayout={{
             "code-editor": 94.5,
-            "console": 5.5,
+            console: 5.5,
           }}
         >
           {/* Code Editor */}
@@ -189,14 +190,20 @@ export function ProblemEditorPanel({
             {/* Console Header */}
             <div className="flex shrink-0 justify-between border-b border-border p-1">
               <div className="group flex items-center">
-                <button className="flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent">
+                <button
+                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent ${!isTestCaseSelected ? "opacity-50" : ""}`}
+                  onClick={() => setIsTestCaseSelected(true)}
+                >
                   <SquareCheck className="p-0.5 text-emerald-400" />
                   Testcase
                 </button>
 
                 <div className="h-4 border-r border-border transition-opacity duration-150 group-hover:opacity-0" />
 
-                <button className="flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent">
+                <button
+                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent ${isTestCaseSelected ? "opacity-50" : ""}`}
+                  onClick={() => setIsTestCaseSelected(false)}
+                >
                   <Terminal className="p-0.5 text-emerald-400" />
                   Output
                 </button>
