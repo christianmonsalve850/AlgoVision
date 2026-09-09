@@ -1,6 +1,7 @@
 import { Brand } from "@/components/layout/brand"
 import { ThemeToggle } from "@/components/theme/theme-toggle"
 import { HeaderNav } from "@/components/layout/header-nav"
+import { AccountButton } from "@/components/layout/account-button"
 
 export default function Header() {
     return (
@@ -9,8 +10,10 @@ export default function Header() {
             <Brand />
             
             <HeaderNav />
-            
-            <ThemeToggle />
+            <div className="flex gap-3">
+                <ThemeToggle />
+                <AccountButton />
+            </div>
             
         </header>
     )

@@ -6,6 +6,18 @@ const nextConfig: NextConfig = {
     experimental: {
         webpackBuildWorker: true,
     },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'lh3.googleusercontent.com', // Google Profile Pictures
+            },
+            {
+                protocol: 'https',
+                hostname: 'avatars.githubusercontent.com', // GitHub Profile Pictures
+            },
+        ],
+    },
 };
 
 module.exports = withMDX(nextConfig)
