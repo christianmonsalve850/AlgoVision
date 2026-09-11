@@ -123,34 +123,6 @@ export function ProblemEditorPanel({
 
   return (
     <section className="flex h-full min-h-0 flex-col bg-background overflow-y-auto">
-      <div className="flex items-center justify-between border-b border-border px-5 py-4">
-        <div className="flex items-center gap-2">
-          <Code2 className="size-4 text-muted-foreground" />
-          <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-foreground">
-            Editor
-          </h2>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
-            onClick={handleReset}
-          >
-            <RotateCcw className="size-4" />
-            Reset
-          </button>
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 rounded-lg bg-foreground px-3 py-2 text-sm font-medium text-background transition-colors hover:opacity-90"
-            onClick={handleRun}
-          >
-            <Play className="size-4" />
-            Run
-          </button>
-        </div>
-      </div>
-
       <div className="flex flex-1 min-h-0 flex-col gap-4">
         <Group
           orientation="vertical"
