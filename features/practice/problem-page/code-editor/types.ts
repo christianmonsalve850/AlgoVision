@@ -2,13 +2,6 @@ export type Language = "Python" | "JavaScript" | "Java";
 
 export type StarterCodeMap = Partial<Record<Language, string>>;
 
-export type ProblemCodeEditorProps = {
-  language: Language;
-  code: string;
-  onLanguageChange: (language: Language) => void;
-  onCodeChange: (code: string | undefined) => void;
-};
-
 export type ProblemEditorPanelProps = {
   problem_id: string;
   starterCodeMap: StarterCodeMap;
