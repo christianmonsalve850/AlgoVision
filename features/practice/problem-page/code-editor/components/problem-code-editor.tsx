@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { ChevronDown, Play, RotateCcw, X } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
@@ -25,6 +25,8 @@ export function ProblemCodeEditor({
   const [language, setLanguage] = useState<Language>("Python");
   const [code, setCode] = useState(starterCodeMap[language] ?? "");
 
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const setTrace = useTraceStore((state) => state.setTrace);
   const setIsRunning = useTraceStore((state) => state.setIsRunning);
 
@@ -41,37 +43,31 @@ export function ProblemCodeEditor({
     setLanguage(nextLanguage);
   };
 
-  function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
-    let timeoutId: ReturnType<typeof setTimeout>;
-    return (...args: Parameters<T>) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => fn(...args), delay);
-    };
-  }
-
-  const debouncedSave = useCallback(
-    debounce((value: string) => {
-      if (!value) return;
-      localStorage.setItem(compositeKey, value);
-      console.log("Buffered code autosaved safely.");
-    }, 400),
-    [compositeKey],
-  );
-
   const handleEditorChange = (value: string | undefined) => {
     const currentCode = value || "";
     setCode(currentCode);
 
-    debouncedSave(currentCode);
+    // Clear existing timeout
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    // Set new timeout for 400ms after last keystroke
+    saveTimeoutRef.current = setTimeout(() => {
+      if (currentCode) {
+        localStorage.setItem(compositeKey, currentCode);
+      }
+    }, 400);
   };
 
   const handleReset = () => {
-    setCode(code ?? "");
-    localStorage.setItem(compositeKey, starterCodeMap[language] ?? "");
+    const defaultCode = starterCodeMap[language] ?? "";
+    setCode(defaultCode);
+    localStorage.setItem(compositeKey, defaultCode);
   };
 
-  const handleRun = useCallback(async () => {
-    console.log("Run clicked");
+  const handleRun = async () => {
+    console.log("Run clicked, executing code:", code);
     try {
       setIsRunning(true);
       const outcome: ExecutionOutcome = await executeTrace(code);
@@ -84,7 +80,7 @@ export function ProblemCodeEditor({
     } finally {
       setIsRunning(false);
     }
-  }, [code, setIsRunning, setTrace]);
+  };
 
   useEffect(() => {
     const savedCode = localStorage.getItem(compositeKey);
@@ -146,10 +142,8 @@ export function ProblemCodeEditor({
           <div className="flex m-2 overflow-x-auto">
             <div className="flex items-center gap-1.5 cursor-pointer text-sm text-foreground bg-muted px-2 py-1 rounded-sm">
               <span>Solution 1</span>
-              <button
-                type="button"
-              >
-                <X className="w-4 h-4 p-0.5 text-muted-foreground rounded-xs hover:text-red-400 hover:bg-red-400/20"/>
+              <button type="button">
+                <X className="w-4 h-4 p-0.5 text-muted-foreground rounded-xs hover:text-red-400 hover:bg-red-400/20" />
               </button>
             </div>
           </div>
