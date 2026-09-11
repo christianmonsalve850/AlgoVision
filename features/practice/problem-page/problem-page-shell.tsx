@@ -8,6 +8,7 @@ import { PlaybackControls } from "@/features/practice/problem-page/playback-cont
 import type { PlaybackSpeed } from "@/features/practice/problem-page/types";
 import { filterUserTrace } from "@/features/practice/problem-page/visualization/utils";
 import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace-store";
+import { ProblemPageHeader } from "@/features/practice/problem-page/problem-page-header";
 import { useEffect, useState } from "react";
 import {
   Panel,
@@ -61,6 +62,7 @@ export function ProblemPageShell({
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background">
+      <ProblemPageHeader title={problem.title} />
       <Group
         orientation="horizontal"
         defaultLayout={{
