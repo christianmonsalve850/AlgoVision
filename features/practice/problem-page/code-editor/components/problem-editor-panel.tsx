@@ -115,7 +115,7 @@ export function ProblemEditorPanel({
             </div>
 
             {/* Console Content */}
-            <div className="min-h-0 flex-1">
+            <div className="min-h-0 flex-1 overflow-y-auto">
               { isTestCaseSelected ? <ProblemTestCasesPanel /> : <ProblemTestCaseOutput /> }
             </div>
           </Panel>
