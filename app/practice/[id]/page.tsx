@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 
 import { ProblemPageShell } from "@/features/practice/problem-page/problem-page-shell";
 import type { Language } from "@/features/practice/problem-page/code-editor/types";
-import type { ProblemRecord, ProblemExample  } from "@/features/practice/problem-page/problem/types";
+import type { ProblemRecord, ProblemExample, TestCase  } from "@/features/practice/problem-page/problem/types";
 
 type ProblemPageProps = {
     params: Promise<{ id: string }>;
@@ -48,6 +48,18 @@ export default async function ProblemPage({ params } : ProblemPageProps) {
         console.log(starterCodeError)
     }
 
+    const { data: testCases, error: testCasesError } = await supabase
+        .from("test_cases")
+        .select()
+        .eq("problem_id", id)
+        .order("order_index", { ascending: true });
+
+    const problemTestCases = testCases as TestCase[]
+
+    if (testCasesError) {
+        console.log(testCasesError);
+    }
+
     const starterCodeMap = Object.fromEntries(
         (starterCode ?? []).map((row) => [
             row.language,
@@ -60,6 +72,7 @@ export default async function ProblemPage({ params } : ProblemPageProps) {
             problem={problem as ProblemRecord} 
             examples={(examples ?? []) as ProblemExample[]} 
             starterCodeMap={starterCodeMap}
+            testCases={problemTestCases}
         />
     )
 }

@@ -20,6 +20,7 @@ export function ProblemPageShell({
   problem,
   examples,
   starterCodeMap,
+  testCases
 }: ProblemPageData) {
   const trace = filterUserTrace(useTraceStore((state) => state.trace));
   const currentStepIndex = useTraceStore((state) => state.currentStepIndex);
@@ -81,6 +82,7 @@ export function ProblemPageShell({
           <ProblemEditorPanel
             problem_id={problem.id}
             starterCodeMap={starterCodeMap}
+            testCases={testCases}
           />
         </Panel>
         <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-x border-border">

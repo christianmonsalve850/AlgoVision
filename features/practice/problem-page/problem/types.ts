@@ -36,8 +36,19 @@ export type ProblemSidebarProps = {
   examples: ProblemExample[];
 };
 
+export interface TestCase {
+  id: string;
+  problem_id: string;
+  input: Record<string, any>;
+  expected_output: any;
+  is_hidden: boolean;
+  order_index: number;
+  created_at?: string;
+}
+
 export type ProblemEditorPanelProps = {
   starterCodeMap: StarterCodeMap;
+  testCases: TestCase[];
 };
 
 export type ProblemPageData = ProblemSidebarProps & ProblemEditorPanelProps;

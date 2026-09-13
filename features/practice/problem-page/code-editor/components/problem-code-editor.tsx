@@ -7,7 +7,7 @@ import { useTheme } from "@/components/theme/theme-provider";
 import { languageOptions } from "@/features/practice/problem-page/code-editor/constants/languages";
 import type {
   Language,
-  ProblemEditorPanelProps,
+  ProblemCodeEditorPanelProps,
 } from "@/features/practice/problem-page/code-editor/types";
 import { executeTrace } from "@/lib/algovision-harness/src/script";
 import { useTraceStore } from "../../stores/use-trace-store";
@@ -19,7 +19,7 @@ import type {
 export function ProblemCodeEditor({
   problem_id,
   starterCodeMap,
-}: ProblemEditorPanelProps) {
+}: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
 
   const [language, setLanguage] = useState<Language>("Python");

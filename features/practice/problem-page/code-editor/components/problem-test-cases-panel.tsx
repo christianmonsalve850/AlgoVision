@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { ProblemTestCaseDetail } from "@/features/practice/problem-page/code-editor/components/problem-test-case-detail";
 import { ProblemTestCasePill } from "@/features/practice/problem-page/code-editor/components/problem-test-case-pill";
-import { testCases } from "@/features/practice/problem-page/code-editor/constants/problem-test-cases-data";
+import { TestCase } from "@/features/practice/problem-page/code-editor/types";
 
-export function ProblemTestCasesPanel() {
+export function ProblemTestCasesPanel({ testCases } : {testCases : TestCase[]} ) {
+  console.log(testCases)
   const [selectedCaseId, setSelectedCaseId] = useState(testCases[0].id);
   const selectedCase =
     testCases.find((testCase) => testCase.id === selectedCaseId) ??

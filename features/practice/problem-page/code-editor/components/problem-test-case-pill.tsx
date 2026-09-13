@@ -15,7 +15,7 @@ export function ProblemTestCasePill({ testCase, selected, onSelect }: ProblemTes
         !selected && "bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
-      <span className="font-medium">Case {testCase.id}</span>
+      <span className="font-medium">Case {testCase.order_index}</span>
     </button>
   );
 }
