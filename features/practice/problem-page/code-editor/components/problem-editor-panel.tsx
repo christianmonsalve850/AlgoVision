@@ -10,7 +10,7 @@ import {
 import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
 import type {
-  ProblemEditorPanelProps,
+  ProblemEditorProps,
 } from "@/features/practice/problem-page/code-editor/types";
 import {
   Group,
@@ -24,7 +24,7 @@ export function ProblemEditorPanel({
   problem_id,
   starterCodeMap,
   testCases
-}: ProblemEditorPanelProps) {
+}: ProblemEditorProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [isTestCaseSelected, setIsTestCaseSelected] = useState<boolean>(true);
 
@@ -61,7 +61,6 @@ export function ProblemEditorPanel({
             <ProblemCodeEditor
               problem_id={problem_id}
               starterCodeMap={starterCodeMap}
-              testCases={testCases}
             />
           </Panel>
 
@@ -118,7 +117,10 @@ export function ProblemEditorPanel({
 
             {/* Console Content */}
             <div className="min-h-0 flex-1 overflow-y-auto">
-              { isTestCaseSelected ? <ProblemTestCasesPanel /> : <ProblemTestCaseOutput /> }
+              { isTestCaseSelected ? 
+                <ProblemTestCasesPanel testCases={testCases} /> : 
+                <ProblemTestCaseOutput /> 
+              }
             </div>
           </Panel>
         </Group>

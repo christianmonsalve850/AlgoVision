@@ -1,8 +1,6 @@
-import { ProblemTestCaseDetailProps } from "@/features/practice/problem-page/code-editor/types";
+import { TestCase } from "@/features/practice/problem-page/code-editor/types";
 
-export function ProblemTestCaseDetail({
-  testCase,
-}: ProblemTestCaseDetailProps) {
+export function ProblemTestCaseDetail({testCase} : {testCase : TestCase}) {
   return (
     <div className="bg-background">
       <div className="space-y-3">
@@ -15,7 +13,7 @@ export function ProblemTestCaseDetail({
             </span>
             <span 
               className="mt-1 block w-full rounded-md bg-accent px-4 py-3 text-xs text-foreground font-mono">
-              {`${value}`}
+              {JSON.stringify(value)}
             </span>
           </div>
         ))}

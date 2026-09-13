@@ -12,31 +12,25 @@ export interface TestCase {
   created_at?: string;
 }
 
-export type ProblemEditorPanelProps = {
+export type ProblemEditorProps = {
   problem_id: string;
   starterCodeMap: StarterCodeMap;
-  testCases: TestCase[]
+  testCases: TestCase[];
+};
+
+export type ProblemCodeEditorPanelProps = {
+  problem_id: string;
+  starterCodeMap: StarterCodeMap;
 };
 
 export type TestCaseStatus = "idle" | "passed" | "failed";
 
-export type TestCaseItem = {
-  id: number;
-  input: Record<string, string>;
-  expected: string;
-  status: TestCaseStatus;
-};
-
 export type ProblemTestCaseTabProps = {
-  testCase: TestCaseItem;
+  testCase: TestCase;
   selected: boolean;
-  onSelect: (id: number) => void;
+  onSelect: (id: string) => void;
 };
 
 export type ProblemTestCaseOutputProps = {
   value?: string;
-};
-
-export type ProblemTestCaseDetailProps = {
-  testCase: TestCaseItem;
 };
