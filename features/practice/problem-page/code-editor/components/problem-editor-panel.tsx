@@ -23,6 +23,7 @@ import { ProblemTestCaseOutput } from "@/features/practice/problem-page/code-edi
 export function ProblemEditorPanel({
   problem_id,
   starterCodeMap,
+  testCases
 }: ProblemEditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [isTestCaseSelected, setIsTestCaseSelected] = useState<boolean>(true);
@@ -60,6 +61,7 @@ export function ProblemEditorPanel({
             <ProblemCodeEditor
               problem_id={problem_id}
               starterCodeMap={starterCodeMap}
+              testCases={testCases}
             />
           </Panel>
 

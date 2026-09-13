@@ -2,9 +2,20 @@ export type Language = "Python" | "JavaScript" | "Java";
 
 export type StarterCodeMap = Partial<Record<Language, string>>;
 
+export interface TestCase {
+  id: string;
+  problem_id: string;
+  input: Record<string, any>;
+  expected_output: any;
+  is_hidden: boolean;
+  order_index: number;
+  created_at?: string;
+}
+
 export type ProblemEditorPanelProps = {
   problem_id: string;
   starterCodeMap: StarterCodeMap;
+  testCases: TestCase[]
 };
 
 export type TestCaseStatus = "idle" | "passed" | "failed";
