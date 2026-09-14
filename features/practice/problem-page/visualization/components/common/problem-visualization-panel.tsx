@@ -12,7 +12,7 @@ import type { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
 import {
   ArrayViewToggle,
   ArrayViewMode,
-} from "@/features/practice/problem-page/visualization/components/visualizers/array-view-toggle";
+} from "@/features/practice/problem-page/visualization/components/visualizers/array-mode-toggle";
 
 const EMPTY_TRACE: TraceStep[] = [];
 
