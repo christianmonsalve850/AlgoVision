@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useMemo, useState, SetStateAction, Dispatch } from "react";
 
 export interface Pointer {
   name: string;
@@ -39,7 +39,7 @@ export function ArrayVisualizer({
   keepPointers = false,
   highlightedIndices = [],
   mode = "bars",
-  maxBarHeight = 180,
+  maxBarHeight = 140,
   className = "",
 }: ArrayVisualizerProps) {
   const maxVal = useMemo(() => Math.max(...data, 1), [data]);
@@ -91,8 +91,8 @@ export function ArrayVisualizer({
   }
 
   return (
-    <div className={`flex flex-col items-center justify-center w-full min-w-0 p-2 ${className}`}>
-      <div className="flex items-end justify-center gap-1 sm:gap-2 w-full min-w-0 max-w-full pt-12">
+    <div className={`flex flex-col items-center justify-center w-full min-w-0 ${className}`}>
+      <div className="flex items-end justify-center gap-1 sm:gap-2 w-full min-w-0 max-w-full pt-8">
         {data.map((value, idx) => {
           const isHighlighted = displayedHighlightedIndices.includes(idx);
           const attachedPointers = pointersByIndex.get(idx) || [];
