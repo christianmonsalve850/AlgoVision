@@ -1,7 +1,7 @@
 // runtime/WorkerClient.ts
 
 import { WorkerRequest, WorkerResponse } from "./messages";
-import { ExecutionOutcome } from "./types";
+import { ExecutionOptions, ExecutionOutcome } from "./types";
 
 interface PendingRequest {
   resolve: (value: ExecutionOutcome) => void;
@@ -95,7 +95,11 @@ export class WorkerClient {
    * Dispatches code execution to the background thread, returning a promise
    * that resolves once the worker sends back the complete timeline trace.
    */
-  public async run(userCode: string): Promise<ExecutionOutcome> {
+  public async run(
+    userCode: string,
+    inputs: Record<string, unknown> = {},
+    execution?: ExecutionOptions,
+  ): Promise<ExecutionOutcome> {
     await this.initialize();
 
     if (!this.worker) {
@@ -111,6 +115,8 @@ export class WorkerClient {
       this.worker!.postMessage({
         type: "RUN",
         userCode,
+        inputs,
+        execution,
       } as WorkerRequest);
     });
   }

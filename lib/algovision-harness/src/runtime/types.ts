@@ -37,8 +37,17 @@ export interface ExecutionOutcome {
   duration?: number;
 }
 
+export interface TestCaseExecutionOutcome extends ExecutionOutcome {
+  testCaseId: string;
+}
+
 export interface RuntimeConfig {
   onStdout?: (text: string) => void;
   onStderr?: (text: string) => void;
   language?: SupportedLanguage;
+}
+
+export interface ExecutionOptions {
+  className?: string;
+  functionName?: string;
 }

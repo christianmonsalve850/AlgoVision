@@ -3,6 +3,10 @@
 export const BOOTSTRAP_PYTHON_SCRIPT = `
 
 analyzer_output = StaticAnalyzer.analyze(user_code)
+test_inputs = json.loads(test_inputs_json)
+context.execution_namespace = dict(test_inputs)
+context.execution_namespace["List"] = List
+execution_options = json.loads(execution_options_json)
 
 expression_map = analyzer_output.get("expression_map")
 line_metadata = analyzer_output.get("line_metadata")
@@ -172,6 +176,12 @@ duration_ms = None
 try:
     start_cpu = time.perf_counter()
     exec(compiled, context.execution_namespace)
+    class_name = execution_options.get("className")
+    function_name = execution_options.get("functionName")
+    if class_name and function_name:
+        solution = context.execution_namespace[class_name]()
+        solution_method = getattr(solution, function_name)
+        solution_method(**test_inputs)
     end_cpu = time.perf_counter()
     duration_ms = (end_cpu - start_cpu) * 1000
 except Exception as e:
@@ -183,6 +193,7 @@ except Exception as e:
             "message": str(e)
         }
     }
+    raise
 finally:
     settrace(None)
 

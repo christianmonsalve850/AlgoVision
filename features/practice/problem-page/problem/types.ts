@@ -29,6 +29,8 @@ export type ProblemRecord = {
   difficulty: Difficulty;
   pattern: PatternName;
   constraints: string[];
+  function_name: string;
+  class_name: string;
 };
 
 export type ProblemSidebarProps = {

@@ -9,16 +9,16 @@ import type {
   Language,
   ProblemCodeEditorPanelProps,
 } from "@/features/practice/problem-page/code-editor/types";
-import { executeTrace } from "@/lib/algovision-harness/src/script";
+import { executeTraceForTestCases } from "@/lib/algovision-harness/src/script";
 import { useTraceStore } from "../../stores/use-trace-store";
-import type {
-  ExecutionOutcome,
-  TraceStep,
-} from "@/lib/algovision-harness/src/runtime/types";
+import type {} from "@/lib/algovision-harness/src/runtime/types";
 
 export function ProblemCodeEditor({
   problem_id,
+  function_name,
+  class_name,
   starterCodeMap,
+  testCases,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
 
@@ -27,7 +27,7 @@ export function ProblemCodeEditor({
 
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const setTrace = useTraceStore((state) => state.setTrace);
+  const setTraceForCase = useTraceStore((state) => state.setTraceForCase);
   const setIsRunning = useTraceStore((state) => state.setIsRunning);
 
   const compositeKey = `problem:${problem_id}:${language}`;
@@ -66,15 +66,24 @@ export function ProblemCodeEditor({
     localStorage.setItem(compositeKey, defaultCode);
   };
 
+  const executionDetails = {
+    className: class_name,
+    functionName: function_name,
+  };
+
   const handleRun = async () => {
-    console.log("Run clicked, executing code:", code);
     try {
       setIsRunning(true);
-      const outcome: ExecutionOutcome = await executeTrace(code);
-
-      if (outcome?.trace) {
-        setTrace(outcome.trace as TraceStep[]);
+      const outcomes = await executeTraceForTestCases(
+        code,
+        testCases,
+        executionDetails,
+      );
+      console.log("OUTCOMES: ", outcomes);
+      for (const outcome of outcomes) {
+        setTraceForCase(outcome.testCaseId, outcome.trace);
       }
+      console.log(outcomes);
     } catch (error) {
       console.error("executeTrace error:", error);
     } finally {

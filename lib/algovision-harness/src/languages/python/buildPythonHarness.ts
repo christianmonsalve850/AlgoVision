@@ -24,6 +24,7 @@ import ast
 import json
 import types
 import sys
+from typing import List
 
 HARNESS_OPTIONS = {
     "max_trace_steps": ${maxTraceSteps},

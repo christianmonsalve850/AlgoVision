@@ -1,7 +1,7 @@
 // runtime/PythonRuntime.ts
 
 import { BrowserRuntime } from "./browser-runtime";
-import { ExecutionOutcome, RuntimeConfig, SupportedLanguage, TraceStep } from "./types";
+import { ExecutionOptions, ExecutionOutcome, RuntimeConfig, SupportedLanguage, TraceStep } from "./types";
 import type { PyodideInterface } from "pyodide";
 
 const PYODIDE_INDEX_URL = "https://cdn.jsdelivr.net/pyodide/v314.0.4/full/";
@@ -61,11 +61,15 @@ export class PythonRuntime {
     return (await this.runWithMetadata(userCode)).trace;
   }
 
-  public async runWithMetadata(userCode: string): Promise<ExecutionOutcome> {
+  public async runWithMetadata(
+    userCode: string,
+    inputs?: Record<string, unknown>,
+    execution?: ExecutionOptions,
+  ): Promise<ExecutionOutcome> {
     if (!this.browserRuntime) {
       throw new Error("Runtime has not been initialized. Call .initialize() first.");
     }
 
-    return this.browserRuntime.executeTraceWithMetadata(userCode);
+    return this.browserRuntime.executeTraceWithMetadata(userCode, inputs, execution);
   }
 }

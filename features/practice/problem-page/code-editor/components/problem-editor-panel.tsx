@@ -12,6 +12,7 @@ import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-edi
 import type {
   ProblemEditorProps,
 } from "@/features/practice/problem-page/code-editor/types";
+import type { ProblemCodeEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
 import {
   Group,
   Separator,
@@ -22,12 +23,14 @@ import { ProblemTestCaseOutput } from "@/features/practice/problem-page/code-edi
 
 export function ProblemEditorPanel({
   problem_id,
+  function_name,
+  class_name,
   starterCodeMap,
   testCases
-}: ProblemEditorProps) {
+}: ProblemCodeEditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [isTestCaseSelected, setIsTestCaseSelected] = useState<boolean>(true);
-
+  
   const panelRef = useRef<PanelImperativeHandle>(null);
 
   useEffect(() => {
@@ -60,7 +63,10 @@ export function ProblemEditorPanel({
           <Panel id="code-editor" defaultSize={70}>
             <ProblemCodeEditor
               problem_id={problem_id}
+              function_name={function_name}
+              class_name={class_name}
               starterCodeMap={starterCodeMap}
+              testCases={testCases}
             />
           </Panel>
 
