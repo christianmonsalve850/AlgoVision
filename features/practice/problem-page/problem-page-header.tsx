@@ -6,6 +6,7 @@ import { ChevronRight } from "lucide-react";
 
 export function ProblemPageHeader({title}: {title: string}) {
   const router = useRouter();
+
   return (
     <div className="flex items-center justify-between border-b border-border px-6 py-2.5 bg-background">
       {/* Left: Breadcrumbs */}

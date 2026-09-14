@@ -1,10 +1,14 @@
 import { PythonRuntime } from "./python-runtime";
-import { ExecutionOutcome, RuntimeConfig, SupportedLanguage, TraceStep } from "./types";
+import { ExecutionOptions, ExecutionOutcome, RuntimeConfig, SupportedLanguage, TraceStep } from "./types";
 
 export interface RuntimeAdapter {
   initialize(): Promise<void>;
   run(userCode: string): Promise<TraceStep[]>;
-  runWithMetadata(userCode: string): Promise<ExecutionOutcome>;
+  runWithMetadata(
+    userCode: string,
+    inputs?: Record<string, unknown>,
+    execution?: ExecutionOptions,
+  ): Promise<ExecutionOutcome>;
 }
 
 export function createRuntime(language: SupportedLanguage, config: RuntimeConfig = {}): RuntimeAdapter {

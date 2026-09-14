@@ -10,19 +10,23 @@ import { filterUserTrace } from "@/features/practice/problem-page/visualization/
 import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace-store";
 import { ProblemPageHeader } from "@/features/practice/problem-page/problem-page-header";
 import { useEffect, useState } from "react";
-import {
-  Panel,
-  Group,
-  Separator,
-} from "react-resizable-panels";
+import { Panel, Group, Separator } from "react-resizable-panels";
+import type { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+const EMPTY_TRACE: TraceStep[] = [];
 
 export function ProblemPageShell({
   problem,
   examples,
   starterCodeMap,
-  testCases
+  testCases,
 }: ProblemPageData) {
-  const trace = filterUserTrace(useTraceStore((state) => state.trace));
+  const activeCaseId = useTraceStore((state) => state.activeCaseId);
+  const activeTrace = useTraceStore(
+    (state) =>
+      (activeCaseId ? state.tracesByCaseId[activeCaseId] : undefined) ??
+      EMPTY_TRACE,
+  );
+  const trace = filterUserTrace(activeTrace);
   const currentStepIndex = useTraceStore((state) => state.currentStepIndex);
   const setCurrentStepIndex = useTraceStore(
     (state) => state.setCurrentStepIndex,
@@ -36,16 +40,25 @@ export function ProblemPageShell({
 
   const isDisabled = isAtEnd;
 
+  const resetTraces = useTraceStore((state) => state.resetTraces);
+
+  // Effect 1: Cleanup global Zustand state when leaving the page
+  useEffect(() => {
+    return () => {
+      resetTraces();
+    };
+  }, [resetTraces]);
+
+  // Effect 2: Prevent playing state desync when jumping to boundaries
   useEffect(() => {
     if (isAtEnd && isPlaying) {
       setIsPlaying(false);
     }
   }, [isAtEnd, isPlaying]);
 
+  // Effect 3: Execution playback loop
   useEffect(() => {
-    if (!isPlaying || isAtEnd) {
-      return;
-    }
+    if (!isPlaying || isAtEnd) return;
 
     const intervalId = window.setInterval(() => {
       setCurrentStepIndex((prev) => {
@@ -59,8 +72,13 @@ export function ProblemPageShell({
     }, 1000 / speed);
 
     return () => window.clearInterval(intervalId);
-  }, [isPlaying, isAtEnd, lastStepIndex, speed, setCurrentStepIndex]);
-
+  }, [
+    isPlaying,
+    isAtEnd,
+    lastStepIndex,
+    speed,
+    setCurrentStepIndex,
+  ]);
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background">
       <ProblemPageHeader title={problem.title} />
@@ -72,7 +90,12 @@ export function ProblemPageShell({
           "problem-visualization": 25,
         }}
       >
-        <Panel id="problem-sidebar" defaultSize={25} minSize="15%" maxSize="25%">
+        <Panel
+          id="problem-sidebar"
+          defaultSize={25}
+          minSize="15%"
+          maxSize="25%"
+        >
           <ProblemSidebar problem={problem} examples={examples} />
         </Panel>
         <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-x border-border">
@@ -81,6 +104,8 @@ export function ProblemPageShell({
         <Panel id="problem-editor" defaultSize={50}>
           <ProblemEditorPanel
             problem_id={problem.id}
+            function_name={problem.function_name}
+            class_name={problem.class_name}
             starterCodeMap={starterCodeMap}
             testCases={testCases}
           />
@@ -88,7 +113,12 @@ export function ProblemPageShell({
         <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-x border-border">
           <div className="h-8 w-1 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
         </Separator>
-        <Panel id="problem-visualization" defaultSize={25} minSize="20%" maxSize="40%">
+        <Panel
+          id="problem-visualization"
+          defaultSize={25}
+          minSize="20%"
+          maxSize="40%"
+        >
           <ProblemVisualizationPanel />
         </Panel>
       </Group>

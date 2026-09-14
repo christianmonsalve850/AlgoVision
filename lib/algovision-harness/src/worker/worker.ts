@@ -25,7 +25,11 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 
     case "RUN":
       try {
-        const executionResult = await runtime.runWithMetadata(String(message.userCode));
+        const executionResult = await runtime.runWithMetadata(
+          String(message.userCode),
+          message.inputs,
+          message.execution,
+        );
         self.postMessage(createWorkerSuccessResponse(executionResult.trace, executionResult.duration));
       } catch (err: any) {
         self.postMessage(createWorkerErrorResponse(err.message || "Runtime execution tracking exception."));

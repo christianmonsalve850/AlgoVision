@@ -1,16 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProblemTestCaseDetail } from "@/features/practice/problem-page/code-editor/components/problem-test-case-detail";
 import { ProblemTestCasePill } from "@/features/practice/problem-page/code-editor/components/problem-test-case-pill";
 import { TestCase } from "@/features/practice/problem-page/code-editor/types";
+import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace-store";
 
-export function ProblemTestCasesPanel({ testCases } : {testCases : TestCase[]} ) {
-  console.log(testCases)
-  const [selectedCaseId, setSelectedCaseId] = useState(testCases[0].id);
+export function ProblemTestCasesPanel({
+  testCases,
+}: {
+  testCases: TestCase[];
+}) {
+  const [selectedCaseId, setSelectedCaseId] = useState(testCases[0]?.id);
+
   const selectedCase =
     testCases.find((testCase) => testCase.id === selectedCaseId) ??
     testCases[0];
+
+  const setActiveCaseId = useTraceStore((state) => state.setActiveCaseId);
+
+  useEffect(() => {
+    const firstCaseId = testCases[0]?.id;
+    if (firstCaseId) {
+      setActiveCaseId(firstCaseId);
+    }
+  }, [testCases, setActiveCaseId]);
+  
+  const handleCaseSelect = (caseId: string) => {
+    setSelectedCaseId(caseId);
+    setActiveCaseId(caseId);
+  };
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-background shadow-sm p-4">
@@ -18,13 +37,13 @@ export function ProblemTestCasesPanel({ testCases } : {testCases : TestCase[]} )
         <div className="flex min-w-max gap-2">
           {testCases.map((testCase) => {
             const isSelected = testCase.id === selectedCaseId;
-
+            console.log(isSelected)
             return (
               <ProblemTestCasePill
                 key={testCase.id}
                 testCase={testCase}
                 selected={isSelected}
-                onSelect={setSelectedCaseId}
+                onSelect={handleCaseSelect}
               />
             );
           })}

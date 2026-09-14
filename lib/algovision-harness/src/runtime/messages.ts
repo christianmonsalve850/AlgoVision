@@ -10,6 +10,11 @@ export interface WorkerResponse {
 export interface WorkerRequest {
   type: "INITIALIZE" | "RUN";
   userCode?: string;
+  inputs?: Record<string, unknown>;
+  execution?: {
+    className?: string;
+    functionName?: string;
+  };
 }
 
 export function createWorkerSuccessResponse(trace: TraceStep[] = [], duration?: number): WorkerResponse {

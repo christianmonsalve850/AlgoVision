@@ -20,7 +20,10 @@ export type ProblemEditorProps = {
 
 export type ProblemCodeEditorPanelProps = {
   problem_id: string;
+  function_name: string;
+  class_name: string;
   starterCodeMap: StarterCodeMap;
+  testCases: TestCase[];
 };
 
 export type TestCaseStatus = "idle" | "passed" | "failed";

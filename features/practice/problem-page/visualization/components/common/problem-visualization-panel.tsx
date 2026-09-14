@@ -8,9 +8,15 @@ import {
   returnVisualizer,
 } from "@/features/practice/problem-page/visualization/utils";
 import { VisualizationPlaceholder } from "@/features/practice/problem-page/visualization/components/common/visualization-placeholder";
+import type { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+
+const EMPTY_TRACE: TraceStep[] = [];
 
 export function ProblemVisualizationPanel() {
-  const trace = filterUserTrace(useTraceStore((state) => state.trace));
+  const activeTrace = useTraceStore(
+    (state) => (state.activeCaseId ? state.tracesByCaseId[state.activeCaseId] : undefined) ?? EMPTY_TRACE
+  );
+  const trace = filterUserTrace(activeTrace);
   const currentStepIndex = useTraceStore((state) => state.currentStepIndex);
 
   const setCurrentStepIndex = useTraceStore(

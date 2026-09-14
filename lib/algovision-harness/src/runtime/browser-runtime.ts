@@ -1,6 +1,6 @@
 import { buildPythonHarness, HarnessOptions } from "../languages/python/buildPythonHarness";
 
-import { ExecutionOutcome, SupportedLanguage, TraceStep } from "./types";
+import { ExecutionOptions, ExecutionOutcome, SupportedLanguage, TraceStep } from "./types";
 import { PyodideInterface } from "pyodide";
 
 export type HarnessLanguage = SupportedLanguage;
@@ -46,7 +46,11 @@ export class BrowserRuntime {
     return outcome.trace;
   }
 
-  public async executeTraceWithMetadata(userCode: string): Promise<ExecutionOutcome> {
+  public async executeTraceWithMetadata(
+    userCode: string,
+    inputs: Record<string, unknown> = {},
+    execution: ExecutionOptions = {},
+  ): Promise<ExecutionOutcome> {
     try {
       const harnessOptions: HarnessOptions = {
         source: userCode,
@@ -56,6 +60,8 @@ export class BrowserRuntime {
 
       const locals = this.pyodide.toPy({
         user_code: userCode,
+        test_inputs_json: JSON.stringify(inputs),
+        execution_options_json: JSON.stringify(execution),
       });
 
       const harness = buildPythonHarness(harnessOptions);
