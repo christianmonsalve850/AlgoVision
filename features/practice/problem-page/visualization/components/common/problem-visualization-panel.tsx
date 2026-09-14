@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { VariableState } from "@/features/practice/problem-page/visualization/components/common/variable-state";
 import { ExecutionStep } from "@/features/practice/problem-page/visualization/components/common/execution-step";
 import { ExecutionTrace } from "@/features/practice/problem-page/visualization/components/common/execution-trace";
@@ -9,7 +9,10 @@ import {
 } from "@/features/practice/problem-page/visualization/utils";
 import { VisualizationPlaceholder } from "@/features/practice/problem-page/visualization/components/common/visualization-placeholder";
 import type { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
-import { ArrayViewToggle } from "@/features/practice/problem-page/visualization/components/visualizers/array-view-toggle";
+import {
+  ArrayViewToggle,
+  ArrayViewMode,
+} from "@/features/practice/problem-page/visualization/components/visualizers/array-view-toggle";
 
 const EMPTY_TRACE: TraceStep[] = [];
 
@@ -26,18 +29,29 @@ export function ProblemVisualizationPanel() {
 
   const currentStep = trace[currentStepIndex];
 
+  const [arrayModes, setArrayModes] = useState<
+    Record<string, ArrayViewMode>
+  >({});
+
+  const updateArrayMode = (arrayName: string, mode: ArrayViewMode) => {
+    setArrayModes((currentModes) => ({
+      ...currentModes,
+      [arrayName]: mode,
+    }));
+  };
+
   const dataStructures = useMemo(() => {
     if (!currentStep) return [];
 
     // Get all rendered visualizers for the current step
-    const visualizers = returnVisualizer(currentStep);
+    const visualizers = returnVisualizer(currentStep, arrayModes);
 
     return visualizers.map((viz) => ({
       name: viz.name,
       type: viz.type,
       component: viz.visualization,
     }));
-  }, [currentStep]);
+  }, [arrayModes, currentStep]);
 
   return (
     <section className="flex h-full min-h-0 flex-col overflow-y-auto bg-background">
@@ -72,8 +86,16 @@ export function ProblemVisualizationPanel() {
                           {dataStructure.name}
                         </span>
                       </div>
+                      
+                      {dataStructure.type === "array" && (
+                        <ArrayViewToggle
+                          mode={arrayModes[dataStructure.name] ?? "cells"}
+                          onModeChange={(mode) =>
+                            updateArrayMode(dataStructure.name, mode)
+                          }
+                        />
+                      )}
 
-                      <ArrayViewToggle />
                       <span className="font-mono text-[10px] uppercase px-1.5 py-0.5 rounded border border-border bg-accent text-muted-foreground font-medium tracking-wide">
                         {dataStructure.type}
                       </span>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useMemo, useState, SetStateAction, Dispatch } from "react";
 
 export interface Pointer {
   name: string;
@@ -20,6 +20,7 @@ export interface ArrayVisualizerProps {
   highlightedIndices?: number[];
   /** Render mode: horizontal cell sequence or vertical bar chart */
   mode?: "cells" | "bars";
+  setMode?: Dispatch<SetStateAction<"cells" | "bars">>;
   /** Max height for bars mode in pixels */
   maxBarHeight?: number;
   className?: string;

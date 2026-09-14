@@ -18,7 +18,6 @@ export interface ArrayVisualizerConfig {
     pointers?: Pointer[];
     keepPointers?: boolean;
     highlightedIndices?: number[];
-    mode?: "cells" | "bars";
     maxBarHeight?: number;
   };
 }
@@ -246,7 +245,6 @@ export function getVisualizers(currentStep: TraceStep): VisualizerConfig[] {
           pointers,
           keepPointers: true,
           highlightedIndices, // Now includes literal indices as well as pointer locations
-          mode: "cells",
         },
       });
     });
@@ -322,19 +320,25 @@ export function getVisualizers(currentStep: TraceStep): VisualizerConfig[] {
   return visualizers;
 }
 
-export function returnVisualizer(currentStep: TraceStep): RenderedVisualizer[] {
+export function returnVisualizer(
+  currentStep: TraceStep,
+  arrayModes: Record<string, "cells" | "bars">,
+): RenderedVisualizer[] {
   const visualizers: VisualizerConfig[] = getVisualizers(currentStep);
 
   return visualizers
     .map((visualizer): RenderedVisualizer | null => {
       switch (visualizer.type) {
-        case "array":
+        case "array":    
           return {
             name: visualizer.name,
             type: visualizer.type,
             visualization: React.createElement(
               ArrayVisualizer,
-              visualizer.props,
+              {
+                ...visualizer.props,
+                mode: arrayModes[visualizer.name] ?? "cells",
+              },
             ),
           };
         case "hashmap":
