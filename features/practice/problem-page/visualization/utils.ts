@@ -146,16 +146,15 @@ export function arrayVariable(currentStep: TraceStep) {
   const entries = getDisplayVariables(currentStep.variables);
 
   const found = entries.find(
-    ([, v]) =>
-      Array.isArray(v) && v.every((el) => typeof el === "number"),
+    ([, v]) => Array.isArray(v) && v.every((el) => typeof el === "number"),
   );
   if (!found) return null;
   return { name: found[0], data: found[1] as number[] };
 }
 
 export function parsePythonIndices(
-  expression: string, 
-  varName?: string
+  expression: string,
+  varName?: string,
 ): { variables: string[]; literals: number[] } {
   if (!expression) return { variables: [], literals: [] };
 
@@ -163,7 +162,7 @@ export function parsePythonIndices(
   const pattern = varName
     ? new RegExp(
         `${varName}\\s*\\[\\s*(?:([a-zA-Za-z_][a-zA-Z0-9_]*)|(\\d+))\\s*\\]`,
-        "g"
+        "g",
       )
     : /\[\s*(?:([a-zA-Za-z_][a-zA-Z0-9_]*)|(\d+))\s*\]/g;
 
@@ -187,7 +186,7 @@ export function parsePythonIndices(
 
 export function expressionPointers(
   currentStep: TraceStep,
-  varName: string
+  varName: string,
 ): ExpressionPointersResult {
   if (!currentStep?.expression) {
     return { pointers: [], highlightedIndices: [] };
@@ -195,7 +194,7 @@ export function expressionPointers(
 
   const { variables, literals } = parsePythonIndices(
     currentStep.expression,
-    varName
+    varName,
   );
 
   const pointers: Pointer[] = variables
@@ -213,7 +212,7 @@ export function expressionPointers(
 
   const pointerIndices = pointers.map((p) => p.index);
   const highlightedIndices = Array.from(
-    new Set([...pointerIndices, ...literals])
+    new Set([...pointerIndices, ...literals]),
   );
 
   return {
@@ -232,25 +231,26 @@ export function getVisualizers(currentStep: TraceStep): VisualizerConfig[] {
   );
 
   if (arrayCandidates.length > 0) {
-  arrayCandidates.forEach(([varName, varValue]) => {
-    // Destructure both properties directly from expressionPointers
-    const { pointers, highlightedIndices } = expressionPointers(
-      currentStep,
-      varName
-    );
-    
-    visualizers.push({
-      name: varName,
-      type: "array",
-      props: {
-        data: varValue as number[],
-        pointers,
-        keepPointers: true,
-        highlightedIndices, // Now includes literal indices as well as pointer locations
-      },
+    arrayCandidates.forEach(([varName, varValue]) => {
+      // Destructure both properties directly from expressionPointers
+      const { pointers, highlightedIndices } = expressionPointers(
+        currentStep,
+        varName,
+      );
+
+      visualizers.push({
+        name: varName,
+        type: "array",
+        props: {
+          data: varValue as number[],
+          pointers,
+          keepPointers: true,
+          highlightedIndices, // Now includes literal indices as well as pointer locations
+          mode: "cells",
+        },
+      });
     });
-  });
-}
+  }
 
   // 2. Hashmap Visualizers
   const objectCandidates = displayVars.filter(
@@ -292,7 +292,9 @@ export function getVisualizers(currentStep: TraceStep): VisualizerConfig[] {
   }
 
   // 4. Graph Visualizer
-  if (/(\b(graph|adj|neighbors|edges|vertex|vertices|node)\b)/.test(expression)) {
+  if (
+    /(\b(graph|adj|neighbors|edges|vertex|vertices|node)\b)/.test(expression)
+  ) {
     const pointers = undefined;
     visualizers.push({
       name: "graph",
@@ -330,7 +332,10 @@ export function returnVisualizer(currentStep: TraceStep): RenderedVisualizer[] {
           return {
             name: visualizer.name,
             type: visualizer.type,
-            visualization: React.createElement(ArrayVisualizer, visualizer.props),
+            visualization: React.createElement(
+              ArrayVisualizer,
+              visualizer.props,
+            ),
           };
         case "hashmap":
         case "tree":

@@ -9,6 +9,7 @@ import {
 } from "@/features/practice/problem-page/visualization/utils";
 import { VisualizationPlaceholder } from "@/features/practice/problem-page/visualization/components/common/visualization-placeholder";
 import type { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import { ArrayViewToggle } from "@/features/practice/problem-page/visualization/components/visualizers/array-view-toggle";
 
 const EMPTY_TRACE: TraceStep[] = [];
 
@@ -72,6 +73,7 @@ export function ProblemVisualizationPanel() {
                         </span>
                       </div>
 
+                      <ArrayViewToggle />
                       <span className="font-mono text-[10px] uppercase px-1.5 py-0.5 rounded border border-border bg-accent text-muted-foreground font-medium tracking-wide">
                         {dataStructure.type}
                       </span>
