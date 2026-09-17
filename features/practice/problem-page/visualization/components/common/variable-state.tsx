@@ -47,7 +47,7 @@ export function VariableState({ variables, changedVariables }: VariableStateProp
             <div
               key={name}
               className={`grid grid-cols-12 items-center rounded-md px-2 py-1.5 transition-all duration-300 ${
-                isHighlighted ? "bg-emerald-700/50 ring-1 ring-emerald-400/40" : "hover:bg-card-foreground/20"
+                isHighlighted ? "bg-emerald-500/60 dark:bg-emerald-700/50 ring-1 ring-emerald-600/80 dark:ring-emerald-400/40" : "hover:bg-card-foreground/20"
               }`}
             >
               <span className="col-span-4 truncate font-medium text-muted-foreground">{name}</span>
