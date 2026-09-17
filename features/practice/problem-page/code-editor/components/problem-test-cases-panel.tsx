@@ -21,6 +21,7 @@ export function ProblemTestCasesPanel({
 
   useEffect(() => {
     const firstCaseId = testCases[0]?.id;
+    console.log(useTraceStore.getState().tracesByCaseId[firstCaseId])
     if (firstCaseId) {
       setActiveCaseId(firstCaseId);
     }
@@ -37,7 +38,6 @@ export function ProblemTestCasesPanel({
         <div className="flex min-w-max gap-2">
           {testCases.map((testCase) => {
             const isSelected = testCase.id === selectedCaseId;
-            console.log(isSelected)
             return (
               <ProblemTestCasePill
                 key={testCase.id}

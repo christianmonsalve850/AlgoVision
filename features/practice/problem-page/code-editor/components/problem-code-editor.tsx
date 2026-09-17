@@ -11,7 +11,7 @@ import type {
 } from "@/features/practice/problem-page/code-editor/types";
 import { executeTraceForTestCases } from "@/lib/algovision-harness/src/script";
 import { useTraceStore } from "../../stores/use-trace-store";
-import type {} from "@/lib/algovision-harness/src/runtime/types";
+import { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
 
 export function ProblemCodeEditor({
   problem_id,
@@ -79,17 +79,34 @@ export function ProblemCodeEditor({
         testCases,
         executionDetails,
       );
-      console.log("OUTCOMES: ", outcomes);
       for (const outcome of outcomes) {
         setTraceForCase(outcome.testCaseId, outcome.trace);
       }
-      console.log(outcomes);
     } catch (error) {
       console.error("executeTrace error:", error);
     } finally {
       setIsRunning(false);
     }
   };
+
+  function getReturnValue(trace: TraceStep[], targetFunction: string) {
+    // 1. Filter for return events matching the main function entry point
+    const returnEvents = trace.filter(
+      (step) => step.event === "return" && step.function === targetFunction,
+    );
+
+    if (returnEvents.length === 0) return undefined;
+
+    // 2. Find the minimum call_depth recorded among matching returns
+    const minDepth = Math.min(...returnEvents.map((step) => step.call_depth));
+
+    // 3. Get the last return event occurring at that base call_depth
+    const outerReturns = returnEvents.filter(
+      (step) => step.call_depth === minDepth,
+    );
+
+    return outerReturns[outerReturns.length - 1]?.return_value;
+  }
 
   useEffect(() => {
     const savedCode = localStorage.getItem(compositeKey);
