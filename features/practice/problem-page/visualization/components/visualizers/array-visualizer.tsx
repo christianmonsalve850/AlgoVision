@@ -104,7 +104,7 @@ export function ArrayVisualizer({
               className="relative flex-1 min-w-0 max-w-11 flex flex-col items-center group"
             >
               {/* STACKED POINTER BADGES */}
-              <div className="absolute -top-9 flex flex-col items-center gap-0.5 z-10 w-full min-w-0">
+              <div className="absolute -top-6 flex flex-col items-center gap-0.5 z-10 w-full min-w-0">
                 <AnimatePresence>
                   {attachedPointers.map((pointer) => {
                     const colorStyle =
