@@ -104,7 +104,7 @@ export function ArrayVisualizer({
               className="relative flex-1 min-w-0 max-w-11 flex flex-col items-center group"
             >
               {/* STACKED POINTER BADGES */}
-              <div className="absolute -top-9 flex flex-col items-center gap-0.5 z-10 w-full min-w-0">
+              <div className="absolute -top-6 flex flex-col items-center gap-0.5 z-10 w-full min-w-0">
                 <AnimatePresence>
                   {attachedPointers.map((pointer) => {
                     const colorStyle =
@@ -135,10 +135,10 @@ export function ArrayVisualizer({
                   className={`relative flex w-full flex-col items-center justify-between rounded-md border p-0.5 transition-colors ${
                     isHighlighted
                       ? "border-purple-400 bg-purple-500/20 shadow-md shadow-purple-500/10"
-                      : "border-border bg-muted hover:border-muted"
+                      : "border-border bg-muted text-foreground hover:border-muted"
                   }`}
                 >
-                  <span className="font-mono text-[10px] font-bold text-foreground truncate">
+                  <span className="font-mono text-[10px] font-bold truncate">
                     {value}
                   </span>
                 </motion.div>
@@ -146,13 +146,13 @@ export function ArrayVisualizer({
                 <motion.div
                   layout
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  className={`flex w-full aspect-square items-center justify-center rounded-md border font-mono text-xs font-bold transition-colors ${
+                  className={`flex w-full aspect-square items-center justify-center rounded-md border font-mono text-xs font-bold transition-colors text-foreground ${
                     isHighlighted
-                      ? "border-purple-400 bg-purple-500/20 text-purple-200"
-                      : "border-border/80 bg-zinc-900/90 text-zinc-200"
+                      ? "border-purple-400 bg-purple-500/20 shadow-md shadow-purple-500/10"
+                      : "border-border bg-muted hover:border-muted"
                   }`}
                 >
-                  <span className="truncate">{value}</span>
+                  <span className="font-mono text-[10px] font-bold truncate">{value}</span>
                 </motion.div>
               )}
 
