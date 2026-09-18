@@ -37,7 +37,6 @@ export function ProblemTestCasesPanel({
         <div className="flex min-w-max gap-2">
           {testCases.map((testCase) => {
             const isSelected = testCase.id === selectedCaseId;
-            console.log(isSelected)
             return (
               <ProblemTestCasePill
                 key={testCase.id}
