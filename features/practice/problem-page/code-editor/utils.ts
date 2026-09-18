@@ -1,7 +1,7 @@
 import { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
 
 // Safely evaluate equality across primitives, arrays, and objects
-function isEqual(actual: any, expected: any): boolean {
+export function isEqual(actual: any, expected: any): boolean {
   try {
     return JSON.stringify(actual) === JSON.stringify(expected);
   } catch {
@@ -10,7 +10,7 @@ function isEqual(actual: any, expected: any): boolean {
 }
 
 // Extract output or exception status from trace
-function evaluateTrace(trace: TraceStep[], targetFunction: string) {
+export function evaluateTrace(trace: TraceStep[], targetFunction: string) {
   // Check if trace ended in an exception/error
   const exceptionStep = trace.find((step) => step.event === "exception");
   if (exceptionStep) {

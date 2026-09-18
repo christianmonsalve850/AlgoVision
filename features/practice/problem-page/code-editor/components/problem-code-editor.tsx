@@ -10,8 +10,11 @@ import type {
   ProblemCodeEditorPanelProps,
 } from "@/features/practice/problem-page/code-editor/types";
 import { executeTraceForTestCases } from "@/lib/algovision-harness/src/script";
-import { useTraceStore } from "../../stores/use-trace-store";
-import { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import { TestResult, useTraceStore } from "../../stores/use-trace-store";
+import {
+  evaluateTrace,
+  isEqual,
+} from "@/features/practice/problem-page/code-editor/utils";
 
 export function ProblemCodeEditor({
   problem_id,
@@ -79,8 +82,43 @@ export function ProblemCodeEditor({
         testCases,
         executionDetails,
       );
-      for (const outcome of outcomes) {
-        setTraceForCase(outcome.testCaseId, outcome.trace);
+      // Grade each test case outcome
+      const gradedResults = outcomes.map((outcome) => {
+        const testCase = testCases.find((tc) => tc.id === outcome.testCaseId);
+        const evalResult = evaluateTrace(outcome.trace, function_name);
+
+        let isPassed = false;
+        let status: "passed" | "failed" | "error" = "failed";
+
+        if (evalResult.status === "error") {
+          status = "error";
+        } else {
+          isPassed = isEqual(
+            evalResult.actualOutput,
+            testCase?.expected_output,
+          );
+          status = isPassed ? "passed" : "failed";
+        }
+
+        return {
+          ...outcome,
+          passed: isPassed,
+          status, // "passed" | "failed" | "error"
+          actualOutput: evalResult.actualOutput,
+          expectedOutput: testCase?.expected_output,
+          error: evalResult.error,
+        };
+      });
+
+      // Update state/store
+      for (const result of gradedResults) {
+        const testStatus = {
+          passed: result.passed,
+          status: result.status,
+          actualOutput: result.actualOutput,
+        } as TestResult;
+
+        setTraceForCase(result.testCaseId, result.trace, testStatus);
       }
     } catch (error) {
       console.error("executeTrace error:", error);

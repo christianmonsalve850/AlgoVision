@@ -21,7 +21,6 @@ export function ProblemTestCasesPanel({
 
   useEffect(() => {
     const firstCaseId = testCases[0]?.id;
-    console.log(useTraceStore.getState().tracesByCaseId[firstCaseId])
     if (firstCaseId) {
       setActiveCaseId(firstCaseId);
     }

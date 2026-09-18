@@ -1,35 +1,47 @@
 import { create } from "zustand";
 import { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
 
+export type TestResult =
+  | {
+      passed: boolean;
+      status: "passed" | "error" | "failed";
+      actualOutput: any;
+    }
+  | undefined;
+
 interface TraceState {
   // Map of test case ID to its corresponding trace steps
   tracesByCaseId: Record<string, TraceStep[]>;
+  testStatusByCaseId: Record<string, TestResult>;
   activeCaseId: string | null;
   currentStepIndex: number;
   isRunning: boolean;
 
   // Actions
-  setTraceForCase: (caseId: string, trace: TraceStep[]) => void;
+  setTraceForCase: (
+    caseId: string,
+    trace: TraceStep[],
+    testResult: TestResult,
+  ) => void;
   setActiveCaseId: (caseId: string) => void;
   setCurrentStepIndex: (
-    index: number | ((prevIndex: number) => number)
+    index: number | ((prevIndex: number) => number),
   ) => void;
   setIsRunning: (isRunning: boolean) => void;
   resetTraces: () => void;
 }
+
 export const useTraceStore = create<TraceState>((set) => ({
   tracesByCaseId: {},
+  testStatusByCaseId: {},
   activeCaseId: null,
   currentStepIndex: 0,
   isRunning: false,
 
-  // Set or update the trace for a specific test case ID
-  setTraceForCase: (caseId, trace) =>
+  setTraceForCase: (caseId, trace, testStatus) =>
     set((state) => ({
-      tracesByCaseId: {
-        ...state.tracesByCaseId,
-        [caseId]: trace,
-      },
+      tracesByCaseId: { ...state.tracesByCaseId, [caseId]: trace },
+      testStatusByCaseId: { ...state.testStatusByCaseId, [caseId]: testStatus },
     })),
 
   // Switch active case without wiping stored traces
