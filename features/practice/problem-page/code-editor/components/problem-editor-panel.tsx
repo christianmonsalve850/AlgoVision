@@ -9,9 +9,6 @@ import {
 } from "lucide-react";
 import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
-import type {
-  ProblemEditorProps,
-} from "@/features/practice/problem-page/code-editor/types";
 import type { ProblemCodeEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
 import {
   Group,
@@ -19,7 +16,6 @@ import {
   Panel,
   PanelImperativeHandle,
 } from "react-resizable-panels";
-import { ProblemTestCaseOutput } from "@/features/practice/problem-page/code-editor/components/problem-test-case-output";
 
 export function ProblemEditorPanel({
   problem_id,
@@ -125,7 +121,7 @@ export function ProblemEditorPanel({
             <div className="min-h-0 flex-1 overflow-y-auto">
               { isTestCaseSelected ? 
                 <ProblemTestCasesPanel testCases={testCases} /> : 
-                <ProblemTestCaseOutput /> 
+                <div></div>
               }
             </div>
           </Panel>
