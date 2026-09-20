@@ -243,7 +243,7 @@ def tracer(frame, event, arg=None):
             emit_event("call", frame, expression, current_variables)
 
     elif event == "return":
-        if frame.f_code.co_name != "<module>" and arg:
+        if frame.f_code.co_name != "<module>":
             emit_event("return", frame, expression, current_variables, {
                 "return_value": copy.deepcopy(arg)  # arg contains the return value
             })
