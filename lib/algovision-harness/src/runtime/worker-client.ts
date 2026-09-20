@@ -52,8 +52,10 @@ export class WorkerClient {
               break;
 
             case "SUCCESS":
+              console.log("Case: SUCCESS")
               if (this.pendingRequest) {
                 const outcome: ExecutionOutcome = {
+                  success: true,
                   trace: message.trace ?? [],
                   duration: message.duration,
                 };
@@ -62,21 +64,30 @@ export class WorkerClient {
               }
               break;
 
-            case "ERROR":
+            case "ERROR": {
+              console.log("Case: ERROR")
               if (this.pendingRequest) {
-                this.pendingRequest.reject(new Error(message.error || "Execution failed"));
+                this.pendingRequest.resolve({
+                  success: false,
+                  trace: message.trace,
+                  error: typeof message.error === "string" ? message.error : "Execution failed",
+                  errorDetails: message.errorDetails ?? message.error,
+                });
                 this.clearPendingRequest();
-              } else if (this.initializationPromise) {
-                reject(new Error(message.error || "Worker initialization failed"));
               }
               break;
+            }
           }
         };
 
         worker.onerror = (error) => {
           console.error("Critical Web Worker Error:", error);
           if (this.pendingRequest) {
-            this.pendingRequest.reject(error);
+            this.pendingRequest.resolve({
+              success: false,
+              error: "Critical Worker Error",
+              errorDetails: error,
+            });
             this.clearPendingRequest();
           }
           reject(error);

@@ -85,7 +85,20 @@ export function ProblemCodeEditor({
       // Grade each test case outcome
       const gradedResults = outcomes.map((outcome) => {
         const testCase = testCases.find((tc) => tc.id === outcome.testCaseId);
-        const evalResult = evaluateTrace(outcome.trace, function_name);
+
+        if (!outcome.success || outcome.error) {
+          return {
+            ...outcome,
+            passed: false,
+            status: "error" as const,
+            actualOutput: undefined,
+            expectedOutput: testCase?.expected_output,
+            error: typeof outcome.error === "string" ? outcome.error : "Execution failed",
+            errorDetails: outcome.errorDetails ?? outcome.error,
+          };
+        }
+
+        const evalResult = evaluateTrace(outcome.trace ?? [], function_name);
 
         let isPassed = false;
         let status: "passed" | "failed" | "error" = "failed";
@@ -107,6 +120,7 @@ export function ProblemCodeEditor({
           actualOutput: evalResult.actualOutput,
           expectedOutput: testCase?.expected_output,
           error: evalResult.error,
+          errorDetails: evalResult.errorDetails,
         };
       });
 
@@ -116,6 +130,9 @@ export function ProblemCodeEditor({
           passed: result.passed,
           status: result.status,
           actualOutput: result.actualOutput,
+          expectedOutput: result.expectedOutput,
+          error: result.error,
+          errorDetails: result.errorDetails,
         } as TestResult;
 
         setTraceForCase(result.testCaseId, result.trace, testStatus);

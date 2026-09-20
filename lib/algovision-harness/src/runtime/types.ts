@@ -33,12 +33,17 @@ export interface TraceStep {
 }
 
 export interface ExecutionOutcome {
-  trace: TraceStep[];
+  success: boolean;
+  trace?: TraceStep[];
   duration?: number;
+  error?: string | Error | undefined;
+  errorDetails?: any;
 }
 
 export interface TestCaseExecutionOutcome extends ExecutionOutcome {
   testCaseId: string;
+  trace: TraceStep[];
+  duration?: number;
 }
 
 export interface RuntimeConfig {

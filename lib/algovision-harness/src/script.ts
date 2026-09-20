@@ -2,7 +2,7 @@ import { WorkerClient } from "./runtime/worker-client";
 import type {
     ExecutionOptions,
   ExecutionOutcome,
-  TestCaseExecutionOutcome,
+  TestCaseExecutionOutcome
 } from "./runtime/types";
 
 export interface TraceTestCase {
@@ -53,8 +53,9 @@ export async function executeTraceForTestCases(
       const outcome = await workerClient.run(userCode, input, execution);
 
       outcomes.push({
+        ...outcome,
         testCaseId: visibleTestCases[index].id,
-        trace: outcome.trace,
+        trace: outcome.trace ?? [],
         duration: outcome.duration,
       });
     }
