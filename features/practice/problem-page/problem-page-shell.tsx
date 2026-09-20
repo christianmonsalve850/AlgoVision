@@ -41,13 +41,15 @@ export function ProblemPageShell({
   const isDisabled = isAtEnd;
 
   const resetTraces = useTraceStore((state) => state.resetTraces);
+  const resetTestResults = useTraceStore((state) => state.resetTestResults)
 
   // Effect 1: Cleanup global Zustand state when leaving the page
   useEffect(() => {
     return () => {
       resetTraces();
+      resetTestResults();
     };
-  }, [resetTraces]);
+  }, [resetTraces, resetTestResults]);
 
   // Effect 2: Prevent playing state desync when jumping to boundaries
   useEffect(() => {

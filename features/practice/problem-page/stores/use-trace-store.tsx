@@ -32,6 +32,7 @@ interface TraceState {
   ) => void;
   setIsRunning: (isRunning: boolean) => void;
   resetTraces: () => void;
+  resetTestResults: () => void;
 }
 
 export const useTraceStore = create<TraceState>((set) => ({
@@ -68,5 +69,10 @@ export const useTraceStore = create<TraceState>((set) => ({
       activeCaseId: null,
       currentStepIndex: 0,
       isRunning: false,
+    }),
+
+  resetTestResults: () =>
+    set({
+      testStatusByCaseId: {},
     }),
 }));
