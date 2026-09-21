@@ -135,7 +135,7 @@ export function ProblemCodeEditor({
           errorDetails: result.errorDetails,
         } as TestResult;
 
-        setTraceForCase(result.testCaseId, result.trace, testStatus);
+        setTraceForCase(result.testCaseId, testStatus?.error ? [] : result.trace, testStatus);
       }
     } catch (error) {
       console.error("executeTrace error:", error);
