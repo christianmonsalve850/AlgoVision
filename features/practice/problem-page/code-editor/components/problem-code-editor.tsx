@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useMemo, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { ChevronDown, Play, RotateCcw, X } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
@@ -15,6 +15,7 @@ import {
   evaluateTrace,
   isEqual,
 } from "@/features/practice/problem-page/code-editor/utils";
+import { useCodeEditor } from "@/features/practice/problem-page/hooks/use-code-editor";
 
 export function ProblemCodeEditor({
   problem_id,
@@ -24,16 +25,20 @@ export function ProblemCodeEditor({
   testCases,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
-
-  const [language, setLanguage] = useState<Language>("Python");
-  const [code, setCode] = useState(starterCodeMap[language] ?? "");
-
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const {
+    code,
+    language,
+    setLanguage,
+    handleReset,
+    handleEditorChange,
+  } = useCodeEditor({
+    problemId: problem_id,
+    starterCodeMap,
+  });
 
   const setTraceForCase = useTraceStore((state) => state.setTraceForCase);
   const setIsRunning = useTraceStore((state) => state.setIsRunning);
-
-  const compositeKey = `problem:${problem_id}:${language}`;
+  
 
   const activeLanguage = useMemo(
     () =>
@@ -44,29 +49,6 @@ export function ProblemCodeEditor({
 
   const handleLanguageChange = (nextLanguage: Language) => {
     setLanguage(nextLanguage);
-  };
-
-  const handleEditorChange = (value: string | undefined) => {
-    const currentCode = value || "";
-    setCode(currentCode);
-
-    // Clear existing timeout
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current);
-    }
-
-    // Set new timeout for 400ms after last keystroke
-    saveTimeoutRef.current = setTimeout(() => {
-      if (currentCode) {
-        localStorage.setItem(compositeKey, currentCode);
-      }
-    }, 400);
-  };
-
-  const handleReset = () => {
-    const defaultCode = starterCodeMap[language] ?? "";
-    setCode(defaultCode);
-    localStorage.setItem(compositeKey, defaultCode);
   };
 
   const executionDetails = {
@@ -143,16 +125,6 @@ export function ProblemCodeEditor({
       setIsRunning(false);
     }
   };
-
-  useEffect(() => {
-    const savedCode = localStorage.getItem(compositeKey);
-
-    if (savedCode) {
-      setCode(savedCode);
-    } else {
-      setCode(starterCodeMap[language] || "");
-    }
-  }, [problem_id, language]);
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background shadow-sm">
