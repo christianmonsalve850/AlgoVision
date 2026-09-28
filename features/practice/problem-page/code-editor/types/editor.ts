@@ -1,6 +1,6 @@
 import type { TestCase } from "./test-case";
 
-export type Language = "Python" | "JavaScript" | "Java";
+export type Language = "Python";
 
 export type StarterCodeMap = Partial<Record<Language, string>>;
 
