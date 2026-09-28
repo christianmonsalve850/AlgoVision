@@ -1,0 +1,48 @@
+import { Welcome } from '@/features/lessons/components/welcome'
+import { LearningObjectives } from '@/features/lessons/components/learning-objectives'
+import { Callout } from '@/features/lessons/components/callout'
+import { PatternCard } from '@/features/lessons/components/pattern-card'
+import { Checkpoint } from '@/features/lessons/components/checkpoint'
+
+<Welcome
+    title="A sliding window turns repeated range work into one steady pass."
+    text="Track a contiguous section of an array or string, then move its boundaries while reusing the information you already have."
+/>
+
+<LearningObjectives
+    objectives={[
+        'Recognize contiguous subarray and substring problems',
+        'Choose between fixed-size and variable-size windows',
+        'Add incoming values and remove outgoing values correctly',
+        'Understand when a variable window can safely shrink',
+        'Analyze the time and space costs of the pattern',
+    ]}
+    title={"What You'll Learn"}
+/>
+
+---
+
+<Callout type="success">
+    A window is a range of consecutive elements. Sliding it lets you reuse work instead of recomputing every range from scratch.
+</Callout>
+
+---
+
+<PatternCard
+    title="Where You'll See It"
+    items={[
+        'Maximum or minimum over every k consecutive values',
+        'Longest substring satisfying a condition',
+        'Shortest subarray reaching a target',
+        'Counts or sums over contiguous ranges',
+        'Problems that ask about consecutive elements',
+    ]}
+/>
+
+---
+
+<Checkpoint>
+
+Does the problem ask about a contiguous range, where every value between the boundaries must stay together?
+
+</Checkpoint>

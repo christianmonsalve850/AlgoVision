@@ -1,0 +1,39 @@
+import { ComplexityTable } from '@/features/lessons/components/complexity-table'
+import { Hint } from '@/features/lessons/components/hint'
+import { Callout } from '@/features/lessons/components/callout'
+
+<section className="lesson-surface my-8 p-6">
+  <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">The Core Idea</h1>
+  <p className="mt-3 text-base leading-relaxed text-foreground/80">Keep track of the current contiguous range. When it moves, update only what changed at its edges instead of recalculating everything inside it.</p>
+</section>
+
+<div className="my-6 grid gap-3 sm:grid-cols-2">
+  <div className="lesson-surface-muted p-4">
+    <h2 className="text-sm font-semibold text-foreground">Fixed-size window</h2>
+    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">The window always contains k elements. Add the next value and remove the value that just left.</p>
+    <p className="mt-3 font-mono text-xs text-foreground">[2, 1, 5] -&gt; [1, 5, 1]</p>
+  </div>
+  <div className="lesson-surface-muted p-4">
+    <h2 className="text-sm font-semibold text-foreground">Variable-size window</h2>
+    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Expand the right edge to include more values; shrink the left edge when the current range meets a condition and can be improved.</p>
+    <p className="mt-3 font-mono text-xs text-foreground">expand -&gt; check -&gt; shrink if valid</p>
+  </div>
+</div>
+
+<ComplexityTable
+  before={{ time: 'O(nk)', space: 'O(1)' }}
+  after={{ time: 'O(n)', space: 'O(1)' }}
+  title="Fixed-Window Sum: Recompute vs. Reuse"
+  beforeLabel="Recompute Each Range"
+  afterLabel="Sliding Window"
+/>
+
+<Callout type="info">
+  A typical sliding-window pass is O(n) because each boundary moves forward at most n times. The exact update depends on the state you maintain, such as a sum or a character-frequency map.
+</Callout>
+
+---
+
+<Hint>
+For a sum-based variable window, shrinking after the sum reaches a target is straightforward when values are nonnegative: removing a value cannot increase the sum. With negative values, that reasoning may fail.
+</Hint>
