@@ -1,16 +1,6 @@
 import { create } from "zustand";
 import { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
-
-export type TestResult =
-  | {
-      passed: boolean;
-      status: "passed" | "error" | "failed";
-      actualOutput: any;
-      expectedOutput: any;
-      error: string | undefined;
-      errorDetails: any;
-    }
-  | undefined;
+import { TestResult } from "@/features/practice/problem-page/code-editor/types";
 
 interface TraceState {
   // Map of test case ID to its corresponding trace steps
