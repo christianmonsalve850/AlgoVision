@@ -15,6 +15,7 @@ export function useProblemRunner ({
     const run = async () => {
         try {
             setIsRunning(true);
+            onRunStart?.();
             const results = await executeProblem({
                 code,
                 testCases,
@@ -24,7 +25,6 @@ export function useProblemRunner ({
             for (const result of results) {
                 setTraceForCase(result.testCaseId, result.trace, result.testResult);
             } 
-            onRunStart?.();
         } catch (error) {
           console.error("executeTrace error:", error);
         } finally {
