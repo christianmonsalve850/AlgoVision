@@ -5,7 +5,8 @@ import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace
 export function ProblemTestCaseDetail({
   testCase,
 }: { testCase: TestCase }) {
-  const testStatus = useTraceStore.getState().testStatusByCaseId[testCase.id]
+  const testStatus = useTraceStore(state => state.testStatusByCaseId[testCase.id]);
+  
   console.log(testStatus)
   const actualOutputText =
     testStatus?.actualOutput !== undefined

@@ -7,16 +7,6 @@ export const languageOptions: { label: Language; value: Language; fileName: stri
       fileName: "solution.py", 
       extension: "python" 
     },
-    { label: "JavaScript", 
-      value: "JavaScript", 
-      fileName: "solution.js", 
-      extension: "javascript" 
-    },
-    { label: "Java", 
-      value: "Java", 
-      fileName: "Solution.java", 
-      extension: "java" 
-    },
   ];
 
   
