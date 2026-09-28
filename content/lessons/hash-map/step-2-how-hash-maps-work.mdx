@@ -1,0 +1,43 @@
+import { Callout } from '@/features/lessons/components/callout'
+import { Hint } from '@/features/lessons/components/hint'
+import { Quiz } from '@/features/lessons/components/quiz'
+
+<h1 className="text-2xl font-semibold tracking-tight text-foreground">How Hash Maps Work</h1>
+
+<div className="lesson-surface my-6 p-5">
+  <p className="text-base leading-relaxed text-foreground/80">A hash map stores pairs: a <strong>key</strong> identifies an entry, and its <strong>value</strong> is the information stored there.</p>
+</div>
+
+<div className="lesson-surface-muted my-6 grid gap-3 p-4 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center">
+  <div className="rounded border border-border bg-background p-3 text-center"><div className="text-xs uppercase text-muted-foreground">Key</div><div className="mt-1 font-mono text-sm text-foreground">"pear"</div></div>
+  <div className="text-center text-muted-foreground">→</div>
+  <div className="rounded border border-border bg-background p-3 text-center"><div className="text-xs uppercase text-muted-foreground">Hash function</div><div className="mt-1 font-mono text-sm text-foreground">maps key to a location</div></div>
+  <div className="text-center text-muted-foreground">→</div>
+  <div className="rounded border border-border bg-background p-3 text-center"><div className="text-xs uppercase text-muted-foreground">Value</div><div className="mt-1 font-mono text-sm text-foreground">4</div></div>
+</div>
+
+<Callout type="info">
+  A hash function helps the map find where a key belongs. Different keys can sometimes map to the same location; a hash map handles these collisions internally and still checks key equality.
+</Callout>
+
+---
+
+<section className="lesson-surface my-6 p-5">
+  <h2 className="text-lg font-semibold text-foreground">Python dictionaries</h2>
+  <pre className="mt-3 overflow-x-auto rounded-md bg-muted p-4 text-sm"><code>{`prices = {"pear": 4, "plum": 3}
+price = prices["pear"]       # 4
+prices["pear"] = 5           # update the value
+prices["kiwi"] = 6           # add a new key-value pair`}</code></pre>
+  <p className="mt-3 text-sm text-muted-foreground">Python dictionaries preserve insertion order, but they are not sorted by key. Their purpose is key-based lookup, not ordered searching.</p>
+</section>
+
+<Hint>
+In Python, keys must be hashable. Strings, numbers, and tuples of hashable values can be keys; a list cannot.
+</Hint>
+
+<Quiz
+  question={'In prices = {"pear": 4}, what is the key?'}
+  options={['4', '"pear"', 'The dictionary itself', 'The index 0']}
+  answer={1}
+  explanation={'The string "pear" identifies the entry, and 4 is the value associated with it.'}
+/>

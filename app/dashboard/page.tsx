@@ -2,10 +2,8 @@ import DashboardHeader from "@/features/dashboard/components/dashboard-header";
 import ProblemsSolved from "@/features/dashboard/components/problems-solved";
 import SmallWidget from "@/features/dashboard/components/small-widget";
 import { TrendingUp, Flame, Clock, BookOpen } from "lucide-react";
-import CategoryMastery from "@/features/dashboard/components/category-mastery";
 import RecentActivity from "@/features/dashboard/components/recent-activity";
-
-
+import CategoryMastery from "@/features/dashboard/components/category-mastery";
 export default async function Dashboard() {
 
   return ( 

@@ -1,0 +1,38 @@
+import { DecisionQuiz } from '@/features/lessons/components/decision-quiz'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { Quiz } from '@/features/lessons/components/quiz'
+
+<section className="lesson-surface my-8 p-6">
+  <div className="flex items-center gap-2"><span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-600 dark:bg-emerald-400" /><span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">Check Your Understanding</span></div>
+  <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground">When Should You Use a Map?</h1>
+  <p className="mt-2 text-sm leading-relaxed text-foreground/80">Choose a hash map when fast lookup or a relationship between keys and values makes the problem simpler.</p>
+</section>
+
+<DecisionQuiz
+  question="You need to count how many times each word appears. What fits naturally?"
+  options={['A frequency map', 'A nested loop for every word pair', 'A stack', 'A binary search tree traversal']}
+  answer={0}
+  explanation="Each distinct word becomes a key, and its count is the value."
+/>
+
+---
+
+<DecisionQuiz
+  question="You need to check whether a value has appeared before, and order does not matter. What can help?"
+  options={['A set or hash map', 'A queue only', 'A sorted array is always required', 'A recursive call for every comparison']}
+  answer={0}
+  explanation="A set stores membership; a hash map can store membership plus related information such as an index or count."
+/>
+
+---
+
+<Mistake>
+Trying to use a mutable list as a Python dictionary key. Keys need a stable hash; use an immutable representation such as a tuple when appropriate.
+</Mistake>
+
+<Quiz
+  question="What does a hash map generally trade for fast average-case lookup?"
+  options={['Extra space', 'Sorted keys', 'A fixed number of entries', 'The ability to update values']}
+  answer={0}
+  explanation="The map stores entries and supporting structure, using space proportional to the number of stored keys."
+/>
