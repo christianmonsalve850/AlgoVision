@@ -1,3 +1,9 @@
+import { Language } from "@/features/practice/problem-page/code-editor/types";
+import { StarterCodeMap } from "@/features/practice/problem-page/code-editor/types";
+import { TestCase } from "@/features/practice/problem-page/code-editor/types";
+import { TestResult } from "@/features/practice/problem-page/stores/use-trace-store";
+import { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+
 export type PlaybackSpeed = 0.5 | 1 | 2 | 4;
 
 export type PlaybackControlsProps = {
@@ -10,3 +16,42 @@ export type PlaybackControlsProps = {
   onPlayPauseToggle: () => void;
   onSpeedChange: (speed: PlaybackSpeed) => void;
 };
+
+export interface UseCodeEditorReturn {
+  code: string;
+  language: Language;
+  handleLanguageChange: (newLang: Language) => void;
+  handleReset: () => void;
+  handleEditorChange: (value: string | undefined) => void;
+}
+
+export interface UseCodeEditorOptions {
+  problemId: string;
+  starterCodeMap: StarterCodeMap;
+  defaultLanguage?: Language;
+}
+
+export interface UseProblemRunnerOptions {
+  code: string;
+  testCases: TestCase[];
+  functionName: string;
+  className: string;
+  onRunStart?: () => void;
+}
+
+export interface UseProblemRunnerReturn {
+  run: () => Promise<void>;
+}
+
+export interface ExecuteProblemOptions {
+  code: string;
+  testCases: TestCase[];
+  functionName: string;
+  className: string;
+}
+
+export interface ExecuteProblemReturn {
+  testCaseId: string;
+  trace: TraceStep[];
+  testResult: TestResult;
+}

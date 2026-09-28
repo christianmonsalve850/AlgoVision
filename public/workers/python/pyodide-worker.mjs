@@ -243,7 +243,7 @@ def tracer(frame, event, arg=None):
             emit_event("call", frame, expression, current_variables)
 
     elif event == "return":
-        if frame.f_code.co_name != "<module>" and arg:
+        if frame.f_code.co_name != "<module>":
             emit_event("return", frame, expression, current_variables, {
                 "return_value": copy.deepcopy(arg)  # arg contains the return value
             })
@@ -279,15 +279,17 @@ try:
     end_cpu = time.perf_counter()
     duration_ms = (end_cpu - start_cpu) * 1000
 except Exception as e:
-    # This catches fatal execution or syntax crashes that stop the machine completely
+    # Preserve the trace up to the exception point instead of dropping it.
+    # We still want the final exception event to be visible to the UI and grading logic.
     fatal_error_payload = {
         "success": False,
         "error": {
             "type": e.__class__.__name__,
             "message": str(e)
-        }
+        },
+        "trace": context.trace,
     }
-    raise
+    # Do not re-raise here; the trace is the useful output for the UI.
 finally:
     settrace(None)
 
@@ -505,7 +507,7 @@ var BrowserRuntime = class {
   }
   async executePythonTrace(userCode) {
     const outcome = await this.executeTraceWithMetadata(userCode);
-    return outcome.trace;
+    return outcome.trace ?? [];
   }
   async executeTraceWithMetadata(userCode, inputs = {}, execution = {}) {
     try {
@@ -520,16 +522,44 @@ var BrowserRuntime = class {
         execution_options_json: JSON.stringify(execution)
       });
       const harness = buildPythonHarness(harnessOptions);
-      const [rawTraceResult, durationMs] = await this.pyodide.runPythonAsync(harness, { globals: locals });
+      const [rawTraceResult, durationMs] = await this.pyodide.runPythonAsync(
+        harness,
+        { globals: locals }
+      );
       const resolvedDuration = typeof durationMs === "number" ? durationMs : typeof durationMs === "string" ? Number(durationMs) : void 0;
       return {
+        success: true,
         trace: this.parseTraceResult(rawTraceResult),
         duration: resolvedDuration
       };
     } catch (error) {
-      console.error("Runtime Tracing Error: ", error);
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorDetails = this.createErrorDetails(error, errorMessage, userCode);
+      return {
+        success: false,
+        trace: [],
+        error: errorMessage,
+        errorDetails
+      };
     }
+  }
+  createErrorDetails(error, errorMessage, userCode) {
+    const errorName = error instanceof Error && error.name ? error.name : /SyntaxError/i.test(errorMessage) ? "SyntaxError" : "ExecutionError";
+    const userCodeFrame = errorMessage.match(
+      /File ["']<user_code>["'], line (\d+)(?:[^\n]*\n)?([^\n]*)/i
+    );
+    const lineMatch = errorMessage.match(/(?:line|lineno)\s*[:=]?\s*(\d+)/i);
+    const line = userCodeFrame ? Number(userCodeFrame[1]) : lineMatch ? Number(lineMatch[1]) : null;
+    const code = line ? userCode.split("\n")[line - 1]?.trim() ?? null : null;
+    const typeMatch = errorMessage.match(/\b([A-Za-z]+Error)\s*:\s*([\s\S]*?)(?:\n|$)/);
+    const type = typeMatch?.[1] ?? errorName;
+    const message = typeMatch?.[2]?.trim() || errorMessage.split("\n").at(-1)?.trim() || errorMessage;
+    return {
+      type,
+      line,
+      code: code ?? userCodeFrame?.[2]?.trim() ?? null,
+      message
+    };
   }
   parseTraceResult(rawTraceResult) {
     if (typeof rawTraceResult === "string") {
@@ -590,7 +620,8 @@ var PythonRuntime = class {
    * Takes a raw code block string and provides a language-agnostic step timeline array.
    */
   async run(userCode) {
-    return (await this.runWithMetadata(userCode)).trace;
+    const outcome = await this.runWithMetadata(userCode);
+    return outcome.trace ?? [];
   }
   async runWithMetadata(userCode, inputs, execution) {
     if (!this.browserRuntime) {
@@ -611,17 +642,52 @@ function createRuntime(language, config = {}) {
 }
 
 // lib/algovision-harness/src/runtime/messages.ts
+function normalizeWorkerError(error) {
+  if (error instanceof Error) {
+    return {
+      message: error.message || "Execution failed",
+      details: {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+        cause: error.cause
+      }
+    };
+  }
+  if (typeof error === "string") {
+    return {
+      message: error || "Execution failed",
+      details: { raw: error }
+    };
+  }
+  if (error && typeof error === "object") {
+    const maybeMessage = "message" in error ? String(error.message) : void 0;
+    return {
+      message: maybeMessage || "Execution failed",
+      details: error
+    };
+  }
+  return {
+    message: String(error ?? "Execution failed"),
+    details: { raw: error }
+  };
+}
 function createWorkerSuccessResponse(trace = [], duration) {
+  console.log("createWorkerSuccessResponse");
   return {
     type: "SUCCESS",
     trace,
     duration
   };
 }
-function createWorkerErrorResponse(error) {
+function createWorkerErrorResponse(error, trace = [], errorDetails) {
+  const normalized = normalizeWorkerError(error);
+  console.log("createWorkerErrorResponse");
   return {
     type: "ERROR",
-    error
+    trace,
+    error: normalized.message,
+    errorDetails: errorDetails ?? normalized.details
   };
 }
 
@@ -635,7 +701,11 @@ self.onmessage = async (event) => {
         await runtime.initialize();
         self.postMessage({ type: "INITIALIZED" });
       } catch (err) {
-        self.postMessage(createWorkerErrorResponse(err.message || "Failed to boot WebAssembly compilation context."));
+        self.postMessage(
+          createWorkerErrorResponse(
+            err.message || "Failed to boot WebAssembly compilation context."
+          )
+        );
       }
       break;
     case "RUN":
@@ -645,9 +715,28 @@ self.onmessage = async (event) => {
           message.inputs,
           message.execution
         );
-        self.postMessage(createWorkerSuccessResponse(executionResult.trace, executionResult.duration));
-      } catch (err) {
-        self.postMessage(createWorkerErrorResponse(err.message || "Runtime execution tracking exception."));
+        if (!executionResult.success) {
+          self.postMessage(
+            createWorkerErrorResponse(
+              executionResult.error,
+              executionResult.trace,
+              executionResult.errorDetails
+            )
+          );
+          break;
+        }
+        self.postMessage(
+          createWorkerSuccessResponse(
+            executionResult.trace,
+            executionResult.duration
+          )
+        );
+      } catch (error) {
+        self.postMessage(
+          createWorkerErrorResponse(
+            error
+          )
+        );
       }
       break;
   }

@@ -5,21 +5,16 @@ import {
   ChevronDown,
   ChevronUp,
   SquareCheck,
-  Terminal,
 } from "lucide-react";
 import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
-import type {
-  ProblemEditorProps,
-} from "@/features/practice/problem-page/code-editor/types";
-import type { ProblemCodeEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
+import type { ProblemEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
 import {
   Group,
   Separator,
   Panel,
   PanelImperativeHandle,
 } from "react-resizable-panels";
-import { ProblemTestCaseOutput } from "@/features/practice/problem-page/code-editor/components/problem-test-case-output";
 
 export function ProblemEditorPanel({
   problem_id,
@@ -27,7 +22,7 @@ export function ProblemEditorPanel({
   class_name,
   starterCodeMap,
   testCases
-}: ProblemCodeEditorPanelProps) {
+}: ProblemEditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [isTestCaseSelected, setIsTestCaseSelected] = useState<boolean>(true);
   
@@ -40,7 +35,7 @@ export function ProblemEditorPanel({
         if (panel.isCollapsed()) {
           panel.expand();
         }
-        panel.resize(300);
+        panel.resize(360);
       } else {
         if (!panel.isCollapsed()) {
           panel.collapse();
@@ -67,6 +62,7 @@ export function ProblemEditorPanel({
               class_name={class_name}
               starterCodeMap={starterCodeMap}
               testCases={testCases}
+              setIsOpenConsole={setIsOpenConsole}
             />
           </Panel>
 
@@ -101,14 +97,6 @@ export function ProblemEditorPanel({
                 </button>
 
                 <div className="h-4 border-r border-border transition-opacity duration-150 group-hover:opacity-0" />
-
-                <button
-                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent ${isTestCaseSelected ? "opacity-50" : ""}`}
-                  onClick={() => setIsTestCaseSelected(false)}
-                >
-                  <Terminal className="p-0.5 text-emerald-400" />
-                  Output
-                </button>
               </div>
 
               <div className="flex items-center pr-2">
@@ -125,7 +113,7 @@ export function ProblemEditorPanel({
             <div className="min-h-0 flex-1 overflow-y-auto">
               { isTestCaseSelected ? 
                 <ProblemTestCasesPanel testCases={testCases} /> : 
-                <ProblemTestCaseOutput /> 
+                <div></div>
               }
             </div>
           </Panel>

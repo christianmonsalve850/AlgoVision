@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useMemo, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { ChevronDown, Play, RotateCcw, X } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
@@ -9,12 +9,8 @@ import type {
   Language,
   ProblemCodeEditorPanelProps,
 } from "@/features/practice/problem-page/code-editor/types";
-import { executeTraceForTestCases } from "@/lib/algovision-harness/src/script";
-import { TestResult, useTraceStore } from "../../stores/use-trace-store";
-import {
-  evaluateTrace,
-  isEqual,
-} from "@/features/practice/problem-page/code-editor/utils";
+import { useCodeEditor } from "@/features/practice/problem-page/hooks/use-code-editor";
+import { useProblemRunner } from "@/features/practice/problem-page/hooks/use-problem-runner";
 
 export function ProblemCodeEditor({
   problem_id,
@@ -22,120 +18,34 @@ export function ProblemCodeEditor({
   class_name,
   starterCodeMap,
   testCases,
+  setIsOpenConsole,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
+  const {
+    code,
+    language,
+    handleLanguageChange,
+    handleReset,
+    handleEditorChange,
+  } = useCodeEditor({
+    problemId: problem_id,
+    starterCodeMap,
+  });
 
-  const [language, setLanguage] = useState<Language>("Python");
-  const [code, setCode] = useState(starterCodeMap[language] ?? "");
-
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const setTraceForCase = useTraceStore((state) => state.setTraceForCase);
-  const setIsRunning = useTraceStore((state) => state.setIsRunning);
-
-  const compositeKey = `problem:${problem_id}:${language}`;
-
+  const { run } = useProblemRunner({
+    code,
+    testCases,
+    functionName: function_name,
+    className: class_name,
+    onRunStart: () => setIsOpenConsole(true),
+  });
+  
   const activeLanguage = useMemo(
     () =>
       languageOptions.find((option) => option.value === language) ??
       languageOptions[0],
     [language],
   );
-
-  const handleLanguageChange = (nextLanguage: Language) => {
-    setLanguage(nextLanguage);
-  };
-
-  const handleEditorChange = (value: string | undefined) => {
-    const currentCode = value || "";
-    setCode(currentCode);
-
-    // Clear existing timeout
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current);
-    }
-
-    // Set new timeout for 400ms after last keystroke
-    saveTimeoutRef.current = setTimeout(() => {
-      if (currentCode) {
-        localStorage.setItem(compositeKey, currentCode);
-      }
-    }, 400);
-  };
-
-  const handleReset = () => {
-    const defaultCode = starterCodeMap[language] ?? "";
-    setCode(defaultCode);
-    localStorage.setItem(compositeKey, defaultCode);
-  };
-
-  const executionDetails = {
-    className: class_name,
-    functionName: function_name,
-  };
-
-  const handleRun = async () => {
-    try {
-      setIsRunning(true);
-      const outcomes = await executeTraceForTestCases(
-        code,
-        testCases,
-        executionDetails,
-      );
-      // Grade each test case outcome
-      const gradedResults = outcomes.map((outcome) => {
-        const testCase = testCases.find((tc) => tc.id === outcome.testCaseId);
-        const evalResult = evaluateTrace(outcome.trace, function_name);
-
-        let isPassed = false;
-        let status: "passed" | "failed" | "error" = "failed";
-
-        if (evalResult.status === "error") {
-          status = "error";
-        } else {
-          isPassed = isEqual(
-            evalResult.actualOutput,
-            testCase?.expected_output,
-          );
-          status = isPassed ? "passed" : "failed";
-        }
-
-        return {
-          ...outcome,
-          passed: isPassed,
-          status, // "passed" | "failed" | "error"
-          actualOutput: evalResult.actualOutput,
-          expectedOutput: testCase?.expected_output,
-          error: evalResult.error,
-        };
-      });
-
-      // Update state/store
-      for (const result of gradedResults) {
-        const testStatus = {
-          passed: result.passed,
-          status: result.status,
-          actualOutput: result.actualOutput,
-        } as TestResult;
-
-        setTraceForCase(result.testCaseId, result.trace, testStatus);
-      }
-    } catch (error) {
-      console.error("executeTrace error:", error);
-    } finally {
-      setIsRunning(false);
-    }
-  };
-
-  useEffect(() => {
-    const savedCode = localStorage.getItem(compositeKey);
-
-    if (savedCode) {
-      setCode(savedCode);
-    } else {
-      setCode(starterCodeMap[language] || "");
-    }
-  }, [problem_id, language]);
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background shadow-sm">
@@ -174,7 +84,7 @@ export function ProblemCodeEditor({
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-lg bg-foreground px-3 py-2 text-sm font-medium text-background transition-colors hover:opacity-90"
-            onClick={handleRun}
+            onClick={run}
           >
             <Play className="size-4" />
             Run

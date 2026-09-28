@@ -2,7 +2,12 @@
 /// <reference lib="webworker" />
 
 import { RuntimeAdapter, createRuntime } from "../runtime/runtime-factory";
-import { WorkerRequest, WorkerResponse, createWorkerErrorResponse, createWorkerSuccessResponse } from "../runtime/messages";
+import {
+  WorkerRequest,
+  WorkerResponse,
+  createWorkerErrorResponse,
+  createWorkerSuccessResponse,
+} from "../runtime/messages";
 
 const runtime: RuntimeAdapter = createRuntime("python");
 
@@ -19,7 +24,11 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
         await runtime.initialize();
         self.postMessage({ type: "INITIALIZED" } as WorkerResponse);
       } catch (err: any) {
-        self.postMessage(createWorkerErrorResponse(err.message || "Failed to boot WebAssembly compilation context."));
+        self.postMessage(
+          createWorkerErrorResponse(
+            err.message || "Failed to boot WebAssembly compilation context.",
+          ),
+        );
       }
       break;
 
@@ -30,9 +39,30 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
           message.inputs,
           message.execution,
         );
-        self.postMessage(createWorkerSuccessResponse(executionResult.trace, executionResult.duration));
-      } catch (err: any) {
-        self.postMessage(createWorkerErrorResponse(err.message || "Runtime execution tracking exception."));
+
+        if (!executionResult.success) {
+          self.postMessage(
+            createWorkerErrorResponse(
+              executionResult.error,
+              executionResult.trace,
+              executionResult.errorDetails,
+            ),
+          );
+          break;
+        }
+
+        self.postMessage(
+          createWorkerSuccessResponse(
+            executionResult.trace,
+            executionResult.duration,
+          ),
+        );
+      } catch (error) {
+        self.postMessage(
+          createWorkerErrorResponse(
+            error,
+          ),
+        );
       }
       break;
   }

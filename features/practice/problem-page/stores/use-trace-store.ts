@@ -6,6 +6,9 @@ export type TestResult =
       passed: boolean;
       status: "passed" | "error" | "failed";
       actualOutput: any;
+      expectedOutput: any;
+      error: string | undefined;
+      errorDetails: any;
     }
   | undefined;
 
@@ -29,6 +32,7 @@ interface TraceState {
   ) => void;
   setIsRunning: (isRunning: boolean) => void;
   resetTraces: () => void;
+  resetTestResults: () => void;
 }
 
 export const useTraceStore = create<TraceState>((set) => ({
@@ -65,5 +69,10 @@ export const useTraceStore = create<TraceState>((set) => ({
       activeCaseId: null,
       currentStepIndex: 0,
       isRunning: false,
+    }),
+
+  resetTestResults: () =>
+    set({
+      testStatusByCaseId: {},
     }),
 }));

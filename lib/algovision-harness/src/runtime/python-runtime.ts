@@ -58,7 +58,8 @@ export class PythonRuntime {
    * Takes a raw code block string and provides a language-agnostic step timeline array.
    */
   public async run(userCode: string): Promise<TraceStep[]> {
-    return (await this.runWithMetadata(userCode)).trace;
+    const outcome = await this.runWithMetadata(userCode);
+    return outcome.trace ?? [];
   }
 
   public async runWithMetadata(
