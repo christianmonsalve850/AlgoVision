@@ -1,5 +1,5 @@
 import { TestCase } from "@/features/practice/problem-page/code-editor/types";
-import { serializeErrorReport } from "@/features/practice/problem-page/code-editor/utils";
+import { serializeErrorReport } from "@/features/practice/problem-page/utils/serialize-error";
 import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace-store";
 
 export function ProblemTestCaseDetail({

@@ -1,9 +1,7 @@
 import { executeTraceForTestCases } from "@/lib/algovision-harness/src/script";
 import { ExecuteProblemOptions, ExecuteProblemReturn } from "@/features/practice/problem-page/types";
-import {
-  evaluateTrace,
-  isEqual,
-} from "@/features/practice/problem-page/code-editor/utils";
+import { evaluateTrace } from "@/features/practice/problem-page/utils/evaluate-trace";
+import { isEqual } from "@/features/practice/problem-page/utils/compare-output";
 import { TestResult } from "@/features/practice/problem-page/stores/use-trace-store";
 
 export async function executeProblem({
