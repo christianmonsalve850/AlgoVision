@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import twoPointersSteps from '@/content/lessons/two-pointers';
+import arraysSteps from '@/content/lessons/arrays';
 
 type LessonMdxStepsProps = {
   slug: string;
@@ -20,7 +21,12 @@ function getStepNumber(step?: string) {
 
 export default function LessonMdxSteps({ slug, step }: LessonMdxStepsProps) {
   const normalizedSlug = slug.replace(/_/g, '-');
-  const steps = normalizedSlug === 'two-pointers' ? twoPointersSteps : [];
+  const steps =
+    normalizedSlug === 'arrays'
+      ? arraysSteps
+      : normalizedSlug === 'two-pointers'
+        ? twoPointersSteps
+        : [];
 
   if (steps.length === 0) {
     return null;

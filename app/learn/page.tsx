@@ -36,7 +36,7 @@ export default async function Learn() {
 
   const typedLessons = (lessons ?? []).map((lesson) => ({
     ...lesson,
-    progress: progressMap.get(lesson.id).toFixed() ?? 0,
+    progress: progressMap.get(lesson.id)?.toFixed() ?? 0,
   }));
 
   return <LessonShell lessons={typedLessons} />;

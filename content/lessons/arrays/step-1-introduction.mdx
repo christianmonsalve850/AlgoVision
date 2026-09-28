@@ -1,0 +1,48 @@
+import { Welcome } from '@/features/lessons/components/welcome'
+import { LearningObjectives } from '@/features/lessons/components/learning-objectives'
+import { Callout } from '@/features/lessons/components/callout'
+import { PatternCard } from '@/features/lessons/components/pattern-card'
+import { Checkpoint } from '@/features/lessons/components/checkpoint'
+
+<Welcome
+    title="Arrays keep related values together in a predictable order."
+    text="They let you reach a value by its position and make a strong foundation for many problem-solving patterns."
+/>
+
+<LearningObjectives
+    objectives={[
+        'Understand indexes and zero-based positions',
+        'Read and update an element by index',
+        'Traverse an array to compute a result',
+        'Compare the costs of common operations',
+        'Avoid common indexing and mutation mistakes',
+    ]}
+    title={"What You'll Learn"}
+/>
+
+---
+
+<Callout type="success">
+    Arrays are useful when order matters or when you need to work through a sequence of values.
+</Callout>
+
+---
+
+<PatternCard
+    title="Where Arrays Appear"
+    items={[
+        'Lists of measurements or scores',
+        'Strings represented as character sequences',
+        'Tables and grids',
+        'Ordered results from a search',
+        'Inputs to sorting and two-pointer algorithms',
+    ]}
+/>
+
+---
+
+<Checkpoint>
+
+If you know an element's index, how could you access it without checking every earlier element?
+
+</Checkpoint>

@@ -1,0 +1,43 @@
+import { DecisionQuiz } from '@/features/lessons/components/decision-quiz'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { Quiz } from '@/features/lessons/components/quiz'
+
+<section className="lesson-surface my-8 p-6">
+  <div className="flex items-center gap-2">
+    <span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-600 dark:bg-emerald-400" />
+    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">Check Your Understanding</span>
+  </div>
+  <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground">Choose the Right Operation</h1>
+  <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+    Think about whether you know the index, need to find a value, or need to change the sequence.
+  </p>
+</section>
+
+<DecisionQuiz
+  question="You know the index of the value you need. What should you use?"
+  options={['Scan the whole array', 'Access the element by index', 'Sort the array first', 'Copy the array']}
+  answer={1}
+  explanation="When the index is known, direct indexed access retrieves that position in O(1) time."
+/>
+
+---
+
+<DecisionQuiz
+  question="You need to find a value in an unsorted array. What is the straightforward approach?"
+  options={['Binary search without sorting', 'Check values one by one', 'Read index 0 only', 'Insert the target at the end']}
+  answer={1}
+  explanation="A linear scan works regardless of order and takes O(n) time in the worst case."
+/>
+
+---
+
+<Mistake>
+Using a binary search on data that is not sorted. Binary search makes decisions based on order, so its assumptions must hold.
+</Mistake>
+
+<Quiz
+  question="Why does deleting an element from the middle of a dynamic array often take O(n) time?"
+  options={['The array must be sorted again', 'Later elements may need to shift', 'Every value must be hashed', 'The array is copied to a linked list']}
+  answer={1}
+  explanation="To keep the remaining elements in order and indices contiguous, later values are typically shifted left."
+/>

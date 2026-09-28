@@ -1,0 +1,43 @@
+import { Summary } from '@/features/lessons/components/summary'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { RecommendedProblems } from '@/features/lessons/components/recommended-problems'
+
+<h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground">Summary</h1>
+
+<Summary>
+
+- Arrays store ordered values that can be addressed by index
+- Python indexes start at 0, and the final valid index is `len(values) - 1`
+- Reading or updating a known index takes O(1) time
+- Searching an unsorted array takes O(n) time
+- Inserting or deleting in the middle can require shifting O(n) values
+- A traversal can compute a result in O(n) time and O(1) extra space
+
+</Summary>
+
+---
+
+<h2 className="mt-4 flex items-center gap-2 text-lg font-semibold text-foreground">Common Mistakes</h2>
+
+<Mistake>
+Forgetting that indexes start at zero, or trying to access index `len(values)`.
+</Mistake>
+
+<Mistake>
+Assuming search is O(1) just because indexed access is O(1).
+</Mistake>
+
+<Mistake>
+Ignoring the cost of shifting values when inserting or deleting in the middle.
+</Mistake>
+
+---
+
+<RecommendedProblems
+  problems={[
+    "Contains Duplicate",
+    "Maximum Subarray",
+    "Move Zeroes",
+    "Best Time to Buy and Sell Stock",
+  ]}
+/>
