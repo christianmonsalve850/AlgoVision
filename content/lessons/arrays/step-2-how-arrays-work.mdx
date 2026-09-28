@@ -1,22 +1,25 @@
-import { Callout } from '@/features/lessons/components/callout'
-import { Quiz } from '@/features/lessons/components/quiz'
-import { Hint } from '@/features/lessons/components/hint'
+import { Callout } from "@/features/lessons/components/callout";
+import { Quiz } from "@/features/lessons/components/quiz";
+import { Hint } from "@/features/lessons/components/hint";
 
-<h1 className="text-2xl font-semibold tracking-tight text-foreground">How Arrays Work</h1>
+<h1 className="text-2xl font-semibold tracking-tight text-foreground">
+  How Arrays Work
+</h1>
 
 <div className="lesson-surface my-6 p-5">
-  <p className="text-base leading-relaxed text-foreground/80">
-    An array is an ordered sequence. Each value has a position called an <strong>index</strong>.
-    In Python, indexing starts at zero, so the first element is at index <code>0</code>.
-  </p>
+  <p className="text-base leading-relaxed text-foreground/80">An array is an ordered sequence. Each value has a position called an{" "}<strong>index</strong>. In Python, indexing starts at zero, so the first element is at index <code>0</code>.</p>
 </div>
 
 <div className="lesson-surface-muted my-6 overflow-x-auto p-4">
-  <div className="mb-2 font-mono text-xs text-muted-foreground">values = [12, 5, 8, 20]</div>
+  <div className="mb-2 font-mono text-xs text-muted-foreground">
+    values = [12, 5, 8, 20]
+  </div>
   <div className="grid min-w-72 grid-cols-4 gap-2 text-center font-mono">
     {[12, 5, 8, 20].map((value, index) => (
       <div key={index}>
-        <div className="rounded border border-border bg-background px-3 py-2 text-sm font-semibold text-foreground">{value}</div>
+        <div className="rounded border border-border bg-background px-3 py-2 text-sm font-semibold text-foreground">
+          {value}
+        </div>
         <div className="mt-1 text-xs text-muted-foreground">index {index}</div>
       </div>
     ))}
@@ -24,29 +27,35 @@ import { Hint } from '@/features/lessons/components/hint'
 </div>
 
 <Callout type="info">
-  Use <code>values[i]</code> to read the element at index <code>i</code>. The last valid index is <code>len(values) - 1</code>.
+  Use <code>values[i]</code> to read the element at index <code>i</code>. The
+  last valid index is <code>len(values) - 1</code>.
 </Callout>
 
 ---
 
 <section className="lesson-surface my-6 p-5">
-  <h2 className="text-lg font-semibold text-foreground">Indexing and assignment</h2>
-  <pre className="mt-3 overflow-x-auto rounded-md bg-muted p-4 text-sm"><code>{`values = [12, 5, 8, 20]
-first = values[0]       # 12
-values[1] = 6           # [12, 6, 8, 20]
-last = values[-1]       # 20 in Python`}</code></pre>
-  <p className="mt-3 text-sm text-muted-foreground">
-    Python also accepts negative indexes, but many languages do not. Check the language's indexing rules when translating an algorithm.
-  </p>
+  <h2 className="text-lg font-semibold text-foreground">
+    Indexing and assignment
+  </h2>
+  <pre className="mt-3 overflow-x-auto rounded-md bg-muted p-4 text-sm">
+    <code>
+      {`values = [12, 5, 8, 20]
+      first = values[0]       # 12
+      values[1] = 6           # [12, 6, 8, 20]
+      last = values[-1]       # 20 in Python`}
+    </code>
+  </pre>
+  <p className="mt-3 text-sm text-muted-foreground">Python also accepts negative indexes, but many languages do not. Check the language's indexing rules when translating an algorithm.</p>
 </section>
 
 <Hint>
-An index is a position, not a count. The first position is zero, while the number of elements is the length.
+  An index is a position, not a count. The first position is zero, while the
+  number of elements is the length.
 </Hint>
 
 <Quiz
   question="For values = [12, 5, 8, 20], what does values[2] return?"
-  options={['12', '5', '8', '20']}
+  options={["12", "5", "8", "20"]}
   answer={2}
   explanation="Index 0 is 12, index 1 is 5, and index 2 is 8."
 />
