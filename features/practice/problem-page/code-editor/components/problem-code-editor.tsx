@@ -95,11 +95,8 @@ export function ProblemCodeEditor({
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="min-h-0 flex-1 bg-[#FFFFFF] dark:bg-[#1E1E1E]">
           <div className="flex m-2 overflow-x-auto">
-            <div className="flex items-center gap-1.5 cursor-pointer text-sm text-foreground bg-muted px-2 py-1 rounded-sm">
-              <span>Solution 1</span>
-              <button type="button">
-                <X className="w-4 h-4 p-0.5 text-muted-foreground rounded-xs hover:text-red-400 hover:bg-red-400/20" />
-              </button>
+            <div className="flex items-center gap-1.5 text-sm text-foreground bg-muted px-2 py-1 rounded-sm">
+              <span>{activeLanguage.fileName}</span>
             </div>
           </div>
           <div className="h-full overflow-hidden bg-background">
