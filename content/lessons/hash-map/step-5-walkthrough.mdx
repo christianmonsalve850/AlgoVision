@@ -1,0 +1,24 @@
+<div className="border-b border-border pb-4">
+  <h1 className="text-2xl font-bold tracking-tight text-foreground">Walkthrough</h1>
+  <p className="mt-1 text-base text-muted-foreground">Trace <code>count_frequencies(["tea", "coffee", "tea", "tea", "coffee"])</code> as each key is read or added.</p>
+</div>
+
+<section className="lesson-surface my-6 overflow-x-auto p-5">
+  <table className="w-full min-w-128 text-left text-sm">
+    <thead className="border-b border-border text-xs uppercase text-muted-foreground"><tr><th className="px-3 py-2">Input</th><th className="px-3 py-2">Previous count</th><th className="px-3 py-2">Updated map</th></tr></thead>
+    <tbody className="divide-y divide-border font-mono text-foreground">
+      <tr><td className="px-3 py-3">"tea"</td><td className="px-3 py-3">0</td><td className="px-3 py-3">{'{"tea": 1}'}</td></tr>
+      <tr><td className="px-3 py-3">"coffee"</td><td className="px-3 py-3">0</td><td className="px-3 py-3">{'{"tea": 1, "coffee": 1}'}</td></tr>
+      <tr><td className="px-3 py-3">"tea"</td><td className="px-3 py-3">1</td><td className="px-3 py-3">{'{"tea": 2, "coffee": 1}'}</td></tr>
+      <tr><td className="px-3 py-3">"tea"</td><td className="px-3 py-3">2</td><td className="px-3 py-3">{'{"tea": 3, "coffee": 1}'}</td></tr>
+      <tr><td className="px-3 py-3">"coffee"</td><td className="px-3 py-3">1</td><td className="px-3 py-3">{'{"tea": 3, "coffee": 2}'}</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<div className="lesson-surface-muted my-6 p-4 text-sm leading-relaxed text-foreground/80">When a value appears for the first time, <code>get</code> supplies zero. Later appearances retrieve and increment the existing count. The final map contains two keys and the total of all frequencies is five.</div>
+
+<section className="my-6 grid gap-3 sm:grid-cols-2">
+  <div className="lesson-surface p-4"><h2 className="text-sm font-semibold text-foreground">New key</h2><div className="mt-2 font-mono text-sm text-muted-foreground">old count = 0</div></div>
+  <div className="lesson-surface p-4"><h2 className="text-sm font-semibold text-foreground">Existing key</h2><div className="mt-2 font-mono text-sm text-muted-foreground">old count = stored value</div></div>
+</section>

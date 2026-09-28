@@ -1,0 +1,41 @@
+import { AnnotatedCode } from '@/features/lessons/components/annotated-code'
+import { ContextCard } from '@/features/lessons/components/context-card'
+import { Callout } from '@/features/lessons/components/callout'
+
+<ContextCard
+  title="Example: Count Each Value"
+  difficulty="Easy"
+  subtitle="Frequency map"
+  description={<span>Build a dictionary where each distinct input value is a key and its number of occurrences is the associated value.</span>}
+  example={{
+    input: "values = [\"red\", \"blue\", \"red\"]",
+    output: "{\"red\": 2, \"blue\": 1}",
+    note: "One map entry per distinct value",
+  }}
+  keyDifference="The map lets each occurrence update its count without searching a separate list of previously seen values."
+/>
+
+---
+
+<AnnotatedCode
+  language="python"
+  title="Count Frequencies"
+  code={`def count_frequencies(values):
+    counts = {}
+    for value in values:
+        counts[value] = counts.get(value, 0) + 1
+    return counts`}
+  annotations={{
+    1: "Accept the sequence to count.",
+    2: "Start with an empty dictionary.",
+    3: "Process each input value once.",
+    4: "Read its current count, default to zero, then store the incremented count.",
+    5: "Return the completed frequency map.",
+  }}
+/>
+
+---
+
+<Callout type="info">
+  <code>dict.get(key, default)</code> returns the stored value when the key exists; otherwise it returns the default without raising a missing-key error.
+</Callout>

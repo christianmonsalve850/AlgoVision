@@ -1,0 +1,45 @@
+import { ComplexityTable } from '@/features/lessons/components/complexity-table'
+import { Callout } from '@/features/lessons/components/callout'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { Quiz } from '@/features/lessons/components/quiz'
+
+<h1 className="text-2xl font-semibold tracking-tight text-foreground">Operations and Costs</h1>
+
+<p className="my-5 text-base leading-relaxed text-foreground/80">Hash maps trade extra storage for fast key-based access. Their common operation costs are average-case expectations, not unconditional guarantees.</p>
+
+<div className="my-6 overflow-x-auto rounded-lg border border-border">
+  <table className="w-full min-w-120 text-left text-sm">
+    <thead className="bg-muted text-foreground"><tr><th className="px-4 py-3">Operation</th><th className="px-4 py-3">Average</th><th className="px-4 py-3">Worst case</th></tr></thead>
+    <tbody className="divide-y divide-border text-foreground/80">
+      <tr><td className="px-4 py-3">Lookup by key</td><td className="px-4 py-3 font-mono">O(1)</td><td className="px-4 py-3 font-mono">O(n)</td></tr>
+      <tr><td className="px-4 py-3">Insert or update</td><td className="px-4 py-3 font-mono">O(1)</td><td className="px-4 py-3 font-mono">O(n)</td></tr>
+      <tr><td className="px-4 py-3">Delete by key</td><td className="px-4 py-3 font-mono">O(1)</td><td className="px-4 py-3 font-mono">O(n)</td></tr>
+      <tr><td className="px-4 py-3">Visit every entry</td><td className="px-4 py-3 font-mono">O(n)</td><td className="px-4 py-3 font-mono">O(n)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<ComplexityTable
+  before={{ time: 'O(n)', space: 'O(1)' }}
+  after={{ time: 'O(1) average', space: 'O(n)' }}
+  title="Repeated Membership Checks"
+  beforeLabel="Scan a List Each Time"
+  afterLabel="Build a Set or Map"
+/>
+
+<Callout type="info">
+  Collisions and resizing explain why constant time is an average-case description. A poor distribution of keys can make operations slower, though practical hash-map implementations are designed to avoid that in normal use.
+</Callout>
+
+---
+
+<Mistake>
+Assuming a hash map uses no extra memory. It stores key-value entries and supporting structure, so space is typically O(n) for n entries.
+</Mistake>
+
+<Quiz
+  question="What is the average time to look up a key in a well-behaved hash map?"
+  options={['O(1)', 'O(log n)', 'O(n)', 'O(n log n)']}
+  answer={0}
+  explanation="Hashing usually maps the key directly to its entry location, giving average constant-time lookup."
+/>

@@ -1,0 +1,48 @@
+import { Welcome } from '@/features/lessons/components/welcome'
+import { LearningObjectives } from '@/features/lessons/components/learning-objectives'
+import { Callout } from '@/features/lessons/components/callout'
+import { PatternCard } from '@/features/lessons/components/pattern-card'
+import { Checkpoint } from '@/features/lessons/components/checkpoint'
+
+<Welcome
+    title="A hash map connects keys to the values you need to find."
+    text="Instead of scanning a whole collection for a matching item, store information under a key and look it up directly."
+/>
+
+<LearningObjectives
+    objectives={[
+        'Understand key-value storage',
+        'Read, add, update, and remove dictionary entries',
+        'Use a map to count frequencies',
+        'Compare hash-map operations with array scans',
+        'Know the requirements and costs of using keys',
+    ]}
+    title={"What You'll Learn"}
+/>
+
+---
+
+<Callout type="success">
+    Hash maps are especially useful when a problem repeatedly asks whether a value exists or how much information is associated with a key.
+</Callout>
+
+---
+
+<PatternCard
+    title="Where Hash Maps Appear"
+    items={[
+        'Fast lookup by an identifier',
+        'Counting values or characters',
+        'Recording the first or most recent position',
+        'Grouping items by a shared property',
+        'Finding complements, such as a two-sum target',
+    ]}
+/>
+
+---
+
+<Checkpoint>
+
+If you need to find the same value many times, would it help to store information under that value as a key?
+
+</Checkpoint>

@@ -1,0 +1,43 @@
+import { Summary } from '@/features/lessons/components/summary'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { RecommendedProblems } from '@/features/lessons/components/recommended-problems'
+
+<h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground">Summary</h1>
+
+<Summary>
+
+- A hash map stores values under keys for efficient key-based access
+- Python dictionaries support lookup, insertion, update, and deletion by key
+- Lookup and updates are O(1) on average and O(n) in the worst case
+- Frequency maps count occurrences in one pass
+- Keys must be hashable; a map uses O(n) space for n entries
+- Use a set for membership alone and a map when each key needs associated data
+
+</Summary>
+
+---
+
+<h2 className="mt-4 flex items-center gap-2 text-lg font-semibold text-foreground">Common Mistakes</h2>
+
+<Mistake>
+Confusing a key with its associated value, or checking only values when the lookup should be by key.
+</Mistake>
+
+<Mistake>
+Assuming hash maps keep keys sorted or that every operation is guaranteed O(1).
+</Mistake>
+
+<Mistake>
+Using an unhashable mutable object, such as a list, as a Python dictionary key.
+</Mistake>
+
+---
+
+<RecommendedProblems
+  problems={[
+    "Two Sum",
+    "Contains Duplicate",
+    "Valid Anagram",
+    "First Unique Character in a String",
+  ]}
+/>

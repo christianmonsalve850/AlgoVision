@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import twoPointersSteps from '@/content/lessons/two-pointers';
 import arraysSteps from '@/content/lessons/arrays';
 import slidingWindowSteps from '@/content/lessons/sliding-window';
+import hashMapSteps from '@/content/lessons/hash-map';
 
 type LessonMdxStepsProps = {
   slug: string;
@@ -29,7 +30,9 @@ export default function LessonMdxSteps({ slug, step }: LessonMdxStepsProps) {
         ? twoPointersSteps
         : normalizedSlug === 'sliding-window'
           ? slidingWindowSteps
-          : [];
+          : normalizedSlug === 'hash-map'
+            ? hashMapSteps
+            : [];
 
   if (steps.length === 0) {
     return null;
