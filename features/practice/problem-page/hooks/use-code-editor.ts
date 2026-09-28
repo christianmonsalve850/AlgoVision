@@ -32,6 +32,10 @@ export function useCodeEditor({
     localStorage.setItem(compositeKey, defaultCode);
   };
 
+  const handleLanguageChange = (newLang: Language) => {
+    setLanguage(newLang);
+  };
+
   const handleEditorChange = (value: string | undefined) => {
     const currentCode = value || "";
     setCode(currentCode);
@@ -53,7 +57,7 @@ export function useCodeEditor({
   return {
     code,
     language,
-    setLanguage,
+    handleLanguageChange,
     handleReset,
     handleEditorChange,
   };

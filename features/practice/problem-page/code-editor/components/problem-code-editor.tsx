@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useMemo, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { ChevronDown, Play, RotateCcw, X } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
@@ -9,13 +9,8 @@ import type {
   Language,
   ProblemCodeEditorPanelProps,
 } from "@/features/practice/problem-page/code-editor/types";
-import { executeTraceForTestCases } from "@/lib/algovision-harness/src/script";
-import { TestResult, useTraceStore } from "../../stores/use-trace-store";
-import {
-  evaluateTrace,
-  isEqual,
-} from "@/features/practice/problem-page/code-editor/utils";
 import { useCodeEditor } from "@/features/practice/problem-page/hooks/use-code-editor";
+import { useProblemRunner } from "@/features/practice/problem-page/hooks/use-problem-runner";
 
 export function ProblemCodeEditor({
   problem_id,
@@ -25,10 +20,11 @@ export function ProblemCodeEditor({
   testCases,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
+  const [ isOpenConsole, setIsOpenConsole ] = useState<boolean>(false)
   const {
     code,
     language,
-    setLanguage,
+    handleLanguageChange,
     handleReset,
     handleEditorChange,
   } = useCodeEditor({
@@ -36,95 +32,20 @@ export function ProblemCodeEditor({
     starterCodeMap,
   });
 
-  const setTraceForCase = useTraceStore((state) => state.setTraceForCase);
-  const setIsRunning = useTraceStore((state) => state.setIsRunning);
+  const { run } = useProblemRunner({
+    code,
+    testCases,
+    functionName: function_name,
+    className: class_name,
+    onRunStart: () => setIsOpenConsole(true),
+  });
   
-
   const activeLanguage = useMemo(
     () =>
       languageOptions.find((option) => option.value === language) ??
       languageOptions[0],
     [language],
   );
-
-  const handleLanguageChange = (nextLanguage: Language) => {
-    setLanguage(nextLanguage);
-  };
-
-  const executionDetails = {
-    className: class_name,
-    functionName: function_name,
-  };
-
-  const handleRun = async () => {
-    try {
-      setIsRunning(true);
-      const outcomes = await executeTraceForTestCases(
-        code,
-        testCases,
-        executionDetails,
-      );
-      // Grade each test case outcome
-      const gradedResults = outcomes.map((outcome) => {
-        const testCase = testCases.find((tc) => tc.id === outcome.testCaseId);
-
-        if (!outcome.success || outcome.error) {
-          return {
-            ...outcome,
-            passed: false,
-            status: "error" as const,
-            actualOutput: undefined,
-            expectedOutput: testCase?.expected_output,
-            error: typeof outcome.error === "string" ? outcome.error : "Execution failed",
-            errorDetails: outcome.errorDetails ?? outcome.error,
-          };
-        }
-
-        const evalResult = evaluateTrace(outcome.trace ?? [], function_name);
-
-        let isPassed = false;
-        let status: "passed" | "failed" | "error" = "failed";
-
-        if (evalResult.status === "error") {
-          status = "error";
-        } else {
-          isPassed = isEqual(
-            evalResult.actualOutput,
-            testCase?.expected_output,
-          );
-          status = isPassed ? "passed" : "failed";
-        }
-
-        return {
-          ...outcome,
-          passed: isPassed,
-          status, // "passed" | "failed" | "error"
-          actualOutput: evalResult.actualOutput,
-          expectedOutput: testCase?.expected_output,
-          error: evalResult.error,
-          errorDetails: evalResult.errorDetails,
-        };
-      });
-
-      // Update state/store
-      for (const result of gradedResults) {
-        const testStatus = {
-          passed: result.passed,
-          status: result.status,
-          actualOutput: result.actualOutput,
-          expectedOutput: result.expectedOutput,
-          error: result.error,
-          errorDetails: result.errorDetails,
-        } as TestResult;
-
-        setTraceForCase(result.testCaseId, testStatus?.error ? [] : result.trace, testStatus);
-      }
-    } catch (error) {
-      console.error("executeTrace error:", error);
-    } finally {
-      setIsRunning(false);
-    }
-  };
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background shadow-sm">
@@ -163,7 +84,7 @@ export function ProblemCodeEditor({
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-lg bg-foreground px-3 py-2 text-sm font-medium text-background transition-colors hover:opacity-90"
-            onClick={handleRun}
+            onClick={run}
           >
             <Play className="size-4" />
             Run
