@@ -18,4 +18,6 @@ export interface ProblemEditorPanelProps {
   testCases: TestCase[];
 }
 
-export type ProblemCodeEditorPanelProps = ProblemEditorPanelProps;
+export interface ProblemCodeEditorPanelProps extends ProblemEditorPanelProps {
+  setIsOpenConsole: React.Dispatch<React.SetStateAction<boolean>>;
+}

@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
-import type { ProblemCodeEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
+import type { ProblemEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
 import {
   Group,
   Separator,
@@ -22,7 +22,7 @@ export function ProblemEditorPanel({
   class_name,
   starterCodeMap,
   testCases
-}: ProblemCodeEditorPanelProps) {
+}: ProblemEditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [isTestCaseSelected, setIsTestCaseSelected] = useState<boolean>(true);
   
@@ -35,7 +35,7 @@ export function ProblemEditorPanel({
         if (panel.isCollapsed()) {
           panel.expand();
         }
-        panel.resize(300);
+        panel.resize(360);
       } else {
         if (!panel.isCollapsed()) {
           panel.collapse();
@@ -62,6 +62,7 @@ export function ProblemEditorPanel({
               class_name={class_name}
               starterCodeMap={starterCodeMap}
               testCases={testCases}
+              setIsOpenConsole={setIsOpenConsole}
             />
           </Panel>
 

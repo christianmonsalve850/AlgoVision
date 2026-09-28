@@ -18,9 +18,9 @@ export function ProblemCodeEditor({
   class_name,
   starterCodeMap,
   testCases,
+  setIsOpenConsole,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
-  const [ isOpenConsole, setIsOpenConsole ] = useState<boolean>(false)
   const {
     code,
     language,
