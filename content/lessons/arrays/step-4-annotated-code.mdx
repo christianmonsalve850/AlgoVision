@@ -1,0 +1,51 @@
+import { AnnotatedCode } from '@/features/lessons/components/annotated-code'
+import { ContextCard } from '@/features/lessons/components/context-card'
+import { Callout } from '@/features/lessons/components/callout'
+
+<ContextCard
+  title="Example: Find the Largest Value"
+  difficulty="Easy"
+  subtitle="One pass through an array"
+  description={
+    <p>Keep the largest value seen so far. Start with the first element, then compare each remaining value against it.</p>
+  }
+  example={{
+    input: "values = [4, 1, 7, 3]",
+    output: "7",
+    note: "Each value is examined once",
+  }}
+  keyDifference="The algorithm takes O(n) time and O(1) extra space. It does not create another array."
+/>
+
+---
+
+<AnnotatedCode
+  language="python"
+  title="Find the Largest Value"
+  code={`def find_max(values):
+    if not values:
+        return None
+
+    largest = values[0]
+    for index in range(1, len(values)):
+        if values[index] > largest:
+            largest = values[index]
+
+    return largest`}
+  annotations={{
+    1: "Define a function that accepts the array.",
+    2: "Handle the empty-array case before indexing.",
+    3: "There is no maximum when the input is empty.",
+    5: "Use the first value as the initial maximum.",
+    6: "Visit every remaining index once.",
+    7: "Compare the current value with the best seen so far.",
+    8: "Update the maximum only when a larger value is found.",
+    10: "Return the largest value after the traversal.",
+  }}
+/>
+
+---
+
+<Callout type="info">
+  Starting with <code>values[0]</code> is safe because the function checks for an empty array first. Without that check, indexing an empty array would fail.
+</Callout>

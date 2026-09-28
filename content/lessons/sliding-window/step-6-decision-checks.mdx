@@ -1,0 +1,46 @@
+import { DecisionQuiz } from '@/features/lessons/components/decision-quiz'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { Quiz } from '@/features/lessons/components/quiz'
+
+<section className="lesson-surface my-8 p-6">
+  <div className="flex items-center gap-2">
+    <span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-600 dark:bg-emerald-400" />
+    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">Interactive Prompt</span>
+  </div>
+  <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground">Choose the Window Movement</h1>
+  <p className="mt-2 text-sm leading-relaxed text-foreground/80">A fixed-size window currently covers indices 1 through 3. To move it one position right, which values change?</p>
+</section>
+
+<DecisionQuiz
+  question="How should the running sum change?"
+  options={['Add index 4 and subtract index 1', 'Add index 1 and subtract index 4', 'Recompute every value in the array', 'Remove both boundary values']}
+  answer={0}
+  explanation="The next window includes the value at index 4 and no longer includes the value at index 1."
+/>
+
+---
+
+<DecisionQuiz
+  question="For a variable window tracking a sum that must reach a target, when is the usual expand-then-shrink rule justified?"
+  options={['Whenever the array is sorted', 'When all values are nonnegative', 'Only when the window has size 2', 'Whenever the target is positive']}
+  answer={1}
+  explanation="With nonnegative values, expanding cannot decrease the sum and shrinking cannot increase it. Negative values break that monotonic reasoning."
+/>
+
+---
+
+<Mistake>
+Subtracting the wrong outgoing element. For a fixed window of size k with right edge at r, the element leaving is at index r - k.
+</Mistake>
+
+<Quiz
+  question="Which statement about sliding windows is correct?"
+  options={[
+    'A window may skip elements between its boundaries',
+    'Every window represents a contiguous range',
+    'Every sliding-window problem has fixed size',
+    'Window sums require rescanning the entire range after each move',
+  ]}
+  answer={1}
+  explanation="Contiguity is what makes the range a window. Its size may be fixed or variable."
+/>

@@ -1,0 +1,60 @@
+import { AnnotatedCode } from '@/features/lessons/components/annotated-code'
+import { ContextCard } from '@/features/lessons/components/context-card'
+import { Callout } from '@/features/lessons/components/callout'
+
+<ContextCard
+  title="Example: Maximum Sum of k Consecutive Values"
+  difficulty="Easy"
+  subtitle="Fixed-size window"
+  description={
+    <p>Given a list and a positive window size k, return the largest sum among all contiguous ranges of exactly k values.</p>
+  }
+  example={{
+    input: "values = [2, 1, 5, 1, 3, 2], k = 3",
+    output: "9",
+    note: "The range [5, 1, 3] has the largest sum",
+  }}
+  keyDifference="A direct approach sums every length-k range in O(nk). Updating the running sum takes O(1) per move, for O(n) total time."
+/>
+
+---
+
+<AnnotatedCode
+  language="python"
+  title="Maximum Sum of k Consecutive Values"
+  code={`def max_window_sum(values, k):
+    if k <= 0 or k > len(values):
+        return None
+
+    window_sum = 0
+    for index in range(k):
+        window_sum += values[index]
+
+    best_sum = window_sum
+    for right in range(k, len(values)):
+        window_sum += values[right]
+        window_sum -= values[right - k]
+        best_sum = max(best_sum, window_sum)
+
+    return best_sum`}
+  annotations={{
+    1: "Define the function with the input list and window size.",
+    2: "Reject a window size that cannot describe a valid range.",
+    3: "Return a clear sentinel for invalid input.",
+    5: "Start the running sum at zero.",
+    6: "Build the first window once.",
+    7: "Add each of its k values.",
+    9: "The first window is the best seen so far.",
+    10: "Move the right edge across each remaining value.",
+    11: "Include the value entering the window.",
+    12: "Remove the value that just left the window.",
+    13: "Keep the larger of the previous best and current sum.",
+    15: "Return the maximum window sum.",
+  }}
+/>
+
+---
+
+<Callout type="info">
+  Add the incoming value and subtract the outgoing one. The window remains exactly k elements wide, and negative values are handled correctly because this fixed-size method does not depend on shrinking by a sum threshold.
+</Callout>

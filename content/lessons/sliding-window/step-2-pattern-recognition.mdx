@@ -1,0 +1,59 @@
+import { DecisionTree } from '@/features/lessons/components/desicion-tree'
+import { PatternSignals } from '@/features/lessons/components/pattern-signals'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { Quiz } from '@/features/lessons/components/quiz'
+
+<h1 className="text-2xl font-semibold tracking-tight text-foreground">Recognizing the Pattern</h1>
+
+<div className="lesson-surface my-6 p-5">
+  <p className="text-base leading-relaxed text-foreground/80">Sliding window is a strong candidate when a problem asks about a <strong>contiguous</strong> section of an array or string and many overlapping ranges need to be considered.</p>
+</div>
+
+<DecisionTree
+  decisionSteps={{
+    1: {
+      question: 'Does the problem ask about a contiguous subarray or substring?',
+      yesOption: { label: 'Yes, elements stay consecutive', nextStepId: 2 },
+      noOption: { label: 'No, elements can be chosen freely', result: 'Consider another technique, such as a hash set, sorting, or dynamic programming' },
+    },
+    2: {
+      question: 'Is the window length fixed at k?',
+      yesOption: { label: 'Yes, every range has size k', result: 'Use a fixed-size sliding window' },
+      noOption: { label: 'No, the range grows or shrinks to satisfy a condition', result: 'Consider a variable-size sliding window; verify the condition supports your boundary movement' },
+    },
+  }}
+/>
+
+---
+
+<div className="lesson-surface-muted mt-8 px-4 py-3">
+  <h2 className="text-lg font-semibold tracking-tight text-foreground">Common Signals</h2>
+</div>
+
+<PatternSignals
+  signals={[
+    'Contiguous subarray or substring',
+    'Longest or shortest valid range',
+    'A fixed number k of consecutive elements',
+    'Repeated calculations over overlapping ranges',
+    'A sum, count, or frequency maintained for the current range',
+  ]}
+/>
+
+---
+
+<Mistake>
+Treating any collection of elements as a window. A sliding window preserves contiguity; it does not skip arbitrary positions.
+</Mistake>
+
+<Quiz
+  question="Which request most directly suggests a sliding window?"
+  options={[
+    'Find any two values that add to a target',
+    'Find the largest sum of 5 consecutive values',
+    'Find a path through a binary tree',
+    'Sort a list of names',
+  ]}
+  answer={1}
+  explanation="The range is explicitly contiguous and has a fixed size, so a fixed-size window fits."
+/>

@@ -1,0 +1,33 @@
+<div className="border-b border-border pb-4">
+  <h1 className="text-2xl font-bold tracking-tight text-foreground">Walkthrough</h1>
+  <p className="mt-1 text-base text-muted-foreground">Slide a window of size 3 across <code>[2, 1, 5, 1, 3, 2]</code> and track its sum.</p>
+</div>
+
+<section className="lesson-surface my-6 overflow-x-auto p-5">
+  <table className="w-full min-w-lg text-left text-sm">
+    <thead className="border-b border-border text-xs uppercase text-muted-foreground">
+      <tr><th className="px-3 py-2">Window</th><th className="px-3 py-2">Enter</th><th className="px-3 py-2">Leave</th><th className="px-3 py-2">Sum</th><th className="px-3 py-2">Best</th></tr>
+    </thead>
+    <tbody className="divide-y divide-border font-mono text-foreground">
+      <tr><td className="px-3 py-3">[2, 1, 5]</td><td className="px-3 py-3">-</td><td className="px-3 py-3">-</td><td className="px-3 py-3">8</td><td className="px-3 py-3">8</td></tr>
+      <tr><td className="px-3 py-3">[1, 5, 1]</td><td className="px-3 py-3">1</td><td className="px-3 py-3">2</td><td className="px-3 py-3">7</td><td className="px-3 py-3">8</td></tr>
+      <tr><td className="px-3 py-3">[5, 1, 3]</td><td className="px-3 py-3">3</td><td className="px-3 py-3">1</td><td className="px-3 py-3">9</td><td className="px-3 py-3">9</td></tr>
+      <tr><td className="px-3 py-3">[1, 3, 2]</td><td className="px-3 py-3">2</td><td className="px-3 py-3">5</td><td className="px-3 py-3">6</td><td className="px-3 py-3">9</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<div className="lesson-surface-muted my-6 p-4 text-sm leading-relaxed text-foreground/80">
+  Each move reuses the previous sum: add the new rightmost value and subtract the old leftmost value. The largest sum is <strong className="text-foreground">9</strong>, from the window <code>[5, 1, 3]</code>.
+</div>
+
+<section className="my-6 grid gap-3 sm:grid-cols-2">
+  <div className="lesson-surface p-4">
+    <h2 className="text-sm font-semibold text-foreground">One full-size window</h2>
+    <p className="mt-2 font-mono text-sm text-muted-foreground">[6, 2], k = 2 -&gt; maximum sum 8</p>
+  </div>
+  <div className="lesson-surface p-4">
+    <h2 className="text-sm font-semibold text-foreground">Window too wide</h2>
+    <p className="mt-2 font-mono text-sm text-muted-foreground">[6, 2], k = 3 -&gt; no valid window</p>
+  </div>
+</section>

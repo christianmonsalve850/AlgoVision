@@ -1,0 +1,43 @@
+import { Summary } from '@/features/lessons/components/summary'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { RecommendedProblems } from '@/features/lessons/components/recommended-problems'
+
+<h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground">Summary</h1>
+
+<Summary>
+
+- Sliding windows represent contiguous ranges in arrays or strings
+- Fixed-size windows add the incoming value and remove the outgoing value
+- Variable-size windows expand and shrink according to a condition
+- Each boundary usually moves forward at most n times, giving O(n) traversal
+- Sum-based shrinking generally relies on nonnegative values for its usual monotonic rule
+- Track exactly which values enter and leave the window
+
+</Summary>
+
+---
+
+<h2 className="mt-4 flex items-center gap-2 text-lg font-semibold text-foreground">Common Mistakes</h2>
+
+<Mistake>
+Applying the pattern to a problem about non-contiguous selections.
+</Mistake>
+
+<Mistake>
+Forgetting to remove the outgoing value when a fixed-size window advances.
+</Mistake>
+
+<Mistake>
+Shrinking a sum-based variable window with negative values as though the sum changed monotonically.
+</Mistake>
+
+---
+
+<RecommendedProblems
+  problems={[
+    "Maximum Average Subarray I",
+    "Minimum Size Subarray Sum",
+    "Longest Substring Without Repeating Characters",
+    "Fruit Into Baskets",
+  ]}
+/>

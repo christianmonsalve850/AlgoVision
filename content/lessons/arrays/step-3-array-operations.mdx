@@ -1,0 +1,43 @@
+import { Callout } from '@/features/lessons/components/callout'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { Quiz } from '@/features/lessons/components/quiz'
+
+<h1 className="text-2xl font-semibold tracking-tight text-foreground">Common Array Operations</h1>
+
+<p className="my-5 text-base leading-relaxed text-foreground/80">An array gives fast access when you already know the index. Finding a value or inserting into the middle may require looking at or shifting many elements.</p>
+
+<div className="my-6 overflow-x-auto rounded-lg border border-border">
+  <table className="w-full min-w-120 text-left text-sm">
+    <thead className="bg-muted text-foreground">
+      <tr><th className="px-4 py-3">Operation</th><th className="px-4 py-3">Typical time</th><th className="px-4 py-3">Why</th></tr>
+    </thead>
+    <tbody className="divide-y divide-border text-foreground/80">
+      <tr><td className="px-4 py-3">Read or update by index</td><td className="px-4 py-3 font-mono">O(1)</td><td className="px-4 py-3">The position identifies the element directly.</td></tr>
+      <tr><td className="px-4 py-3">Search an unsorted array</td><td className="px-4 py-3 font-mono">O(n)</td><td className="px-4 py-3">You may need to inspect every value.</td></tr>
+      <tr><td className="px-4 py-3">Append to a dynamic array</td><td className="px-4 py-3 font-mono">Amortized O(1)</td><td className="px-4 py-3">Most appends are constant time; occasional resizing costs more.</td></tr>
+      <tr><td className="px-4 py-3">Insert or delete in the middle</td><td className="px-4 py-3 font-mono">O(n)</td><td className="px-4 py-3">Following elements may need to shift.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<Callout type="info">
+  Python's <code>list</code> is a dynamic array implementation. Its <code>append</code> operation is amortized O(1), not guaranteed O(1) for every individual append.
+</Callout>
+
+---
+
+<section className="lesson-surface my-6 p-5">
+  <h2 className="text-lg font-semibold text-foreground">Search depends on what you know</h2>
+  <p className="mt-2 text-sm leading-relaxed text-foreground/80">In an unsorted array, a simple search checks values one by one. If the array is sorted, binary search can reduce the search time to O(log n), but it relies on that sorted order.</p>
+</section>
+
+<Mistake>
+Assuming that inserting at index 0 is as cheap as appending. In a dynamic array, existing elements usually have to shift.
+</Mistake>
+
+<Quiz
+  question="What is the typical time to find a target in an unsorted array of n values?"
+  options={['O(1)', 'O(log n)', 'O(n)', 'O(n²)']}
+  answer={2}
+  explanation="Without ordering or another lookup structure, the target may be anywhere, so the search can inspect every element."
+/>

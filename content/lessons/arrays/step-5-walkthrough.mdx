@@ -1,0 +1,34 @@
+<div className="border-b border-border pb-4">
+  <h1 className="text-2xl font-bold tracking-tight text-foreground">Walkthrough</h1>
+  <p className="mt-1 text-base text-muted-foreground">Trace <code>find_max([4, 1, 7, 3, 9])</code> and keep track of the largest value seen.</p>
+</div>
+
+<section className="lesson-surface my-6 overflow-x-auto p-5">
+  <table className="w-full min-w-120 text-left text-sm">
+    <thead className="border-b border-border text-xs uppercase text-muted-foreground">
+      <tr><th className="px-3 py-2">Index</th><th className="px-3 py-2">Value</th><th className="px-3 py-2">Largest so far</th><th className="px-3 py-2">Decision</th></tr>
+    </thead>
+    <tbody className="divide-y divide-border font-mono text-foreground">
+      <tr><td className="px-3 py-3">0</td><td className="px-3 py-3">4</td><td className="px-3 py-3">4</td><td className="px-3 py-3">Initialize</td></tr>
+      <tr><td className="px-3 py-3">1</td><td className="px-3 py-3">1</td><td className="px-3 py-3">4</td><td className="px-3 py-3">Keep 4</td></tr>
+      <tr><td className="px-3 py-3">2</td><td className="px-3 py-3">7</td><td className="px-3 py-3">7</td><td className="px-3 py-3">Replace 4 with 7</td></tr>
+      <tr><td className="px-3 py-3">3</td><td className="px-3 py-3">3</td><td className="px-3 py-3">7</td><td className="px-3 py-3">Keep 7</td></tr>
+      <tr><td className="px-3 py-3">4</td><td className="px-3 py-3">9</td><td className="px-3 py-3">9</td><td className="px-3 py-3">Replace 7 with 9</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<div className="lesson-surface-muted my-6 p-4 text-sm leading-relaxed text-foreground/80">
+  The loop ends after index 4. The stored maximum is <strong className="text-foreground">9</strong>, so that is the return value. The algorithm never needs to revisit an earlier element.
+</div>
+
+<section className="my-6 grid gap-3 sm:grid-cols-2">
+  <div className="lesson-surface p-4">
+    <h2 className="text-sm font-semibold text-foreground">Single element</h2>
+    <p className="mt-2 font-mono text-sm text-muted-foreground">find_max([6]) returns 6</p>
+  </div>
+  <div className="lesson-surface p-4">
+    <h2 className="text-sm font-semibold text-foreground">All negative</h2>
+    <p className="mt-2 font-mono text-sm text-muted-foreground">find_max([-8, -2, -5]) returns -2</p>
+  </div>
+</section>
