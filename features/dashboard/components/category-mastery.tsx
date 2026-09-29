@@ -17,7 +17,7 @@ export default async function CategoryMastery() {
 
   if (categoryCompletion && categoryCompletion.length < 1) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border/80 bg-card/50 p-8 text-center min-h-[220px]">
+      <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border/80 bg-card/50 p-8 text-center min-h-55">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground">
           <FolderOpen className="h-5 w-5" />
         </div>
