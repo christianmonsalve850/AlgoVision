@@ -1,0 +1,57 @@
+import { AnnotatedCode } from '@/features/lessons/components/annotated-code'
+import { ContextCard } from '@/features/lessons/components/context-card'
+import { Callout } from '@/features/lessons/components/callout'
+
+<ContextCard
+  title="Example: Find a Target"
+  difficulty="Easy"
+  subtitle="Sorted array"
+  description={<span>Return the index of a target in an ascending array, or -1 if the target is absent.</span>}
+  example={{
+    input: "values = [2, 5, 8, 12, 16], target = 12",
+    output: "3",
+    note: "The target is at zero-based index 3",
+  }}
+  keyDifference="The search interval is cut in half after each comparison, giving O(log n) time and O(1) extra space."
+/>
+
+---
+
+<AnnotatedCode
+  language="python"
+  title="Iterative Binary Search"
+  code={`def binary_search(values, target):
+    left = 0
+    right = len(values) - 1
+
+    while left <= right:
+        middle = left + (right - left) // 2
+
+        if values[middle] == target:
+            return middle
+        elif values[middle] < target:
+            left = middle + 1
+        else:
+            right = middle - 1
+
+    return -1`}
+  annotations={{
+    1: "Accept the sorted values and target.",
+    2: "Start at the first valid index.",
+    3: "The last valid index is one less than the length.",
+    5: "Search while at least one candidate remains.",
+    6: "Choose a midpoint inside the current interval.",
+    8: "Return immediately when the target is found.",
+    10: "The target must be to the right of a smaller middle value.",
+    11: "Exclude the middle value from the next interval.",
+    13: "Otherwise the target must be to the left.",
+    14: "Exclude the middle value from the next interval.",
+    16: "The interval is empty, so the target is absent.",
+  }}
+/>
+
+---
+
+<Callout type="info">
+  This version returns any matching index when duplicates exist. Finding the first or last occurrence requires continuing the search after a match while tracking a candidate answer.
+</Callout>

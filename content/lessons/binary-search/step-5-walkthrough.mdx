@@ -1,0 +1,22 @@
+<div className="border-b border-border pb-4">
+  <h1 className="text-2xl font-bold tracking-tight text-foreground">Walkthrough</h1>
+  <p className="mt-1 text-base text-muted-foreground">Search for <code>16</code> in <code>[2, 5, 8, 12, 16, 23, 38]</code>.</p>
+</div>
+
+<section className="lesson-surface my-6 overflow-x-auto p-5">
+  <table className="w-full min-w-128 text-left text-sm">
+    <thead className="border-b border-border text-xs uppercase text-muted-foreground"><tr><th className="px-3 py-2">Left</th><th className="px-3 py-2">Right</th><th className="px-3 py-2">Middle</th><th className="px-3 py-2">Value</th><th className="px-3 py-2">Decision</th></tr></thead>
+    <tbody className="divide-y divide-border font-mono text-foreground">
+      <tr><td className="px-3 py-3">0</td><td className="px-3 py-3">6</td><td className="px-3 py-3">3</td><td className="px-3 py-3">12</td><td className="px-3 py-3">12 &lt; 16, search right</td></tr>
+      <tr><td className="px-3 py-3">4</td><td className="px-3 py-3">6</td><td className="px-3 py-3">5</td><td className="px-3 py-3">23</td><td className="px-3 py-3">23 &gt; 16, search left</td></tr>
+      <tr><td className="px-3 py-3">4</td><td className="px-3 py-3">4</td><td className="px-3 py-3">4</td><td className="px-3 py-3">16</td><td className="px-3 py-3">Found at index 4</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<div className="lesson-surface-muted my-6 p-4 text-sm leading-relaxed text-foreground/80">Each comparison removes every value on one side of the midpoint. The target is found after three checks, and the function returns its zero-based index, <strong className="text-foreground">4</strong>.</div>
+
+<section className="my-6 grid gap-3 sm:grid-cols-2">
+  <div className="lesson-surface p-4"><h2 className="text-sm font-semibold text-foreground">Empty input</h2><div className="mt-2 font-mono text-sm text-muted-foreground">left = 0, right = -1, return -1</div></div>
+  <div className="lesson-surface p-4"><h2 className="text-sm font-semibold text-foreground">Target outside range</h2><div className="mt-2 font-mono text-sm text-muted-foreground">The interval eventually becomes empty</div></div>
+</section>

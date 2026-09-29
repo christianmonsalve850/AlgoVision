@@ -1,0 +1,57 @@
+import { DecisionTree } from '@/features/lessons/components/desicion-tree'
+import { PatternSignals } from '@/features/lessons/components/pattern-signals'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { Quiz } from '@/features/lessons/components/quiz'
+
+<h1 className="text-2xl font-semibold tracking-tight text-foreground">Recognizing the Pattern</h1>
+
+<div className="lesson-surface my-6 p-5">
+  <p className="text-base leading-relaxed text-foreground/80">Binary search applies when the candidate values have an order that lets a comparison rule out one side completely.</p>
+</div>
+
+<DecisionTree
+  decisionSteps={{
+    1: {
+      question: 'Is the collection sorted, or does the search condition change monotonically?',
+      yesOption: { label: 'Yes, order gives a reliable direction', nextStepId: 2 },
+      noOption: { label: 'No, comparisons cannot rule out a range', result: 'Use a linear scan or establish a valid ordering first' },
+    },
+    2: {
+      question: 'Can one comparison eliminate half of the remaining candidates?',
+      yesOption: { label: 'Yes, one side is impossible', result: 'Binary search is a strong candidate' },
+      noOption: { label: 'No, the result gives no directional information', result: 'Choose another search strategy' },
+    },
+  }}
+/>
+
+---
+
+<div className="lesson-surface-muted mt-8 px-4 py-3"><h2 className="text-lg font-semibold tracking-tight text-foreground">Common Signals</h2></div>
+
+<PatternSignals
+  signals={[
+    'Input is sorted',
+    'Need to find a target or insertion position',
+    'A yes/no condition changes only once across ordered candidates',
+    'A linear scan is too slow for repeated lookups',
+    'Each comparison can discard a whole range',
+  ]}
+/>
+
+---
+
+<Mistake>
+Running binary search on unsorted data. Without a meaningful order, the middle comparison cannot prove which half is safe to discard.
+</Mistake>
+
+<Quiz
+  question="Which input is directly suitable for ordinary binary search?"
+  options={[
+    'An unsorted list of unique values',
+    'A sorted list of numbers',
+    'A linked list with unknown order',
+    'A set of unrelated records without a comparison rule',
+  ]}
+  answer={1}
+  explanation="The sorted order makes comparisons directional: smaller values lie to the left and larger values to the right."
+/>

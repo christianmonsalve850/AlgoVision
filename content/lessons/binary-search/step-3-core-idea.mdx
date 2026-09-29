@@ -1,0 +1,32 @@
+import { ComplexityTable } from '@/features/lessons/components/complexity-table'
+import { Hint } from '@/features/lessons/components/hint'
+import { Callout } from '@/features/lessons/components/callout'
+
+<section className="lesson-surface my-8 p-6">
+  <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">The Core Idea</h1>
+  <p className="mt-3 text-base leading-relaxed text-foreground/80">Keep a range of possible answers. Check its midpoint, then discard only the half that cannot contain the target.</p>
+</section>
+
+<div className="my-6 grid gap-3 sm:grid-cols-3">
+  <div className="lesson-surface-muted p-4"><h2 className="text-sm font-semibold text-foreground">1. Find the middle</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Choose an index between the current left and right bounds.</p></div>
+  <div className="lesson-surface-muted p-4"><h2 className="text-sm font-semibold text-foreground">2. Compare</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Check whether the middle value is equal to, below, or above the target.</p></div>
+  <div className="lesson-surface-muted p-4"><h2 className="text-sm font-semibold text-foreground">3. Keep a valid range</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">Move one bound past the midpoint so the next search is smaller.</p></div>
+</div>
+
+<ComplexityTable
+  before={{ time: 'O(n)', space: 'O(1)' }}
+  after={{ time: 'O(log n)', space: 'O(1)' }}
+  title="Searching a Sorted Array"
+  beforeLabel="Linear Scan"
+  afterLabel="Binary Search"
+/>
+
+<Callout type="info">
+  With inclusive bounds, the active search interval is <code>[left, right]</code>. Continue while <code>left &lt;= right</code>, and return not-found only after the interval becomes empty.
+</Callout>
+
+---
+
+<Hint>
+If the middle value is too small, set <code>left = middle + 1</code>. If it is too large, set <code>right = middle - 1</code>. Excluding the middle prevents the search from getting stuck.
+</Hint>
