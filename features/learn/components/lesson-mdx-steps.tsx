@@ -6,6 +6,7 @@ import twoPointersSteps from '@/content/lessons/two-pointers';
 import arraysSteps from '@/content/lessons/arrays';
 import slidingWindowSteps from '@/content/lessons/sliding-window';
 import hashMapSteps from '@/content/lessons/hash-map';
+import binarySearchSteps from '@/content/lessons/binary-search';
 
 type LessonMdxStepsProps = {
   slug: string;
@@ -32,7 +33,9 @@ export default function LessonMdxSteps({ slug, step }: LessonMdxStepsProps) {
           ? slidingWindowSteps
           : normalizedSlug === 'hash-map'
             ? hashMapSteps
-            : [];
+            : normalizedSlug === 'binary-search'
+              ? binarySearchSteps
+              : [];
 
   if (steps.length === 0) {
     return null;

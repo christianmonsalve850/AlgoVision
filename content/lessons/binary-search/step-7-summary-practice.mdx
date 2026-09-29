@@ -1,0 +1,43 @@
+import { Summary } from '@/features/lessons/components/summary'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { RecommendedProblems } from '@/features/lessons/components/recommended-problems'
+
+<h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground">Summary</h1>
+
+<Summary>
+
+- Binary search needs sorted data or another monotonic search condition
+- Keep the search interval and its boundary convention consistent
+- Compare the middle candidate, then exclude it when moving a bound
+- Halving the candidate range gives O(log n) time
+- An iterative search uses O(1) extra space
+- Ordinary search may return any matching index when duplicates exist
+
+</Summary>
+
+---
+
+<h2 className="mt-4 flex items-center gap-2 text-lg font-semibold text-foreground">Common Mistakes</h2>
+
+<Mistake>
+Searching unsorted values or assuming that a midpoint comparison can discard a half without a valid ordering.
+</Mistake>
+
+<Mistake>
+Mixing inclusive and exclusive boundary rules, which can skip candidates or cause an infinite loop.
+</Mistake>
+
+<Mistake>
+Forgetting to move past the midpoint after it has already been checked.
+</Mistake>
+
+---
+
+<RecommendedProblems
+  problems={[
+    "Binary Search",
+    "Search Insert Position",
+    "First Bad Version",
+    "Search a 2D Matrix",
+  ]}
+/>

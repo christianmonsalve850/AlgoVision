@@ -1,0 +1,48 @@
+import { Welcome } from '@/features/lessons/components/welcome'
+import { LearningObjectives } from '@/features/lessons/components/learning-objectives'
+import { Callout } from '@/features/lessons/components/callout'
+import { PatternCard } from '@/features/lessons/components/pattern-card'
+import { Checkpoint } from '@/features/lessons/components/checkpoint'
+
+<Welcome
+    title="Binary search finds a target by cutting the search range in half."
+    text="When data is ordered, each comparison can eliminate many candidates at once instead of checking every value."
+/>
+
+<LearningObjectives
+    objectives={[
+        'Identify the ordering binary search requires',
+        'Choose and maintain inclusive search bounds',
+        'Move a boundary after comparing the middle value',
+        'Explain why the running time is O(log n)',
+        'Handle empty inputs and absent targets safely',
+    ]}
+    title={"What You'll Learn"}
+/>
+
+---
+
+<Callout type="success">
+    Binary search is powerful because a comparison tells you which half of an ordered search space can be discarded.
+</Callout>
+
+---
+
+<PatternCard
+    title="Where You'll See It"
+    items={[
+        'Finding a value in a sorted array',
+        'Finding where a value belongs in sorted order',
+        'Looking up a value in a sorted range',
+        'Searching for the first or last position meeting a condition',
+        'Searching a monotonic answer space',
+    ]}
+/>
+
+---
+
+<Checkpoint>
+
+If the data is ordered, what can the middle value tell you about every value on one side of it?
+
+</Checkpoint>

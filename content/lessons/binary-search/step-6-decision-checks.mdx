@@ -1,0 +1,38 @@
+import { DecisionQuiz } from '@/features/lessons/components/decision-quiz'
+import { Mistake } from '@/features/lessons/components/mistake'
+import { Quiz } from '@/features/lessons/components/quiz'
+
+<section className="lesson-surface my-8 p-6">
+  <div className="flex items-center gap-2"><span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-600 dark:bg-emerald-400" /><span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">Check Your Understanding</span></div>
+  <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground">Make the Next Decision</h1>
+  <p className="mt-2 text-sm leading-relaxed text-foreground/80">Use the sorted order to discard only values that cannot contain the target.</p>
+</section>
+
+<DecisionQuiz
+  question="The middle value is 10 and the target is 14. Which bound changes?"
+  options={['Move left to middle + 1', 'Move right to middle - 1', 'Move both bounds', 'Keep the same bounds']}
+  answer={0}
+  explanation="All values at or left of the middle are too small, so continue in the right half."
+/>
+
+---
+
+<DecisionQuiz
+  question="For inclusive bounds, when should the search loop stop?"
+  options={['When left is greater than right', 'When left equals right', 'After one comparison', 'When middle equals left']}
+  answer={0}
+  explanation="When left exceeds right, no candidate indices remain. Equality still represents one valid index to check."
+/>
+
+---
+
+<Mistake>
+Using <code>left &lt; right</code> with inclusive bounds can skip checking the final remaining element.
+</Mistake>
+
+<Quiz
+  question="What must be true before ordinary binary search can rule out half the values?"
+  options={['The array must contain unique values', 'The values must have a useful sorted order', 'The array length must be even', 'The target must be present']}
+  answer={1}
+  explanation="Uniqueness and a present target are not required, but the ordering must make comparisons directional."
+/>
