@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { useUserProfile } from "@/hooks/use-user-profile";
+import { useRouter } from "next/navigation";
 
 export function AccountButton() {
   const { avatarUrl } = useUserProfile();
+  const router = useRouter();
 
   return (
     <>
@@ -19,7 +21,10 @@ export function AccountButton() {
           />
         </button>
       ) : (
-        <button className="rounded-sm border border-border bg-background flex items-center justify-center text-muted-foreground hover:text-foreground font-semibold text-sm px-2">
+        <button 
+          className="rounded-sm border border-border bg-background flex items-center justify-center text-muted-foreground hover:text-foreground font-semibold text-sm px-2"
+          onClick={() => router.replace('/login')}
+        >
           Sign In
         </button>
       )}
