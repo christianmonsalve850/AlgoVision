@@ -31,15 +31,21 @@ export function useProblemSubmitter({
             });
 
             for (const result of visibleTestCaseResults) {
-                if (!result.testResult?.passed) {
-                    submissionResult = {
-                        success: false,
-                        failedTestCase: result.testResult,
-                    };
-                    onSubmitEnd?.(submissionResult);
-                }
                 setTraceForCase(result.testCaseId, result.trace, result.testResult);
             } 
+
+            const failedVisibleTestCase = visibleTestCaseResults.find(
+                (result) => !result.testResult?.passed,
+            );
+
+            if (failedVisibleTestCase) {
+                submissionResult = {
+                    success: false,
+                    failedTestCase: failedVisibleTestCase.testResult,
+                };
+                onSubmitEnd?.(submissionResult);
+                return submissionResult;
+            }
 
             const hiddenTestCaseResults = await executeProblem({
                 code,
@@ -48,15 +54,18 @@ export function useProblemSubmitter({
                 className
             })
 
-            for (const result of hiddenTestCaseResults) {
-                if (!result.testResult?.passed) {
-                    submissionResult = {
-                        success: false,
-                        failedTestCase: result.testResult,
-                    };
-                    onSubmitEnd?.(submissionResult);
-                }
-            } 
+            const failedHiddenTestCase = hiddenTestCaseResults.find(
+                (result) => !result.testResult?.passed,
+            );
+            
+            if (failedHiddenTestCase) {
+                submissionResult = {
+                    success: false,
+                    failedTestCase: failedHiddenTestCase.testResult,
+                };
+                onSubmitEnd?.(submissionResult);
+                return submissionResult;
+            }
 
             submissionResult = { success: true };
             onSubmitEnd?.(submissionResult);

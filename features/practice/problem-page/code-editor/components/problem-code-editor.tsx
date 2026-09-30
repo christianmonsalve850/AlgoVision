@@ -74,7 +74,7 @@ export function ProblemCodeEditor({
       <SubmissionOverlay
         status={submissionStatus}
         onClose={() => setSubmissionStatus(null)}
-        durationMs={2000} // Optional: display duration (default is 2000ms)
+        durationMs={2000}
       />
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">

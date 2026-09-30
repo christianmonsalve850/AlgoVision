@@ -7,7 +7,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 interface SubmissionOverlayProps {
   status: "success" | "failure" | null;
   onClose: () => void;
-  durationMs?: number; // Optional duration, default 2000ms
+  durationMs?: number;
 }
 
 export function SubmissionOverlay({
@@ -18,12 +18,10 @@ export function SubmissionOverlay({
   useEffect(() => {
     if (!status) return;
 
-    // Automatically trigger onClose after durationMs
     const timer = setTimeout(() => {
       onClose();
     }, durationMs);
 
-    // Cleanup timer if component unmounts or status changes before timeout
     return () => clearTimeout(timer);
   }, [status, durationMs, onClose]);
 
