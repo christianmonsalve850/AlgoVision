@@ -7,12 +7,14 @@ export function useProblemRunner ({
     visibleTestCases,
     functionName,
     className,
+    setExecutionStatus,
     onRunStart,
 } : UseProblemRunnerOptions ) : UseProblemRunnerReturn {
     const setIsRunning = useTraceStore((state) => state.setIsRunning);
     const setTraceForCase = useTraceStore((state) => state.setTraceForCase);
     
     const run = async () => {
+      setExecutionStatus("running");
         try {
             setIsRunning(true);
             onRunStart?.();
@@ -29,6 +31,7 @@ export function useProblemRunner ({
           console.error("executeTrace error:", error);
         } finally {
           setIsRunning(false);
+          setExecutionStatus("idle");
         }
       };
     return { run };

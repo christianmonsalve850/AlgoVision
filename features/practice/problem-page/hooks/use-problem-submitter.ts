@@ -8,6 +8,7 @@ export function useProblemSubmitter({
     hiddenTestCases,
     functionName,
     className,
+    setExecutionStatus,
     onSubmitStart,
     onSubmitEnd
 } : UseProblemSubmitterOptions) : UseProblemSubmitterReturn {
@@ -15,6 +16,7 @@ export function useProblemSubmitter({
     const setTraceForCase = useTraceStore((state) => state.setTraceForCase);
 
     const submit = async (): Promise<SubmissionResult> => {
+        setExecutionStatus("submitting");
         let submissionResult: SubmissionResult;
 
         try {
@@ -71,6 +73,7 @@ export function useProblemSubmitter({
             return submissionResult;
         } finally {
           setIsRunning(false);
+          setExecutionStatus("idle")
         }
       };
     return { submit };

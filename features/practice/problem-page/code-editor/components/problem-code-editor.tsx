@@ -13,6 +13,8 @@ import { useCodeEditor } from "@/features/practice/problem-page/hooks/use-code-e
 import { useProblemRunner } from "@/features/practice/problem-page/hooks/use-problem-runner";
 import { useProblemSubmitter } from "@/features/practice/problem-page/hooks/use-problem-submitter";
 import { SubmissionOverlay } from "@/features/practice/problem-page/code-editor/components/submission-overlay";
+import { Spinner } from "@/components/ui/spinner";
+import { ExecutionStatus } from "@/features/practice/problem-page/types";
 
 export function ProblemCodeEditor({
   problem_id,
@@ -24,9 +26,8 @@ export function ProblemCodeEditor({
   setIsOpenConsole,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
-  const [submissionStatus, setSubmissionStatus] = useState<
-    "success" | "failure" | null
-  >(null);
+  const [ submissionStatus, setSubmissionStatus ] = useState<"success" | "failure" | null>(null);
+  const [ executionsStatus, setExecutionStatus ] = useState<ExecutionStatus>("idle");
 
   const {
     code,
@@ -44,6 +45,7 @@ export function ProblemCodeEditor({
     visibleTestCases,
     functionName: function_name,
     className: class_name,
+    setExecutionStatus,
     onRunStart: () => setIsOpenConsole(true),
   });
 
@@ -53,6 +55,7 @@ export function ProblemCodeEditor({
     hiddenTestCases,
     functionName: function_name,
     className: class_name,
+    setExecutionStatus,
     onSubmitStart: () => setIsOpenConsole(true),
     onSubmitEnd: (result) => {
       setSubmissionStatus(result.success ? "success" : "failure");
@@ -110,7 +113,7 @@ export function ProblemCodeEditor({
             className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
             onClick={run}
           >
-            <Play className="size-4" />
+            { executionsStatus == "running" ? <Spinner /> : <Play className="size-4" />}
             Run
           </button>
 
@@ -119,7 +122,7 @@ export function ProblemCodeEditor({
             className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-500"
             onClick={submit}
           >
-            <Send className="size-4" />
+            { executionsStatus == "submitting" ? <Spinner /> : <Send className="size-4" />}
             Submit
           </button>
         </div>
