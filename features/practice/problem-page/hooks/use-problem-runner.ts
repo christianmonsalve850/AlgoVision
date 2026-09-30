@@ -4,21 +4,23 @@ import { executeProblem } from "@/features/practice/problem-page/services/execut
 
 export function useProblemRunner ({
     code,
-    testCases,
+    visibleTestCases,
     functionName,
     className,
+    setExecutionStatus,
     onRunStart,
 } : UseProblemRunnerOptions ) : UseProblemRunnerReturn {
     const setIsRunning = useTraceStore((state) => state.setIsRunning);
     const setTraceForCase = useTraceStore((state) => state.setTraceForCase);
     
     const run = async () => {
+      setExecutionStatus("running");
         try {
             setIsRunning(true);
             onRunStart?.();
             const results = await executeProblem({
                 code,
-                testCases,
+                testCases: visibleTestCases,
                 functionName,
                 className,
             });
@@ -29,6 +31,7 @@ export function useProblemRunner ({
           console.error("executeTrace error:", error);
         } finally {
           setIsRunning(false);
+          setExecutionStatus("idle");
         }
       };
     return { run };

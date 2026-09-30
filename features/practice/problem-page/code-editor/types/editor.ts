@@ -15,7 +15,8 @@ export interface ProblemEditorPanelProps {
   function_name: string;
   class_name: string;
   starterCodeMap: StarterCodeMap;
-  testCases: TestCase[];
+  visibleTestCases: TestCase[];
+  hiddenTestCases: TestCase[];
 }
 
 export interface ProblemCodeEditorPanelProps extends ProblemEditorPanelProps {

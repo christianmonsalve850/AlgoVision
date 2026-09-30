@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Editor from "@monaco-editor/react";
-import { ChevronDown, Play, RotateCcw, X } from "lucide-react";
+import { ChevronDown, Play, RotateCcw, Send } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
 import { languageOptions } from "@/features/practice/problem-page/code-editor/constants/languages";
 import type {
@@ -11,16 +11,24 @@ import type {
 } from "@/features/practice/problem-page/code-editor/types";
 import { useCodeEditor } from "@/features/practice/problem-page/hooks/use-code-editor";
 import { useProblemRunner } from "@/features/practice/problem-page/hooks/use-problem-runner";
+import { useProblemSubmitter } from "@/features/practice/problem-page/hooks/use-problem-submitter";
+import { SubmissionOverlay } from "@/features/practice/problem-page/code-editor/components/submission-overlay";
+import { Spinner } from "@/components/ui/spinner";
+import { ExecutionStatus } from "@/features/practice/problem-page/types";
 
 export function ProblemCodeEditor({
   problem_id,
   function_name,
   class_name,
   starterCodeMap,
-  testCases,
+  visibleTestCases,
+  hiddenTestCases,
   setIsOpenConsole,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
+  const [ submissionStatus, setSubmissionStatus ] = useState<"success" | "failure" | null>(null);
+  const [ executionsStatus, setExecutionStatus ] = useState<ExecutionStatus>("idle");
+
   const {
     code,
     language,
@@ -34,12 +42,26 @@ export function ProblemCodeEditor({
 
   const { run } = useProblemRunner({
     code,
-    testCases,
+    visibleTestCases,
     functionName: function_name,
     className: class_name,
+    setExecutionStatus,
     onRunStart: () => setIsOpenConsole(true),
   });
-  
+
+  const { submit } = useProblemSubmitter({
+    code,
+    visibleTestCases,
+    hiddenTestCases,
+    functionName: function_name,
+    className: class_name,
+    setExecutionStatus,
+    onSubmitStart: () => setIsOpenConsole(true),
+    onSubmitEnd: (result) => {
+      setSubmissionStatus(result.success ? "success" : "failure");
+    },
+  });
+
   const activeLanguage = useMemo(
     () =>
       languageOptions.find((option) => option.value === language) ??
@@ -49,6 +71,11 @@ export function ProblemCodeEditor({
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background shadow-sm">
+      <SubmissionOverlay
+        status={submissionStatus}
+        onClose={() => setSubmissionStatus(null)}
+        durationMs={2000}
+      />
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex items-center gap-2">
@@ -83,11 +110,20 @@ export function ProblemCodeEditor({
           </button>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg bg-foreground px-3 py-2 text-sm font-medium text-background transition-colors hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
             onClick={run}
           >
-            <Play className="size-4" />
+            { executionsStatus == "running" ? <Spinner /> : <Play className="size-4" />}
             Run
+          </button>
+
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-500"
+            onClick={submit}
+          >
+            { executionsStatus == "submitting" ? <Spinner /> : <Send className="size-4" />}
+            Submit
           </button>
         </div>
       </div>

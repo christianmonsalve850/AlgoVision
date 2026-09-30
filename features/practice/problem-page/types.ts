@@ -14,6 +14,8 @@ export type PlaybackControlsProps = {
   onSpeedChange: (speed: PlaybackSpeed) => void;
 };
 
+export type ExecutionStatus = "idle" | "running" | "submitting";
+
 export interface UseCodeEditorReturn {
   code: string;
   language: Language;
@@ -30,9 +32,10 @@ export interface UseCodeEditorOptions {
 
 export interface UseProblemRunnerOptions {
   code: string;
-  testCases: TestCase[];
+  visibleTestCases: TestCase[];
   functionName: string;
   className: string;
+  setExecutionStatus: React.Dispatch<React.SetStateAction<ExecutionStatus>>;
   onRunStart?: () => void;
 }
 
@@ -51,4 +54,25 @@ export interface ExecuteProblemReturn {
   testCaseId: string;
   trace: TraceStep[];
   testResult: TestResult;
+}
+
+export interface UseProblemSubmitterOptions {
+  code: string;
+  visibleTestCases: TestCase[];
+  hiddenTestCases: TestCase[];
+  functionName: string;
+  className: string;
+  setExecutionStatus: React.Dispatch<React.SetStateAction<ExecutionStatus>>;
+  onSubmitStart?: () => void;
+  onSubmitEnd?: (result: SubmissionResult) => void;
+}
+
+export interface SubmissionResult {
+  success: boolean;
+  failedTestCase?: TestResult;
+  error?: string;
+}
+
+export interface UseProblemSubmitterReturn {
+  submit: () => Promise<SubmissionResult>;
 }

@@ -48,9 +48,11 @@ export interface TestCase {
   created_at?: string;
 }
 
-export type ProblemEditorPanelProps = {
+export interface ProblemPageShellProps {
+  problem: ProblemRecord;
+  examples: ProblemExample[];
   starterCodeMap: StarterCodeMap;
-  testCases: TestCase[];
-};
+  visibleTestCases: TestCase[];
+  hiddenTestCases: TestCase[];
+}
 
-export type ProblemPageData = ProblemSidebarProps & ProblemEditorPanelProps;
