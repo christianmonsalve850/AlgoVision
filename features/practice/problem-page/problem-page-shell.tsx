@@ -3,7 +3,7 @@
 import { ProblemEditorPanel } from "@/features/practice/problem-page/code-editor/components/problem-editor-panel";
 import { ProblemSidebar } from "@/features/practice/problem-page/problem/components/problem-sidebar";
 import { ProblemVisualizationPanel } from "@/features/practice/problem-page/visualization/components/common/problem-visualization-panel";
-import type { ProblemPageData } from "@/features/practice/problem-page/problem/types";
+import type { ProblemPageShellProps } from "@/features/practice/problem-page/problem/types";
 import { PlaybackControls } from "@/features/practice/problem-page/playback-controls";
 import type { PlaybackSpeed } from "@/features/practice/problem-page/types";
 import { filterUserTrace } from "@/features/practice/problem-page/visualization/utils";
@@ -18,8 +18,9 @@ export function ProblemPageShell({
   problem,
   examples,
   starterCodeMap,
-  testCases,
-}: ProblemPageData) {
+  visibleTestCases,
+  hiddenTestCases,
+}: ProblemPageShellProps) {
   const activeCaseId = useTraceStore((state) => state.activeCaseId);
   const activeTrace = useTraceStore(
     (state) =>
@@ -109,7 +110,8 @@ export function ProblemPageShell({
             function_name={problem.function_name}
             class_name={problem.class_name}
             starterCodeMap={starterCodeMap}
-            testCases={testCases}
+            visibleTestCases={visibleTestCases}
+            hiddenTestCases={hiddenTestCases}
           />
         </Panel>
         <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-x border-border">

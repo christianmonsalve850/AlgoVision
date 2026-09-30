@@ -30,7 +30,7 @@ export interface UseCodeEditorOptions {
 
 export interface UseProblemRunnerOptions {
   code: string;
-  testCases: TestCase[];
+  visibleTestCases: TestCase[];
   functionName: string;
   className: string;
   onRunStart?: () => void;
@@ -42,7 +42,7 @@ export interface UseProblemRunnerReturn {
 
 export interface ExecuteProblemOptions {
   code: string;
-  testCases: TestCase[];
+  visibleTestCases: TestCase[];
   functionName: string;
   className: string;
 }

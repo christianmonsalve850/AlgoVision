@@ -17,7 +17,8 @@ export function ProblemCodeEditor({
   function_name,
   class_name,
   starterCodeMap,
-  testCases,
+  visibleTestCases,
+  hiddenTestCases,
   setIsOpenConsole,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
@@ -34,7 +35,7 @@ export function ProblemCodeEditor({
 
   const { run } = useProblemRunner({
     code,
-    testCases,
+    visibleTestCases,
     functionName: function_name,
     className: class_name,
     onRunStart: () => setIsOpenConsole(true),

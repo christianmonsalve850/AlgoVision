@@ -21,7 +21,8 @@ export function ProblemEditorPanel({
   function_name,
   class_name,
   starterCodeMap,
-  testCases
+  visibleTestCases,
+  hiddenTestCases
 }: ProblemEditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [isTestCaseSelected, setIsTestCaseSelected] = useState<boolean>(true);
@@ -61,7 +62,8 @@ export function ProblemEditorPanel({
               function_name={function_name}
               class_name={class_name}
               starterCodeMap={starterCodeMap}
-              testCases={testCases}
+              visibleTestCases={visibleTestCases}
+              hiddenTestCases={hiddenTestCases}
               setIsOpenConsole={setIsOpenConsole}
             />
           </Panel>
@@ -112,7 +114,7 @@ export function ProblemEditorPanel({
             {/* Console Content */}
             <div className="min-h-0 flex-1 overflow-y-auto">
               { isTestCaseSelected ? 
-                <ProblemTestCasesPanel testCases={testCases} /> : 
+                <ProblemTestCasesPanel testCases={visibleTestCases} /> : 
                 <div></div>
               }
             </div>

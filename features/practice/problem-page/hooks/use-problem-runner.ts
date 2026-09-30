@@ -4,7 +4,7 @@ import { executeProblem } from "@/features/practice/problem-page/services/execut
 
 export function useProblemRunner ({
     code,
-    testCases,
+    visibleTestCases,
     functionName,
     className,
     onRunStart,
@@ -18,7 +18,7 @@ export function useProblemRunner ({
             onRunStart?.();
             const results = await executeProblem({
                 code,
-                testCases,
+                visibleTestCases,
                 functionName,
                 className,
             });
