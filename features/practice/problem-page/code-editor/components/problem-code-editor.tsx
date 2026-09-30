@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Editor from "@monaco-editor/react";
-import { ChevronDown, Play, RotateCcw, X } from "lucide-react";
+import { ChevronDown, Play, RotateCcw, Send } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
 import { languageOptions } from "@/features/practice/problem-page/code-editor/constants/languages";
 import type {
@@ -40,7 +40,7 @@ export function ProblemCodeEditor({
     className: class_name,
     onRunStart: () => setIsOpenConsole(true),
   });
-  
+
   const activeLanguage = useMemo(
     () =>
       languageOptions.find((option) => option.value === language) ??
@@ -84,11 +84,19 @@ export function ProblemCodeEditor({
           </button>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg bg-foreground px-3 py-2 text-sm font-medium text-background transition-colors hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
             onClick={run}
           >
             <Play className="size-4" />
             Run
+          </button>
+
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-500"
+          >
+            <Send className="size-4" />
+            Submit
           </button>
         </div>
       </div>
