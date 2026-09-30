@@ -8,15 +8,18 @@ export function useProblemSubmitter({
     hiddenTestCases,
     functionName,
     className,
-    onRunStart,
+    onSubmitStart,
+    onSubmitEnd
 } : UseProblemSubmitterOptions) : UseProblemSubmitterReturn {
     const setIsRunning = useTraceStore((state) => state.setIsRunning);
     const setTraceForCase = useTraceStore((state) => state.setTraceForCase);
 
     const submit = async (): Promise<SubmissionResult> => {
+        let submissionResult: SubmissionResult;
+
         try {
             setIsRunning(true);
-            onRunStart?.();
+            onSubmitStart?.();
 
             const visibleTestCaseResults  = await executeProblem({
                 code,
@@ -27,10 +30,11 @@ export function useProblemSubmitter({
 
             for (const result of visibleTestCaseResults) {
                 if (!result.testResult?.passed) {
-                    return {
+                    submissionResult = {
                         success: false,
                         failedTestCase: result.testResult,
                     };
+                    onSubmitEnd?.(submissionResult);
                 }
                 setTraceForCase(result.testCaseId, result.trace, result.testResult);
             } 
@@ -44,22 +48,27 @@ export function useProblemSubmitter({
 
             for (const result of hiddenTestCaseResults) {
                 if (!result.testResult?.passed) {
-                    return {
+                    submissionResult = {
                         success: false,
                         failedTestCase: result.testResult,
                     };
+                    onSubmitEnd?.(submissionResult);
                 }
             } 
 
-            return { success: true };
+            submissionResult = { success: true };
+            onSubmitEnd?.(submissionResult);
+            return submissionResult;
 
         } catch (error) {
           console.error("executeTrace error:", error);
 
-          return {
-            success: false,
-            error: error instanceof Error ? error.message : "Execution failed",
-        };
+          submissionResult = {
+                success: false,
+                error: error instanceof Error ? error.message : "Execution failed",
+            };
+            onSubmitEnd?.(submissionResult);
+            return submissionResult;
         } finally {
           setIsRunning(false);
         }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { ChevronDown, Play, RotateCcw, Send } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
@@ -12,6 +12,7 @@ import type {
 import { useCodeEditor } from "@/features/practice/problem-page/hooks/use-code-editor";
 import { useProblemRunner } from "@/features/practice/problem-page/hooks/use-problem-runner";
 import { useProblemSubmitter } from "@/features/practice/problem-page/hooks/use-problem-submitter";
+import { SubmissionOverlay } from "@/features/practice/problem-page/code-editor/components/submission-overlay";
 
 export function ProblemCodeEditor({
   problem_id,
@@ -23,6 +24,10 @@ export function ProblemCodeEditor({
   setIsOpenConsole,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
+  const [submissionStatus, setSubmissionStatus] = useState<
+    "success" | "failure" | null
+  >(null);
+
   const {
     code,
     language,
@@ -48,7 +53,10 @@ export function ProblemCodeEditor({
     hiddenTestCases,
     functionName: function_name,
     className: class_name,
-    onRunStart: () => setIsOpenConsole(true),
+    onSubmitStart: () => setIsOpenConsole(true),
+    onSubmitEnd: (result) => {
+      setSubmissionStatus(result.success ? "success" : "failure");
+    },
   });
 
   const activeLanguage = useMemo(
@@ -60,6 +68,11 @@ export function ProblemCodeEditor({
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background shadow-sm">
+      <SubmissionOverlay
+        status={submissionStatus}
+        onClose={() => setSubmissionStatus(null)}
+        durationMs={2000} // Optional: display duration (default is 2000ms)
+      />
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex items-center gap-2">

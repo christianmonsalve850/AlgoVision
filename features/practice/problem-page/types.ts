@@ -59,7 +59,8 @@ export interface UseProblemSubmitterOptions {
   hiddenTestCases: TestCase[];
   functionName: string;
   className: string;
-  onRunStart?: () => void;
+  onSubmitStart?: () => void;
+  onSubmitEnd?: (result: SubmissionResult) => void;
 }
 
 export interface SubmissionResult {
