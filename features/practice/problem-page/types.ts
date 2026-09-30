@@ -42,7 +42,7 @@ export interface UseProblemRunnerReturn {
 
 export interface ExecuteProblemOptions {
   code: string;
-  visibleTestCases: TestCase[];
+  testCases: TestCase[];
   functionName: string;
   className: string;
 }
@@ -51,4 +51,23 @@ export interface ExecuteProblemReturn {
   testCaseId: string;
   trace: TraceStep[];
   testResult: TestResult;
+}
+
+export interface UseProblemSubmitterOptions {
+  code: string;
+  visibleTestCases: TestCase[];
+  hiddenTestCases: TestCase[];
+  functionName: string;
+  className: string;
+  onRunStart?: () => void;
+}
+
+export interface SubmissionResult {
+  success: boolean;
+  failedTestCase?: TestResult;
+  error?: string;
+}
+
+export interface UseProblemSubmitterReturn {
+  submit: () => Promise<SubmissionResult>;
 }

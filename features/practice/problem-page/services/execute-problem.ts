@@ -6,7 +6,7 @@ import { TestResult } from "@/features/practice/problem-page/code-editor/types";
 
 export async function executeProblem({
   code,
-  visibleTestCases,
+  testCases,
   functionName,
   className,
 } : ExecuteProblemOptions ) : Promise<ExecuteProblemReturn[]> {
@@ -17,12 +17,12 @@ export async function executeProblem({
 
   const outcomes = await executeTraceForTestCases(
     code,
-    visibleTestCases,
+    testCases,
     executionDetails,
   );
 
   const gradedResults = outcomes.map((outcome) => {
-    const testCase = visibleTestCases.find((tc) => tc.id === outcome.testCaseId);
+    const testCase = testCases.find((tc) => tc.id === outcome.testCaseId);
 
     if (!outcome.success || outcome.error) {
       return {

@@ -18,7 +18,7 @@ export function useProblemRunner ({
             onRunStart?.();
             const results = await executeProblem({
                 code,
-                visibleTestCases,
+                testCases: visibleTestCases,
                 functionName,
                 className,
             });

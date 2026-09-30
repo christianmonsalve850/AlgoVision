@@ -11,6 +11,7 @@ import type {
 } from "@/features/practice/problem-page/code-editor/types";
 import { useCodeEditor } from "@/features/practice/problem-page/hooks/use-code-editor";
 import { useProblemRunner } from "@/features/practice/problem-page/hooks/use-problem-runner";
+import { useProblemSubmitter } from "@/features/practice/problem-page/hooks/use-problem-submitter";
 
 export function ProblemCodeEditor({
   problem_id,
@@ -36,6 +37,15 @@ export function ProblemCodeEditor({
   const { run } = useProblemRunner({
     code,
     visibleTestCases,
+    functionName: function_name,
+    className: class_name,
+    onRunStart: () => setIsOpenConsole(true),
+  });
+
+  const { submit } = useProblemSubmitter({
+    code,
+    visibleTestCases,
+    hiddenTestCases,
     functionName: function_name,
     className: class_name,
     onRunStart: () => setIsOpenConsole(true),
@@ -94,6 +104,7 @@ export function ProblemCodeEditor({
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-500"
+            onClick={submit}
           >
             <Send className="size-4" />
             Submit
