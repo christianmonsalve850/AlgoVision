@@ -2,18 +2,16 @@ import { Progress } from "@/components/ui/progress";
 import { createClient } from "@/lib/supabase/server";
 import { FolderOpen } from "lucide-react";
 
-export default async function CategoryMastery() {
-  const supabase = await createClient();
+export interface CategoryCompletionItem {
+  category: string | null;
+  completion_percentage: number | null;
+}
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export interface CategoryMasteryProps {
+  categoryCompletion: CategoryCompletionItem[] | null;
+}
 
-  const { data: categoryCompletion, error: categoryCompletionError } =
-    await supabase
-      .from("category_completion_rates")
-      .select("category, completion_percentage")
-      .eq("user_id", user?.id);
+export default async function CategoryMastery({categoryCompletion} : CategoryMasteryProps) {
 
   if (categoryCompletion && categoryCompletion.length < 1) {
     return (
