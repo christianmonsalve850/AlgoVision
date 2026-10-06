@@ -1,10 +1,16 @@
 import { Progress } from "@/components/ui/progress";
 import { CircleCheckBig } from "lucide-react";
 
-export default function ProblemsSolved() {
-  const current = 45;
-  const total = 100;
-  const percentage = Math.round((current / total) * 100);
+interface ProblemsSolvedProps {
+  solved: number,
+  total: number,
+}
+
+export default function ProblemsSolved({
+  solved,
+  total,
+} : ProblemsSolvedProps) {
+  const percentage = total === 0 ? 0 : Math.round((solved / total) * 100);
 
   return (
     <div className="flex flex-col gap-5 rounded-xl border border-border bg-card p-6 shadow-sm">
@@ -18,7 +24,7 @@ export default function ProblemsSolved() {
           </p>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-extrabold tracking-tight text-card-foreground">
-              {current}
+              {solved}
             </span>
             <span className="text-xs text-muted-foreground">
               / {total}
@@ -34,7 +40,7 @@ export default function ProblemsSolved() {
         </div>
         <Progress value={percentage} />
         <p className="text-xs text-muted-foreground">
-          <strong className="font-semibold text-foreground">{current}</strong> of{" "}
+          <strong className="font-semibold text-foreground">{solved}</strong> of{" "}
           <strong className="font-semibold text-foreground">{total}</strong> problems completed
         </p>
       </div>
