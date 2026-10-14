@@ -76,7 +76,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
     console.log(hiddenTestCasesError);
   }
 
-  const problemHiddenTestCases = (visibleTestCases ?? []) as TestCase[];
+  const problemHiddenTestCases = (hiddenTestCases ?? []) as TestCase[];
 
   const starterCodeMap = Object.fromEntries(
     (starterCode ?? []).map((row) => [

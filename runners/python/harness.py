@@ -27,24 +27,28 @@ def _same_json_value(actual: Any, expected: Any) -> bool:
 def run_submission(
     source_code: str,
     test_cases: list[dict[str, Any]],
+    class_name: str,
     function_name: str,
 ) -> dict[str, Any]:
-    """Execute a Python solution against test cases with named or positional inputs."""
+    """Execute a class-based Python solution against named or positional inputs."""
+    # Check that inputs are valid
     if not isinstance(source_code, str):
         raise ValueError("sourceCode must be a string")
     if not isinstance(test_cases, list) or not test_cases:
         raise ValueError("testCases must be a non-empty array")
+    if not isinstance(class_name, str) or not class_name:
+        raise ValueError("className must be a non-empty string")
     if not isinstance(function_name, str) or not function_name:
         raise ValueError("functionName must be a non-empty string")
 
     prepared_cases = []
-    for index, test_case in enumerate(test_cases):
+    for test_case in test_cases:
         if not isinstance(test_case, Mapping):
-            raise ValueError(f"testCases[{index}] must be an object")
+            raise ValueError(f"testCases[{test_case['order_index']}] must be an object")
 
         inputs = test_case.get("input")
         if not isinstance(inputs, (dict, list)):
-            raise ValueError(f"testCases[{index}].input must be an object or array")
+            raise ValueError(f"testCases[{test_case['order_index']}].input must be an object or array")
 
         if "expected_output" in test_case:
             expected_output = test_case["expected_output"]
@@ -52,11 +56,11 @@ def run_submission(
             expected_output = test_case["expectedOutput"]
         else:
             raise ValueError(
-                f"testCases[{index}] is missing expected_output/expectedOutput"
+                f"testCases[{test_case['order_index']}] is missing expected_output/expectedOutput"
             )
 
         prepared_cases.append(
-            (test_case.get("id", str(index)), inputs, expected_output)
+            (test_case.get("id", str(test_case['order_index'])), inputs, expected_output)
         )
 
     try:
@@ -66,6 +70,7 @@ def run_submission(
         compiled_code = None
         compile_error = error
 
+    # Run code and compare output to expected output
     results = []
     for test_case_id, inputs, expected_output in prepared_cases:
         captured_stdout = io.StringIO()
@@ -77,10 +82,14 @@ def run_submission(
             with contextlib.redirect_stdout(captured_stdout):
                 exec(compiled_code, namespace)
 
-                function = namespace[function_name]
+                solution_class = namespace[class_name]
+                if not isinstance(solution_class, type):
+                    raise TypeError(f"{class_name} is not a class")
 
+                solution = solution_class()
+                function = getattr(solution, function_name)
                 if not callable(function):
-                    raise TypeError(f"{function_name} is not callable")
+                    raise TypeError(f"{class_name}.{function_name} is not callable")
 
                 actual_output = (
                     function(**inputs)

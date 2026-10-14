@@ -14,11 +14,13 @@ def main():
 
         source_code = payload.get("sourceCode")
         test_cases = payload.get("testCases")
+        class_name = payload.get("className")
         function_name = payload.get("functionName")
 
         result = run_submission(
             source_code=source_code,
             test_cases=test_cases,
+            class_name=class_name,
             function_name=function_name,
         )
         print(json.dumps(result))

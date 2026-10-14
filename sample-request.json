@@ -1,10 +1,15 @@
 {
+  "className": "Solution",
   "functionName": "twoSum",
-  "sourceCode": "def twoSum(nums, target):\n    for i in range(len(nums)):\n        for j in range(i + 1, len(nums)):\n            if nums[i] + nums[j] == target:\n                return [i, j]\n    return []",
+  "sourceCode": "class Solution:\n    def twoSum(self, nums, target):\n        for i in range(len(nums)):\n            for j in range(i + 1, len(nums)):\n                if nums[i] + nums[j] == target:\n                    return [i, j]\n        return []",
   "testCases": [
     {
-      "input": [[2, 7, 11, 15], 9],
-      "expectedOutput": [0, 1]
+      "id": "7cfe388e-b898-404d-bce5-e89d48f9d4df",
+      "input": {"nums": [2, 7, 11, 15], "target": 9},
+      "expectedOutput": [0, 1],
+      "is_hidden": false,
+      "order_index": 1,
+      "problem_id": "828d67e0-8a62-44a9-a0cd-dd5cebce7491"
     }
   ]
 }
