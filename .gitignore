@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/runners/python/.venv/
 
 # next.js
 /.next/

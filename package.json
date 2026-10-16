@@ -6,7 +6,8 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:python": "cd runners/python && pytest"
   },
   "dependencies": {
     "@codemirror/lang-python": "^6.2.1",

@@ -42,13 +42,13 @@ def run_submission(
         raise ValueError("functionName must be a non-empty string")
 
     prepared_cases = []
-    for test_case in test_cases:
+    for index, test_case in enumerate(test_cases):
         if not isinstance(test_case, Mapping):
-            raise ValueError(f"testCases[{test_case['order_index']}] must be an object")
+            raise ValueError(f"testCases[{index}] must be an object")
 
         inputs = test_case.get("input")
         if not isinstance(inputs, (dict, list)):
-            raise ValueError(f"testCases[{test_case['order_index']}].input must be an object or array")
+            raise ValueError(f"testCases[{index}].input must be an object or array")
 
         if "expected_output" in test_case:
             expected_output = test_case["expected_output"]
@@ -56,11 +56,11 @@ def run_submission(
             expected_output = test_case["expectedOutput"]
         else:
             raise ValueError(
-                f"testCases[{test_case['order_index']}] is missing expected_output/expectedOutput"
+                f"testCases[{index}] is missing expected_output/expectedOutput"
             )
 
         prepared_cases.append(
-            (test_case.get("id", str(test_case['order_index'])), inputs, expected_output)
+            (test_case.get("id", str(index)), inputs, expected_output)
         )
 
     try:
