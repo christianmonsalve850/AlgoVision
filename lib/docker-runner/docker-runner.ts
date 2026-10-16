@@ -1,6 +1,5 @@
-import type { ChildProcessWithoutNullStreams } from "node:child_process";
-import { randomUUID } from "node:crypto";
-import { spawn } from "node:child_process";
+import type { ChildProcessWithoutNullStreams } from "child_process";
+import { spawn } from "child_process";
 import type { ExecutionPayload, ExecutionResult } from "@/lib/docker-runner/types";
 
 const EXECUTION_TIMEOUT_MS = 3000;
@@ -43,7 +42,12 @@ class PythonExecutionWorker {
 
   execute(payload: ExecutionPayload): Promise<ExecutionResult> {
     return new Promise((resolve, reject) => {
-      this.queue.push({ id: randomUUID(), payload, resolve, reject });
+      this.queue.push({
+        id: payload.executionId,
+        payload,
+        resolve,
+        reject,
+      });
 
       void this.start()
         .then(() => this.dispatchNext())
@@ -73,7 +77,7 @@ class PythonExecutionWorker {
       this.stdoutBuffer = "";
       this.stderr = "";
       this.terminationReason = null;
-      this.containerName = `algovision-python-worker-${randomUUID()}`;
+      this.containerName = `algovision-python-worker-${globalThis.crypto.randomUUID()}`;
       this.container = spawn("docker", [
         "run",
         "--rm",

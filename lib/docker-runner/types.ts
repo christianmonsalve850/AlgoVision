@@ -12,6 +12,7 @@ interface Result {
 }
 
 export interface ExecutionPayload {
+    executionId: string;
     problemId: string;
     sourceCode: string;
     className: string;

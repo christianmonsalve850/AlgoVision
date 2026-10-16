@@ -1,13 +1,7 @@
-export async function register() {
-  if (process.env.NEXT_RUNTIME !== "nodejs") {
-    return;
-  }
-
-  const { warmPythonRunner } = await import("./lib/docker-runner/docker-runner");
-
-  try {
-    await warmPythonRunner();
-  } catch (error) {
-    console.error("Failed to warm the Python execution worker:", error);
+export function register() {
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    // Keep the Node-only runner out of browser and Edge instrumentation bundles.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require("./instrumentation.node").register();
   }
 }
