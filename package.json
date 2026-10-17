@@ -7,7 +7,9 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "test:python": "cd runners/python && pytest"
+    "test:python": "cd runners/python && pytest tests",
+    "test:python:unit": "cd runners/python && pytest tests/unit",
+    "test:python:integration": "cd runners/python && pytest tests/integration"
   },
   "dependencies": {
     "@codemirror/lang-python": "^6.2.1",
