@@ -6,7 +6,11 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:python": "cd runners/python && pytest tests",
+    "test:python:unit": "cd runners/python && pytest tests/unit",
+    "test:python:integration": "cd runners/python && pytest tests/integration",
+    "test:python:security": "cd runners/python && pytest tests/security"
   },
   "dependencies": {
     "@codemirror/lang-python": "^6.2.1",
@@ -22,8 +26,6 @@
     "axios": "^1.18.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
     "lucide-react": "^1.17.0",
     "motion": "^13.1.0",
     "next": "16.2.7",
@@ -41,8 +43,6 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
