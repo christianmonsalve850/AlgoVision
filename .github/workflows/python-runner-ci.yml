@@ -1,0 +1,38 @@
+name: Python Runner CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python-runner-tests:
+    name: Python unit, integration, and security tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: runners/python/requirements-dev.txt
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Install Python test dependencies
+        run: python -m pip install -r runners/python/requirements-dev.txt
+
+      - name: Run Python tests
+        run: npm run test:python
