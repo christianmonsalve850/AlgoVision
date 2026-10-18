@@ -153,7 +153,13 @@ export async function POST(request: Request) {
 
         console.info("Execution metadata updated in Supabase:", updatedExecution);
         return NextResponse.json(
-          { executionId: executionRequest.id, ...executionResult },
+          {
+            executionId: executionRequest.id,
+            status: executionResult.status,
+            verdict: executionResult.verdict,
+            passed: executionResult.passed,
+            total: executionResult.total,
+          },
           { status: 201 },
         );
       default:

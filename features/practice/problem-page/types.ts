@@ -31,6 +31,8 @@ export interface UseCodeEditorOptions {
 }
 
 export interface UseProblemRunnerOptions {
+  problemId: string;
+  language: Language;
   code: string;
   visibleTestCases: TestCase[];
   functionName: string;
@@ -57,9 +59,9 @@ export interface ExecuteProblemReturn {
 }
 
 export interface UseProblemSubmitterOptions {
+  problemId: string;
+  language: Language;
   code: string;
-  visibleTestCases: TestCase[];
-  hiddenTestCases: TestCase[];
   functionName: string;
   className: string;
   setExecutionStatus: React.Dispatch<React.SetStateAction<ExecutionStatus>>;
@@ -69,7 +71,9 @@ export interface UseProblemSubmitterOptions {
 
 export interface SubmissionResult {
   success: boolean;
-  failedTestCase?: TestResult;
+  verdict?: string;
+  passed?: number;
+  total?: number;
   error?: string;
 }
 

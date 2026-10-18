@@ -39,6 +39,37 @@ def test_grades_class_method_with_named_or_positional_inputs(
     assert result["results"][0]["actualOutput"] == expected_output
 
 
+def test_grades_submission_using_typing_list_annotation_without_import():
+    result = run_submission(
+        source_code=(
+            "class Solution:\n"
+            "    def search(self, nums: List[int], target: int) -> int:\n"
+            "        left, right = 0, len(nums) - 1\n"
+            "        while left <= right:\n"
+            "            mid = (left + right) // 2\n"
+            "            if nums[mid] == target:\n"
+            "                return mid\n"
+            "            elif nums[mid] < target:\n"
+            "                left = mid + 1\n"
+            "            else:\n"
+            "                right = mid - 1\n"
+            "        return -1\n"
+        ),
+        test_cases=[
+            {
+                "input": {"nums": [-1, 0, 3, 5, 9, 12], "target": 9},
+                "expected_output": 4,
+            }
+        ],
+        class_name="Solution",
+        function_name="search",
+    )
+
+    assert result["verdict"] == "accepted"
+    assert result["passed"] == 1
+    assert result["results"][0]["actualOutput"] == 4
+
+
 def test_returns_wrong_answer_when_output_does_not_match():
     result = run_submission(
         source_code="class Solution:\n    def solve(self, value):\n        return value + 1\n",

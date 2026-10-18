@@ -10,6 +10,9 @@ from tracing.serializer import serialize_trace, serialize_value
 
 MAX_USER_OUTPUT_BYTES = 10 * 1024
 
+IMPORT_LIST = {
+    "List": List,
+}
 
 class UserOutputLimitExceeded(Exception):
     pass
@@ -76,7 +79,7 @@ def run_trace(
         recorder = TraceRecorder(source_code, max_steps=max_trace_steps)
         execution_namespace = {
             "__name__": "__submission__",
-            "List": List,
+            **IMPORT_LIST
         }
 
         with recorder, contextlib.redirect_stdout(
@@ -204,7 +207,10 @@ def run_submission(
             if compile_error is not None:
                 raise compile_error
 
-            namespace: dict[str, Any] = {"__name__": "__submission__"}
+            namespace: dict[str, Any] = {
+                "__name__": "__submission__",
+                "List": List,
+            }
             with contextlib.redirect_stdout(captured_stdout):
                 exec(compiled_code, namespace)
 

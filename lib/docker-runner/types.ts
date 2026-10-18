@@ -1,4 +1,5 @@
 import { TestCase } from "@/features/practice/problem-page/code-editor/types";
+import type { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
 
 interface ExecutionPayloadBase {
     problemId: string;
@@ -47,7 +48,7 @@ export interface GradeExecutionResult {
 export interface TraceCaseResult {
     testCaseId: string;
     success: boolean;
-    trace: unknown[];
+    trace: TraceStep[];
     duration: number | null;
     actualOutput?: unknown;
     error?: string;
