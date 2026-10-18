@@ -35,6 +35,32 @@ def test_run_trace_records_python_execution_events():
     assert all("changedVariables" in step for step in result["trace"])
 
 
+def test_return_statement_is_recorded_only_as_a_return_event():
+    source_code = (
+        "class Solution:\n"
+        "    def twoSum(self, nums, target):\n"
+        "        seen = {}\n"
+        "        for i, num in enumerate(nums):\n"
+        "            complement = target - num\n"
+        "            if complement in seen:\n"
+        "                return [seen[complement], i]\n"
+        "            seen[num] = i\n"
+    )
+    result = run_trace(
+        source_code=source_code,
+        inputs={"nums": [2, 7], "target": 9},
+        class_name="Solution",
+        function_name="twoSum",
+    )
+
+    return_steps = [
+        step for step in result["trace"] if step["expression"].startswith("return ")
+    ]
+    assert len(return_steps) == 1
+    assert return_steps[0]["event"] == "return"
+    assert return_steps[0]["return_value"] == [0, 1]
+
+
 def test_run_traces_returns_a_separate_trace_for_each_test_case():
     results = run_traces(
         source_code=(

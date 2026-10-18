@@ -29,10 +29,6 @@ class _LimitedOutput:
         self.bytes_written += output_bytes
         return len(text)
 
-    def flush(self) -> None:
-        pass
-
-
 def _same_json_value(actual: Any, expected: Any) -> bool:
     if isinstance(actual, bool) or isinstance(expected, bool):
         return type(actual) is type(expected) and actual == expected

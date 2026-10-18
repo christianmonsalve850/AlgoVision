@@ -98,21 +98,21 @@ class TraceRecorder:
         variables: dict[str, Any],
     ) -> None:
         metadata = self.line_metadata.get(frame.f_lineno)
-        line_type = metadata.get("type") if metadata else None
-
-        if line_type in {"assignment", "mutation", "loop"}:
-            extra_payload = (
-                {"target": metadata.get("target")}
-                if line_type in {"assignment", "mutation"}
-                else None
-            )
-            self._emit_event(
-                line_type,
-                frame,
-                expression,
-                variables,
-                extra_payload,
-            )
+        if metadata is not None:
+            line_type = metadata.get("type")
+            if line_type in {"assignment", "mutation", "loop"}:
+                extra_payload = (
+                    {"target": metadata.get("target")}
+                    if line_type in {"assignment", "mutation"}
+                    else None
+                )
+                self._emit_event(
+                    line_type,
+                    frame,
+                    expression,
+                    variables,
+                    extra_payload,
+                )
             return
 
         if (

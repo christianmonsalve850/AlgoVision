@@ -25,6 +25,7 @@ export function useProblemRunner ({
                 className,
             });
             for (const result of results) {
+                console.log(result.trace)
                 setTraceForCase(result.testCaseId, result.trace, result.testResult);
             } 
         } catch (error) {
