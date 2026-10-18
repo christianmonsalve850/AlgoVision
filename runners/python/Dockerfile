@@ -10,6 +10,7 @@ WORKDIR /app
 
 # Copy the runner and harness into the image
 COPY runner.py harness.py ./
+COPY tracing ./tracing
 
 # Change ownership of the app directory to the non-root user
 RUN chown -R runneruser:runnergroup /app

@@ -3,16 +3,29 @@ import subprocess
 import sys
 from typing import Any
 
-from harness import run_submission
+from harness import run_submission, run_traces
 
 
 def run_once(payload: dict[str, Any]) -> dict[str, Any]:
-    return run_submission(
-        source_code=payload.get("sourceCode"),
-        test_cases=payload.get("testCases"),
-        class_name=payload.get("className"),
-        function_name=payload.get("functionName"),
-    )
+    operation = payload.get("operation")
+
+    if operation == "trace":
+        return run_traces(
+            source_code=payload.get("sourceCode"),
+            test_cases=payload.get("testCases"),
+            class_name=payload.get("className"),
+            function_name=payload.get("functionName"),
+        )
+
+    if operation == "grade":
+        return run_submission(
+            source_code=payload.get("sourceCode"),
+            test_cases=payload.get("testCases"),
+            class_name=payload.get("className"),
+            function_name=payload.get("functionName"),
+        )
+
+    raise ValueError(f"Unsupported operation: {operation}")
 
 
 def execute_once() -> int:
@@ -55,10 +68,8 @@ def run_worker() -> None:
                     error = completed.stderr or completed.stdout or "Execution failed"
                 response = {"requestId": request_id, "error": error}
             else:
-                response = {
-                    "requestId": request_id,
-                    "result": json.loads(completed.stdout),
-                }
+                result = json.loads(completed.stdout)
+                response = {"requestId": request_id, "result": result}
         except Exception as error:
             response = {"requestId": request_id, "error": str(error)}
 

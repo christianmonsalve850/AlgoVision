@@ -11,7 +11,8 @@ import { useTraceStore } from "@/features/practice/problem-page/stores/use-trace
 import { ProblemPageHeader } from "@/features/practice/problem-page/problem-page-header";
 import { useEffect, useState } from "react";
 import { Panel, Group, Separator } from "react-resizable-panels";
-import type { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import type { TraceStep } from "@/lib/trace-types";
+
 const EMPTY_TRACE: TraceStep[] = [];
 
 export function ProblemPageShell({

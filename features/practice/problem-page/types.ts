@@ -1,5 +1,5 @@
 import { StarterCodeMap, TestResult, TestCase, Language } from "@/features/practice/problem-page/code-editor/types";
-import { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import type { TraceStep } from "@/lib/trace-types";
 
 export type PlaybackSpeed = 0.5 | 1 | 2 | 4;
 
@@ -31,6 +31,8 @@ export interface UseCodeEditorOptions {
 }
 
 export interface UseProblemRunnerOptions {
+  problemId: string;
+  language: Language;
   code: string;
   visibleTestCases: TestCase[];
   functionName: string;
@@ -57,9 +59,9 @@ export interface ExecuteProblemReturn {
 }
 
 export interface UseProblemSubmitterOptions {
+  problemId: string;
+  language: Language;
   code: string;
-  visibleTestCases: TestCase[];
-  hiddenTestCases: TestCase[];
   functionName: string;
   className: string;
   setExecutionStatus: React.Dispatch<React.SetStateAction<ExecutionStatus>>;
@@ -69,7 +71,9 @@ export interface UseProblemSubmitterOptions {
 
 export interface SubmissionResult {
   success: boolean;
-  failedTestCase?: TestResult;
+  verdict?: string;
+  passed?: number;
+  total?: number;
   error?: string;
 }
 

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import type { TraceStep } from "@/lib/trace-types";
 import { TestResult } from "@/features/practice/problem-page/code-editor/types";
 
 interface TraceState {

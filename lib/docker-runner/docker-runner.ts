@@ -1,6 +1,13 @@
 import type { ChildProcessWithoutNullStreams } from "child_process";
 import { spawn } from "child_process";
-import type { ExecutionPayload, ExecutionResult } from "@/lib/docker-runner/types";
+import type {
+  ExecutionPayload,
+  ExecutionResult,
+  GradeExecutionPayload,
+  GradeExecutionResult,
+  TraceCaseResult,
+  TraceExecutionPayload,
+} from "@/lib/docker-runner/types";
 
 const EXECUTION_TIMEOUT_MS = 3000;
 const STARTUP_TIMEOUT_MS = 30_000;
@@ -43,7 +50,9 @@ class PythonExecutionWorker {
   execute(payload: ExecutionPayload): Promise<ExecutionResult> {
     return new Promise((resolve, reject) => {
       this.queue.push({
-        id: payload.executionId,
+        id:
+          ("executionId" in payload ? payload.executionId : undefined) ||
+          globalThis.crypto.randomUUID(),
         payload,
         resolve,
         reject,
@@ -133,7 +142,10 @@ class PythonExecutionWorker {
     while (newlineIndex !== -1) {
       const line = this.stdoutBuffer.slice(0, newlineIndex).replace(/\r$/, "");
       this.stdoutBuffer = this.stdoutBuffer.slice(newlineIndex + 1);
-      if (Buffer.byteLength(line, "utf-8") > MAX_OUTPUT_SIZE) {
+      if (
+        this.activeJob?.payload.operation !== "trace" &&
+        Buffer.byteLength(line, "utf-8") > MAX_OUTPUT_SIZE
+      ) {
         this.terminateFor("output-limit");
         return;
       }
@@ -141,7 +153,10 @@ class PythonExecutionWorker {
       newlineIndex = this.stdoutBuffer.indexOf("\n");
     }
 
-    if (Buffer.byteLength(this.stdoutBuffer, "utf-8") > MAX_OUTPUT_SIZE) {
+    if (
+      this.activeJob?.payload.operation !== "trace" &&
+      Buffer.byteLength(this.stdoutBuffer, "utf-8") > MAX_OUTPUT_SIZE
+    ) {
       this.terminateFor("output-limit");
     }
   }
@@ -311,6 +326,14 @@ class PythonExecutionWorker {
 }
 
 const pythonWorker = new PythonExecutionWorker();
+
+export function executePython(
+  internalPayload: TraceExecutionPayload,
+): Promise<TraceCaseResult[]>;
+
+export function executePython(
+  internalPayload: GradeExecutionPayload,
+): Promise<GradeExecutionResult>;
 
 export function executePython(
   internalPayload: ExecutionPayload,

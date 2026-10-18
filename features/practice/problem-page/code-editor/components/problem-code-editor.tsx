@@ -12,7 +12,6 @@ import type {
 import { useCodeEditor } from "@/features/practice/problem-page/hooks/use-code-editor";
 import { useProblemRunner } from "@/features/practice/problem-page/hooks/use-problem-runner";
 import { useProblemSubmitter } from "@/features/practice/problem-page/hooks/use-problem-submitter";
-import { requestCodeExecution } from "@/features/practice/problem-page/services/request-code-execution";
 import { SubmissionOverlay } from "@/features/practice/problem-page/code-editor/components/submission-overlay";
 import { Spinner } from "@/components/ui/spinner";
 import { ExecutionStatus } from "@/features/practice/problem-page/types";
@@ -23,7 +22,6 @@ export function ProblemCodeEditor({
   class_name,
   starterCodeMap,
   visibleTestCases,
-  hiddenTestCases,
   setIsOpenConsole,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
@@ -42,6 +40,8 @@ export function ProblemCodeEditor({
   });
 
   const { run } = useProblemRunner({
+    problemId: problem_id,
+    language,
     code,
     visibleTestCases,
     functionName: function_name,
@@ -51,9 +51,9 @@ export function ProblemCodeEditor({
   });
 
   const { submit } = useProblemSubmitter({
+    problemId: problem_id,
+    language,
     code,
-    visibleTestCases,
-    hiddenTestCases,
     functionName: function_name,
     className: class_name,
     setExecutionStatus,
@@ -62,21 +62,6 @@ export function ProblemCodeEditor({
       setSubmissionStatus(result.success ? "success" : "failure");
     },
   });
-
-  const handleApiTest = async () => {
-    try {
-      await requestCodeExecution({
-        problemId: problem_id,
-        language,
-        sourceCode: code,
-        className: class_name,
-        functionName: function_name,
-        mode: "run",
-      });
-    } catch (error) {
-      console.error("Execution API test failed:", error);
-    }
-  };
 
   const activeLanguage = useMemo(
     () =>
@@ -131,13 +116,6 @@ export function ProblemCodeEditor({
           >
             { executionsStatus == "running" ? <Spinner /> : <Play className="size-4" />}
             Run
-          </button>
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
-            onClick={handleApiTest}
-          >
-            Test API
           </button>
 
           <button

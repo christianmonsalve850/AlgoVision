@@ -16,6 +16,7 @@ def test_worker_terminates_a_real_python_infinite_loop(run_production_worker):
     response = run_production_worker(
         "real-docker",
         payload={
+            "operation": "grade",
             "executionId": "infinite-loop-security-test",
             "sourceCode": (
                 "class Solution:\n"

@@ -1,5 +1,5 @@
 import { Braces } from "lucide-react";
-import type { VariablesMap, VariableValue } from "@/lib/algovision-harness/src/runtime/types";
+import type { VariablesMap } from "@/lib/trace-types";
 import { getDisplayVariables, formatValue, getTypeLabel } from "@/features/practice/problem-page/visualization/utils";
 import { useEffect, useMemo, useState } from "react";
 
