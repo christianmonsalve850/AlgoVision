@@ -8,7 +8,7 @@ import {
   returnVisualizer,
 } from "@/features/practice/problem-page/visualization/utils";
 import { VisualizationPlaceholder } from "@/features/practice/problem-page/visualization/components/common/visualization-placeholder";
-import type { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import type { TraceStep } from "@/lib/trace-types";
 import {
   ArrayViewToggle,
   ArrayViewMode,

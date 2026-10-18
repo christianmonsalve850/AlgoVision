@@ -1,4 +1,4 @@
-import { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import type { TraceStep } from "@/lib/trace-types";
 
 // Extract output or exception status from trace
 export function evaluateTrace(trace: TraceStep[], targetFunction: string) {

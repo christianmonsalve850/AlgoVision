@@ -1,5 +1,5 @@
 import { StarterCodeMap, TestResult, TestCase, Language } from "@/features/practice/problem-page/code-editor/types";
-import { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import type { TraceStep } from "@/lib/trace-types";
 
 export type PlaybackSpeed = 0.5 | 1 | 2 | 4;
 

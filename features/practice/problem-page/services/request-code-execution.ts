@@ -1,5 +1,5 @@
 import type { UseCodeExecuterOptions } from "@/app/types/api-types";
-import type { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import type { TraceStep } from "@/lib/trace-types";
 import type { TraceCaseResult } from "@/lib/docker-runner/types";
 
 type RunExecutionOptions = UseCodeExecuterOptions & { operation: "run" };

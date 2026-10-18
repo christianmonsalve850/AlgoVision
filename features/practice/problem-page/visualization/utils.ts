@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
 import {
-  TraceStep,
-  VariablesMap,
-  VariableValue,
-} from "@/lib/algovision-harness/src/runtime/types";
+  type TraceStep,
+  type VariablesMap,
+  type VariableValue,
+} from "@/lib/trace-types";
 
 import { Pointer } from "@/features/practice/problem-page/visualization/components/visualizers/array-visualizer";
 import { ArrayVisualizer } from "@/features/practice/problem-page/visualization/components/visualizers/array-visualizer";

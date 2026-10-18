@@ -1,5 +1,5 @@
 import { TestCase } from "@/features/practice/problem-page/code-editor/types";
-import type { TraceStep } from "@/lib/algovision-harness/src/runtime/types";
+import type { TraceStep } from "@/lib/trace-types";
 
 interface ExecutionPayloadBase {
     problemId: string;
