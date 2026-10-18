@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import Editor from "@monaco-editor/react";
 import { ChevronDown, Play, RotateCcw, Send } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
@@ -24,8 +25,16 @@ export function ProblemCodeEditor({
   setIsOpenConsole,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
+  const router = useRouter();
   const [ submissionStatus, setSubmissionStatus ] = useState<"success" | "failure" | null>(null);
   const [ executionsStatus, setExecutionStatus ] = useState<ExecutionStatus>("idle");
+  const [ submissionRefreshKey, setSubmissionRefreshKey ] = useState(0);
+
+  useEffect(() => {
+    if (submissionRefreshKey > 0) {
+      router.refresh();
+    }
+  }, [router, submissionRefreshKey]);
 
   const {
     code,
@@ -58,6 +67,9 @@ export function ProblemCodeEditor({
     onSubmitStart: () => setIsOpenConsole(true),
     onSubmitEnd: (result) => {
       setSubmissionStatus(result.success ? "success" : "failure");
+      if (result.recorded) {
+        setSubmissionRefreshKey((key) => key + 1);
+      }
     },
   });
 

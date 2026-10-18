@@ -33,6 +33,7 @@ export function useProblemSubmitter({
 
             submissionResult = {
                 success: result.verdict === "accepted",
+                recorded: true,
                 verdict: result.verdict,
                 passed: result.passed,
                 total: result.total,

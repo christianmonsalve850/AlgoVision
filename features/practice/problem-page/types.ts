@@ -70,6 +70,7 @@ export interface UseProblemSubmitterOptions {
 
 export interface SubmissionResult {
   success: boolean;
+  recorded?: boolean;
   verdict?: string;
   passed?: number;
   total?: number;
