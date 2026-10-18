@@ -8,7 +8,7 @@ export async function requestCodeExecution ({
     functionName,
     mode,
 } : UseCodeExecuterOptions) {
-    const response = await fetch('/api/v1/executions', {
+    const response = await fetch('/api/v1/submit', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
