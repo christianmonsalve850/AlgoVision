@@ -5,6 +5,7 @@ import {
   ChevronDown,
   ChevronUp,
   SquareCheck,
+  RotateCcwClock
 } from "lucide-react";
 import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
@@ -96,6 +97,14 @@ export function ProblemEditorPanel({
                 >
                   <SquareCheck className="p-0.5 text-emerald-400" />
                   Testcase
+                </button>
+
+                <button
+                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent ${isTestCaseSelected ? "opacity-50" : ""}`}
+                  onClick={() => setIsTestCaseSelected(false)}
+                >
+                  <RotateCcwClock className="p-0.5 text-emerald-400" />
+                  Submissions
                 </button>
 
                 <div className="h-4 border-r border-border transition-opacity duration-150 group-hover:opacity-0" />
