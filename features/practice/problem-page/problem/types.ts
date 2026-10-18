@@ -48,11 +48,22 @@ export interface TestCase {
   created_at?: string;
 }
 
+export interface SubmissionHistory {
+  id: string;
+  problem_id: string;
+  source_code: string;
+  verdict: string;
+  submitted_at: string;
+}
+
+export interface SubmissionsPanelProps {
+  submissions: SubmissionHistory[];
+}
+
 export interface ProblemPageShellProps {
   problem: ProblemRecord;
   examples: ProblemExample[];
   starterCodeMap: StarterCodeMap;
   visibleTestCases: TestCase[];
-  hiddenTestCases: TestCase[];
+  submissionHistory: SubmissionHistory[];
 }
-

@@ -34,7 +34,6 @@ export interface UseProblemRunnerOptions {
   problemId: string;
   language: Language;
   code: string;
-  visibleTestCases: TestCase[];
   functionName: string;
   className: string;
   setExecutionStatus: React.Dispatch<React.SetStateAction<ExecutionStatus>>;

@@ -50,6 +50,7 @@ export interface TraceCaseResult {
     success: boolean;
     trace: TraceStep[];
     duration: number | null;
+    expectedOutput?: unknown;
     actualOutput?: unknown;
     error?: string;
     errorDetails?: {

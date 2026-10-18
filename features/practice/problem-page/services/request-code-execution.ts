@@ -4,6 +4,7 @@ import type { TraceCaseResult } from "@/lib/docker-runner/types";
 
 type RunExecutionOptions = UseCodeExecuterOptions & { operation: "run" };
 type SubmitExecutionOptions = UseCodeExecuterOptions & { operation: "submit" };
+type TraceApiCaseResult = TraceCaseResult & { expectedOutput: unknown };
 
 export interface SubmissionExecutionSummary {
     executionId: string;
@@ -65,12 +66,12 @@ function isTraceErrorDetails(
     );
 }
 
-function parseTraceResults(value: unknown): TraceCaseResult[] {
+function parseTraceResults(value: unknown): TraceApiCaseResult[] {
     if (!Array.isArray(value)) {
         throw new Error("Trace API returned an invalid response.");
     }
 
-    return value.map((result): TraceCaseResult => {
+    return value.map((result): TraceApiCaseResult => {
         if (
             !isRecord(result) ||
             typeof result.testCaseId !== "string" ||
@@ -78,6 +79,8 @@ function parseTraceResults(value: unknown): TraceCaseResult[] {
             !Array.isArray(result.trace) ||
             !result.trace.every(isTraceStep) ||
             (typeof result.duration !== "number" && result.duration !== null) ||
+            !Object.hasOwn(result, "expectedOutput") ||
+            !isVariableValue(result.expectedOutput) ||
             (result.error !== undefined && typeof result.error !== "string") ||
             (result.errorDetails !== undefined &&
                 !isTraceErrorDetails(result.errorDetails))
@@ -97,6 +100,7 @@ function parseTraceResults(value: unknown): TraceCaseResult[] {
             success: result.success,
             trace,
             duration: result.duration,
+            expectedOutput: result.expectedOutput,
             ...(Object.hasOwn(result, "actualOutput")
                 ? { actualOutput: result.actualOutput }
                 : {}),
@@ -131,7 +135,7 @@ function parseSubmissionSummary(value: unknown): SubmissionExecutionSummary {
 
 export function requestExecutePython(
     options: RunExecutionOptions,
-): Promise<TraceCaseResult[]>;
+): Promise<TraceApiCaseResult[]>;
 export function requestExecutePython(
     options: SubmitExecutionOptions,
 ): Promise<SubmissionExecutionSummary>;

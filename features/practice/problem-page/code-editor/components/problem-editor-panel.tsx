@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
+import { SubmissionsPanel } from "@/features/practice/problem-page/code-editor/components/submissions-panel";
 import type { ProblemEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
 import {
   Group,
@@ -23,7 +24,7 @@ export function ProblemEditorPanel({
   class_name,
   starterCodeMap,
   visibleTestCases,
-  hiddenTestCases
+  submission_history
 }: ProblemEditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [isTestCaseSelected, setIsTestCaseSelected] = useState<boolean>(true);
@@ -63,8 +64,6 @@ export function ProblemEditorPanel({
               function_name={function_name}
               class_name={class_name}
               starterCodeMap={starterCodeMap}
-              visibleTestCases={visibleTestCases}
-              hiddenTestCases={hiddenTestCases}
               setIsOpenConsole={setIsOpenConsole}
             />
           </Panel>
@@ -124,7 +123,9 @@ export function ProblemEditorPanel({
             <div className="min-h-0 flex-1 overflow-y-auto">
               { isTestCaseSelected ? 
                 <ProblemTestCasesPanel testCases={visibleTestCases} /> : 
-                <div></div>
+                <SubmissionsPanel
+                  submissions={submission_history}
+                />
               }
             </div>
           </Panel>

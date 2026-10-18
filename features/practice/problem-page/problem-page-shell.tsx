@@ -20,7 +20,7 @@ export function ProblemPageShell({
   examples,
   starterCodeMap,
   visibleTestCases,
-  hiddenTestCases,
+  submissionHistory,
 }: ProblemPageShellProps) {
   const activeCaseId = useTraceStore((state) => state.activeCaseId);
   const activeTrace = useTraceStore(
@@ -112,7 +112,7 @@ export function ProblemPageShell({
             class_name={problem.class_name}
             starterCodeMap={starterCodeMap}
             visibleTestCases={visibleTestCases}
-            hiddenTestCases={hiddenTestCases}
+            submission_history={submissionHistory}
           />
         </Panel>
         <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-x border-border">
