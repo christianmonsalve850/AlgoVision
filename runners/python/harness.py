@@ -1,7 +1,36 @@
 import contextlib
 import io
 from collections.abc import Mapping
-from typing import Any
+import time
+from typing import Any, List
+
+from tracing.recorder import TraceRecorder
+from tracing.serializer import serialize_trace, serialize_value
+
+
+MAX_USER_OUTPUT_BYTES = 10 * 1024
+
+
+class UserOutputLimitExceeded(Exception):
+    pass
+
+
+class _LimitedOutput:
+    def __init__(self, max_bytes: int) -> None:
+        self.max_bytes = max_bytes
+        self.bytes_written = 0
+
+    def write(self, text: str) -> int:
+        output_bytes = len(text.encode("utf-8"))
+        if self.bytes_written + output_bytes > self.max_bytes:
+            raise UserOutputLimitExceeded(
+                f"User output exceeded the {self.max_bytes}-byte limit"
+            )
+        self.bytes_written += output_bytes
+        return len(text)
+
+    def flush(self) -> None:
+        pass
 
 
 def _same_json_value(actual: Any, expected: Any) -> bool:
@@ -22,6 +51,107 @@ def _same_json_value(actual: Any, expected: Any) -> bool:
         )
 
     return type(actual) is type(expected) and actual == expected
+
+def run_trace(
+    source_code: str,
+    inputs: dict[str, Any] | list[Any],
+    class_name: str,
+    function_name: str,
+    max_trace_steps: int = 128,
+) -> dict[str, Any]:
+    if not isinstance(source_code, str):
+        raise ValueError("sourceCode must be a string")
+    if not isinstance(inputs, (dict, list)):
+        raise ValueError("input must be an object or array")
+    if not isinstance(class_name, str) or not class_name:
+        raise ValueError("className must be a non-empty string")
+    if not isinstance(function_name, str) or not function_name:
+        raise ValueError("functionName must be a non-empty string")
+    if not isinstance(max_trace_steps, int) or max_trace_steps < 1:
+        raise ValueError("max_trace_steps must be a positive integer")
+
+    recorder = None
+    actual_output = None
+    error = None
+    duration = None
+
+    try:
+        compiled_code = compile(source_code, "<user_code>", "exec")
+        recorder = TraceRecorder(source_code, max_steps=max_trace_steps)
+        execution_namespace = {
+            "__name__": "__submission__",
+            "List": List,
+        }
+
+        with recorder, contextlib.redirect_stdout(
+            _LimitedOutput(MAX_USER_OUTPUT_BYTES)
+        ):
+            start_time = time.perf_counter()
+            try:
+                exec(compiled_code, execution_namespace)
+                solution_class = execution_namespace[class_name]
+                if not isinstance(solution_class, type):
+                    raise TypeError(f"{class_name} is not a class")
+
+                solution = solution_class()
+                function = getattr(solution, function_name)
+                if not callable(function):
+                    raise TypeError(f"{class_name}.{function_name} is not callable")
+
+                actual_output = (
+                    function(**inputs)
+                    if isinstance(inputs, dict)
+                    else function(*inputs)
+                )
+            finally:
+                duration = (time.perf_counter() - start_time) * 1000
+
+    except Exception as execution_error:
+        error = execution_error
+
+    result = {
+        "success": error is None,
+        "trace": serialize_trace(recorder.trace if recorder else []),
+        "duration": duration,
+    }
+    if error is not None:
+        result["error"] = str(error)
+        result["errorDetails"] = {
+            "type": type(error).__name__,
+            "message": str(error),
+            "line": getattr(error, "lineno", None),
+        }
+    else:
+        result["actualOutput"] = serialize_value(actual_output)
+    return result
+
+
+def run_traces(
+    source_code: str,
+    test_cases: list[dict[str, Any]],
+    class_name: str,
+    function_name: str,
+    max_trace_steps: int = 1000,
+) -> list[dict[str, Any]]:
+    if not isinstance(test_cases, list):
+        raise ValueError("testCases must be an array")
+
+    results = []
+    for index, test_case in enumerate(test_cases):
+        if not isinstance(test_case, Mapping):
+            raise ValueError(f"testCases[{index}] must be an object")
+
+        result = run_trace(
+            source_code=source_code,
+            inputs=test_case.get("input"),
+            class_name=class_name,
+            function_name=function_name,
+            max_trace_steps=max_trace_steps,
+        )
+        result["testCaseId"] = str(test_case.get("id", index))
+        results.append(result)
+
+    return results
 
 
 def run_submission(

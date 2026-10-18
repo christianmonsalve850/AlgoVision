@@ -2,6 +2,8 @@ export type SupportedLanguage = "python";
 
 export type TraceEventType =
   | "assignment"
+  | "mutation"
+  | "loop"
   | "line"
   | "call"
   | "return"

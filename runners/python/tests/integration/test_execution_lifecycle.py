@@ -17,6 +17,7 @@ def _request(request_id, payload):
 
 def _payload(source_code):
     return {
+        "operation": "grade",
         "sourceCode": source_code,
         "className": "Solution",
         "functionName": "solve",

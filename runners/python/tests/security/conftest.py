@@ -54,6 +54,7 @@ def sandbox_image():
 def run_sandbox(sandbox_image):
     def run(source_code, expected_output):
         payload = {
+            "operation": "grade",
             "sourceCode": source_code,
             "className": "Solution",
             "functionName": "inspect",
@@ -132,6 +133,7 @@ def run_production_worker():
             "imageName": IMAGE_NAME,
             "payload": payload
             or {
+                "operation": "grade",
                 "executionId": "security-test",
                 "sourceCode": "",
                 "testCases": [],

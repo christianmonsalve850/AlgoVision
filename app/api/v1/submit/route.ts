@@ -108,6 +108,7 @@ export async function POST(request: Request) {
       case "Python":
         const startTime = Date.now();
         const executionResult = await executePython({
+          operation: "grade",
           executionId: executionRequest.id,
           problemId,
           sourceCode,

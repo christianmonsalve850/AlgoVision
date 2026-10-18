@@ -1,6 +1,31 @@
 import { TestCase } from "@/features/practice/problem-page/code-editor/types";
 
-interface Result {
+interface ExecutionPayloadBase {
+    problemId: string;
+    sourceCode: string;
+    className: string;
+    functionName: string;
+}
+
+export interface GradeExecutionPayload extends ExecutionPayloadBase {
+    operation: "grade";
+    executionId: string;
+    testCases: TestCase[];
+}
+
+export interface TraceExecutionPayload extends ExecutionPayloadBase {
+    operation: "trace";
+    testCases: TraceTestCase[];
+}
+
+export interface TraceTestCase {
+    id: string;
+    input: Record<string, unknown> | unknown[];
+}
+
+export type ExecutionPayload = GradeExecutionPayload | TraceExecutionPayload;
+
+interface GradeTestCaseResult {
     testCaseId: string;
     status: string;
     passed: boolean;
@@ -11,19 +36,26 @@ interface Result {
     errorType?: string;
 }
 
-export interface ExecutionPayload {
-    executionId: string;
-    problemId: string;
-    sourceCode: string;
-    className: string;
-    functionName: string;
-    testCases: TestCase[];
-}
-
-export interface ExecutionResult {
+export interface GradeExecutionResult {
     status: string;
     verdict: string;
     passed: number;
     total: number;
-    results: Result[];
+    results: GradeTestCaseResult[];
 }
+
+export interface TraceCaseResult {
+    testCaseId: string;
+    success: boolean;
+    trace: unknown[];
+    duration: number | null;
+    actualOutput?: unknown;
+    error?: string;
+    errorDetails?: {
+        type: string;
+        message: string;
+        line: number | null;
+    };
+}
+
+export type ExecutionResult = GradeExecutionResult | TraceCaseResult[];

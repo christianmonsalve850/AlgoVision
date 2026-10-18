@@ -43,6 +43,7 @@ def test_container_ready_and_request_response_protocol():
     assert build.returncode == 0, build.stderr
 
     payload = {
+        "operation": "grade",
         "sourceCode": (
             "class Solution:\n"
             "    def twoSum(self, nums, target):\n"

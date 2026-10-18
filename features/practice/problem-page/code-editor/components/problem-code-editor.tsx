@@ -71,7 +71,7 @@ export function ProblemCodeEditor({
         sourceCode: code,
         className: class_name,
         functionName: function_name,
-        mode: "run",
+        mode: "trace",
       });
     } catch (error) {
       console.error("Execution API test failed:", error);
