@@ -35,3 +35,15 @@ export type LessonListItem = {
   is_recommended: boolean | null,
   progress: number;
 };
+
+export interface SaveLessonProgressOptions {
+  lessonId: string;
+  currentStep: number;
+  completed: boolean;
+}
+
+export type LessonMdxStepsProps = {
+  lessonId: string;
+  slug: string;
+  step?: string;
+};

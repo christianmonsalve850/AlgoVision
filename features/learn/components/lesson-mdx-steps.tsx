@@ -1,17 +1,16 @@
 'use client'
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import twoPointersSteps from '@/content/lessons/two-pointers';
 import arraysSteps from '@/content/lessons/arrays';
 import slidingWindowSteps from '@/content/lessons/sliding-window';
 import hashMapSteps from '@/content/lessons/hash-map';
 import binarySearchSteps from '@/content/lessons/binary-search';
-
-type LessonMdxStepsProps = {
-  slug: string;
-  step?: string;
-};
+import { saveLessonProgress } from '@/features/learn/actions/save-lesson-progress';
+import type { LessonMdxStepsProps } from '@/features/learn/types';
 
 function getStepNumber(step?: string) {
   if (!step) {
@@ -22,7 +21,14 @@ function getStepNumber(step?: string) {
   return match ? Number(match[1]) : 1;
 }
 
-export default function LessonMdxSteps({ slug, step }: LessonMdxStepsProps) {
+export default function LessonMdxSteps({
+  lessonId,
+  slug,
+  step,
+}: LessonMdxStepsProps) {
+  const router = useRouter();
+  const [progressError, setProgressError] = useState<string | null>(null);
+  const [isSavingProgress, setIsSavingProgress] = useState(false);
   const normalizedSlug = slug.replace(/_/g, '-');
   const steps =
     normalizedSlug === 'arrays'
@@ -51,6 +57,32 @@ export default function LessonMdxSteps({ slug, step }: LessonMdxStepsProps) {
   const previousHref = currentStepNumber > 1 ? `/learn/${slug}/step_${currentStepNumber - 1}` : null;
   const nextHref = currentStepNumber < steps.length ? `/learn/${slug}/step_${currentStepNumber + 1}` : null;
 
+  const handleNextStep = async (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    if (!nextHref || isSavingProgress) {
+      return;
+    }
+
+    setIsSavingProgress(true);
+    setProgressError(null);
+
+    try {
+      await saveLessonProgress({
+        lessonId,
+        currentStep: currentStepNumber + 1,
+        completed: currentStepNumber + 1 === steps.length,
+      });
+      router.push(nextHref);
+    } catch (error) {
+      console.error('Failed to save lesson progress:', error);
+      setProgressError(
+        error instanceof Error ? error.message : 'Failed to save lesson progress.',
+      );
+    } finally {
+      setIsSavingProgress(false);
+    }
+  };
+
   return (
     <div className="space-y-6 w-full">
       <div className="flex items-center justify-between rounded-xl border border-border bg-card/95 shadow-sm gap-4 px-3 py-2">
@@ -74,14 +106,22 @@ export default function LessonMdxSteps({ slug, step }: LessonMdxStepsProps) {
           {nextHref ? (
             <Link
               href={nextHref}
+              onClick={handleNextStep}
+              aria-disabled={isSavingProgress}
               className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-muted-foreground/60"
             >
-              Next
+              {isSavingProgress ? 'Saving…' : 'Next'}
               <ArrowRight className="h-4 w-4" />
             </Link>
           ) : null}
         </div>
       </div>
+
+      {progressError && (
+        <p role="alert" className="text-sm text-destructive">
+          {progressError}
+        </p>
+      )}
 
       <section id={`step-${currentStepNumber}`} className="prose prose-invert max-w-none">
         <CurrentStep />
