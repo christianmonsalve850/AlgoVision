@@ -30,6 +30,32 @@ export default async function LessonPage({ params }: LessonPageProps) {
   if (!lesson) {
     notFound();
   }
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    throw new Error(`Failed to load the current user: ${userError.message}`);
+  }
+
+  let currentLessonStep = 1;
+
+  if (user) {
+    const { data: progress, error: progressError } = await supabase
+      .from('user_lesson_progress')
+      .select('current_lesson_step')
+      .eq('user_id', user.id)
+      .eq('lesson_id', lesson.id)
+      .maybeSingle();
+
+    if (progressError) {
+      throw new Error(`Failed to load lesson progress: ${progressError.message}`);
+    }
+
+    currentLessonStep = progress?.current_lesson_step ?? 1;
+  }
   
   return (
     <main className="mx-auto w-187.5 px-4 py-8 ">
@@ -41,7 +67,11 @@ export default async function LessonPage({ params }: LessonPageProps) {
         <p className="mt-1 text-neutral-400">{lesson.description}</p>
       </div>
 
-      <LessonMdxSteps lessonId={lesson.id} slug={title.toString()} />
+      <LessonMdxSteps
+        lessonId={lesson.id}
+        slug={title.toString()}
+        step={`step_${currentLessonStep}`}
+      />
     </main>
   );
 }
