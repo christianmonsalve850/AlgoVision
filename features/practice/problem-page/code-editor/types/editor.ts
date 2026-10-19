@@ -25,7 +25,8 @@ export interface ProblemCodeEditorPanelProps {
   function_name: string;
   class_name: string;
   starterCodeMap: StarterCodeMap;
-  setIsOpenConsole: React.Dispatch<React.SetStateAction<boolean>>;
+  onRunStart: () => void;
+  onSubmitStart: () => void;
   submissionLoadRequest: {
     submission: SubmissionHistory;
     requestId: number;

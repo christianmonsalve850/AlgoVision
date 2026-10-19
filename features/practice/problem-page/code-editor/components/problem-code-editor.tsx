@@ -22,7 +22,8 @@ export function ProblemCodeEditor({
   function_name,
   class_name,
   starterCodeMap,
-  setIsOpenConsole,
+  onRunStart,
+  onSubmitStart,
   submissionLoadRequest,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
@@ -81,7 +82,7 @@ export function ProblemCodeEditor({
     functionName: function_name,
     className: class_name,
     setExecutionStatus,
-    onRunStart: () => setIsOpenConsole(true),
+    onRunStart,
   });
 
   const { submit } = useProblemSubmitter({
@@ -91,7 +92,7 @@ export function ProblemCodeEditor({
     functionName: function_name,
     className: class_name,
     setExecutionStatus,
-    onSubmitStart: () => setIsOpenConsole(true),
+    onSubmitStart,
     onSubmitEnd: (result) => {
       setSubmissionStatus(result.success ? "success" : "failure");
       if (result.recorded) {

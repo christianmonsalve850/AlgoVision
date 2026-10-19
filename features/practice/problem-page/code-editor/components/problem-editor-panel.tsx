@@ -45,6 +45,16 @@ export function ProblemEditorPanel({
     });
   };
 
+  const handleRunStart = () => {
+    setIsTestCaseSelected(true);
+    setIsOpenConsole(true);
+  };
+
+  const handleSubmitStart = () => {
+    setIsTestCaseSelected(false);
+    setIsOpenConsole(true);
+  };
+
   useEffect(() => {
     const panel = panelRef.current;
     if (panel) {
@@ -78,7 +88,8 @@ export function ProblemEditorPanel({
               function_name={function_name}
               class_name={class_name}
               starterCodeMap={starterCodeMap}
-              setIsOpenConsole={setIsOpenConsole}
+              onRunStart={handleRunStart}
+              onSubmitStart={handleSubmitStart}
               submissionLoadRequest={submissionLoadRequest}
             />
           </Panel>
