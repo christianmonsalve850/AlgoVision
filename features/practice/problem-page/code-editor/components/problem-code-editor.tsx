@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Editor from "@monaco-editor/react";
 import { ChevronDown, Play, RotateCcw, Send } from "lucide-react";
@@ -23,6 +23,7 @@ export function ProblemCodeEditor({
   class_name,
   starterCodeMap,
   setIsOpenConsole,
+  submissionLoadRequest,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
   const router = useRouter();
@@ -46,6 +47,32 @@ export function ProblemCodeEditor({
     problemId: problem_id,
     starterCodeMap,
   });
+
+  const lastProcessedSubmissionRequestId = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (
+      !submissionLoadRequest ||
+      lastProcessedSubmissionRequestId.current ===
+        submissionLoadRequest.requestId
+    ) {
+      return;
+    }
+
+    lastProcessedSubmissionRequestId.current = submissionLoadRequest.requestId;
+    const submissionCode = submissionLoadRequest.submission.source_code;
+
+    if (
+      code !== submissionCode &&
+      !window.confirm(
+        "Load this submission into the editor? Your current code will be replaced.",
+      )
+    ) {
+      return;
+    }
+
+    handleEditorChange(submissionCode);
+  }, [code, handleEditorChange, submissionLoadRequest]);
 
   const { run } = useProblemRunner({
     problemId: problem_id,

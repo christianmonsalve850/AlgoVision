@@ -58,6 +58,7 @@ export interface SubmissionHistory {
 
 export interface SubmissionsPanelProps {
   submissions: SubmissionHistory[];
+  onLoadSubmission: (submission: SubmissionHistory) => void;
 }
 
 export interface ProblemPageShellProps {

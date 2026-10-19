@@ -10,6 +10,7 @@ import {
 import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
 import { SubmissionsPanel } from "@/features/practice/problem-page/code-editor/components/submissions-panel";
+import type { SubmissionHistory } from "@/features/practice/problem-page/problem/types";
 import type { ProblemEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
 import {
   Group,
@@ -28,8 +29,21 @@ export function ProblemEditorPanel({
 }: ProblemEditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [isTestCaseSelected, setIsTestCaseSelected] = useState<boolean>(true);
+  const [submissionLoadRequest, setSubmissionLoadRequest] = useState<{
+    submission: SubmissionHistory;
+    requestId: number;
+  } | null>(null);
+  const submissionLoadRequestId = useRef(0);
   
   const panelRef = useRef<PanelImperativeHandle>(null);
+
+  const handleLoadSubmission = (submission: SubmissionHistory) => {
+    submissionLoadRequestId.current += 1;
+    setSubmissionLoadRequest({
+      submission,
+      requestId: submissionLoadRequestId.current,
+    });
+  };
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -65,6 +79,7 @@ export function ProblemEditorPanel({
               class_name={class_name}
               starterCodeMap={starterCodeMap}
               setIsOpenConsole={setIsOpenConsole}
+              submissionLoadRequest={submissionLoadRequest}
             />
           </Panel>
 
@@ -120,11 +135,12 @@ export function ProblemEditorPanel({
             </div>
 
             {/* Console Content */}
-            <div className="min-h-0 flex-1 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-hidden">
               { isTestCaseSelected ? 
                 <ProblemTestCasesPanel testCases={visibleTestCases} /> : 
                 <SubmissionsPanel
                   submissions={submission_history}
+                  onLoadSubmission={handleLoadSubmission}
                 />
               }
             </div>

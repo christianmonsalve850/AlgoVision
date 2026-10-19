@@ -3,10 +3,9 @@ import type { SubmissionsPanelProps } from "@/features/practice/problem-page/pro
 
 export function SubmissionsPanel({
     submissions,
+    onLoadSubmission,
 }: SubmissionsPanelProps) {
-    const [selectedSubmissionId, setSelectedSubmissionId] = useState(
-        submissions[0]?.id,
-    );
+    const [status, setStatus] = useState("");
 
     if (!submissions || submissions.length === 0) {
         return (
@@ -19,33 +18,36 @@ export function SubmissionsPanel({
         );
     }
 
-    const selectedSubmission =
-        submissions.find((submission) => submission.id === selectedSubmissionId) ??
-        submissions[0];
+    const handleCopy = async (sourceCode: string) => {
+        try {
+            await navigator.clipboard.writeText(sourceCode);
+            setStatus("Code copied to clipboard.");
+        } catch (error) {
+            console.error("Failed to copy submission code:", error);
+            setStatus("Could not copy code. Check clipboard permissions.");
+        }
+    };
 
     return (
-        <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
+        <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto p-4">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Submission History ({submissions.length})
             </h3>
+            {status && (
+                <p role="status" className="text-xs text-muted-foreground">
+                    {status}
+                </p>
+            )}
             <div className="flex flex-col gap-2">
                 {submissions.map((sub) => {
-                    const isAccepted = sub.verdict === 'Accepted';
-                    const isSelected = sub.id === selectedSubmission.id;
+                    const isAccepted = sub.verdict === 'accepted';
                     
                     return (
-                        <button
-                            type="button"
+                        <div
                             key={sub.id}
-                            onClick={() => setSelectedSubmissionId(sub.id)}
-                            aria-pressed={isSelected}
-                            className={`flex items-center justify-between rounded-lg border p-3 text-left transition-colors ${
-                                isSelected
-                                    ? "border-accent-foreground/20 bg-accent text-accent-foreground"
-                                    : "border-border bg-background text-foreground hover:bg-muted"
-                            }`}
+                            className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-background p-3"
                         >
-                            <div className="flex items-center space-x-3">
+                            <div className="flex min-w-0 items-center gap-3">
                                 <span
                                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                                         isAccepted
@@ -65,17 +67,25 @@ export function SubmissionsPanel({
                                     {new Date(sub.submitted_at).toLocaleDateString()}
                                 </span>
                             </div>
-                            <span className="text-xs font-medium text-emerald-600">
-                                {isSelected ? "Selected" : "View Code"}
-                            </span>
-                        </button>
+                            <div className="flex shrink-0 items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => void handleCopy(sub.source_code)}
+                                    className="rounded-md border border-border px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
+                                >
+                                    Copy code
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => onLoadSubmission(sub)}
+                                    className="rounded-md bg-emerald-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-emerald-500"
+                                >
+                                    Load in editor
+                                </button>
+                            </div>
+                        </div>
                     );
                 })}
-            </div>
-            <div className="min-h-0 flex-1 overflow-auto rounded-md border border-border bg-accent">
-                <pre className="h-full overflow-auto p-4 text-xs text-foreground">
-                    <code>{selectedSubmission.source_code}</code>
-                </pre>
             </div>
         </div>
     );
