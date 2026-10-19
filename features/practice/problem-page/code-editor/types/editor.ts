@@ -1,3 +1,4 @@
+import type { SubmissionHistory } from "@/features/practice/problem-page/problem/types";
 import type { TestCase } from "./test-case";
 
 export type Language = "Python";
@@ -16,9 +17,18 @@ export interface ProblemEditorPanelProps {
   class_name: string;
   starterCodeMap: StarterCodeMap;
   visibleTestCases: TestCase[];
-  hiddenTestCases: TestCase[];
+  submission_history: SubmissionHistory[];
 }
 
-export interface ProblemCodeEditorPanelProps extends ProblemEditorPanelProps {
-  setIsOpenConsole: React.Dispatch<React.SetStateAction<boolean>>;
+export interface ProblemCodeEditorPanelProps {
+  problem_id: string;
+  function_name: string;
+  class_name: string;
+  starterCodeMap: StarterCodeMap;
+  onRunStart: () => void;
+  onSubmitStart: () => void;
+  submissionLoadRequest: {
+    submission: SubmissionHistory;
+    requestId: number;
+  } | null;
 }

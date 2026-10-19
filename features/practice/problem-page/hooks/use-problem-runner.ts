@@ -9,7 +9,6 @@ export function useProblemRunner ({
     code,
     problemId,
     language,
-    visibleTestCases,
     functionName,
     className,
     setExecutionStatus,
@@ -32,9 +31,6 @@ export function useProblemRunner ({
                 className,
             });
             for (const result of results) {
-                const testCase = visibleTestCases.find(
-                    (candidate) => candidate.id === result.testCaseId,
-                );
                 let testResult: TestResult;
 
                 if (!result.success || result.error) {
@@ -42,7 +38,7 @@ export function useProblemRunner ({
                         passed: false,
                         status: "error",
                         actualOutput: undefined,
-                        expectedOutput: testCase?.expected_output,
+                        expectedOutput: result.expectedOutput,
                         error: result.error ?? "Execution failed",
                         errorDetails: result.errorDetails ?? result.error,
                     };
@@ -50,7 +46,7 @@ export function useProblemRunner ({
                     const evaluation = evaluateTrace(result.trace, functionName);
                     const passed =
                         evaluation.status === "success" &&
-                        isEqual(evaluation.actualOutput, testCase?.expected_output);
+                        isEqual(evaluation.actualOutput, result.expectedOutput);
 
                     testResult = {
                         passed,
@@ -64,7 +60,7 @@ export function useProblemRunner ({
                             evaluation.status === "success"
                                 ? evaluation.actualOutput
                                 : undefined,
-                        expectedOutput: testCase?.expected_output,
+                        expectedOutput: result.expectedOutput,
                         error:
                             evaluation.status === "error"
                                 ? evaluation.error

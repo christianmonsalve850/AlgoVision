@@ -26,7 +26,7 @@
     "axios": "^1.18.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.17.0",
+    "lucide-react": "^1.59.0",
     "motion": "^13.1.0",
     "next": "16.2.7",
     "pyodide": "^314.0.0",

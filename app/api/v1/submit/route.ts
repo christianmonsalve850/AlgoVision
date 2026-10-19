@@ -66,14 +66,15 @@ export async function POST(request: Request) {
         {
           error: {
             code: "EXECUTION_FAILED",
-            message: "Failed to fetch test cases. Check the server logs for details.",
+            message:
+              "Failed to fetch test cases. Check the server logs for details.",
           },
         },
         { status: 500 },
       );
     }
 
-    const { data: executionRequest, error: insertError } = await supabase
+    const { data: executionRequest, error: exectuionRequestInsertError } = await supabase
       .from("execution_requests")
       .insert({
         problem_id: problemId,
@@ -85,19 +86,20 @@ export async function POST(request: Request) {
       .select("id")
       .single();
 
-    if (insertError) {
+    if (exectuionRequestInsertError) {
       console.error("Failed to insert execution metadata into Supabase:", {
-        code: insertError.code,
-        message: insertError.message,
-        details: insertError.details,
-        hint: insertError.hint,
+        code: exectuionRequestInsertError.code,
+        message: exectuionRequestInsertError.message,
+        details: exectuionRequestInsertError.details,
+        hint: exectuionRequestInsertError.hint,
       });
 
       return NextResponse.json(
         {
           error: {
             code: "INSERT_FAILED",
-            message: "Failed to insert execution metadata. Check the server logs for details.",
+            message:
+              "Failed to insert execution metadata. Check the server logs for details.",
           },
         },
         { status: 500 },
@@ -144,14 +146,50 @@ export async function POST(request: Request) {
             {
               error: {
                 code: "UPDATE_FAILED",
-                message: "Execution completed, but its metadata could not be updated.",
+                message:
+                  "Execution completed, but its metadata could not be updated.",
               },
             },
             { status: 500 },
           );
         }
 
-        console.info("Execution metadata updated in Supabase:", updatedExecution);
+        const { error: submissionInsertError } = await supabase
+          .from("submissions")
+          .insert({
+            problem_id: problemId,
+            user_id: user.id,
+            language: language,
+            source_code: sourceCode,
+            execution_request_id: executionRequest.id,
+            verdict: executionResult.verdict,
+            results: executionResult.results,
+          });
+
+        if (submissionInsertError) {
+          console.error("Failed to insert submission into Supabase:", {
+            code: submissionInsertError.code,
+            message: submissionInsertError.message,
+            details: submissionInsertError.details,
+            hint: submissionInsertError.hint,
+          });
+
+          return NextResponse.json(
+            {
+              error: {
+                code: "INSERT_FAILED",
+                message:
+                  "Failed to insert submission into Supabase. Check the server logs for details.",
+              },
+            },
+            { status: 500 },
+          );
+        }
+
+        console.info(
+          "Execution metadata updated in Supabase:",
+          updatedExecution,
+        );
         return NextResponse.json(
           {
             executionId: executionRequest.id,
@@ -165,15 +203,15 @@ export async function POST(request: Request) {
       default:
         const { data: failedExecution, error: failureUpdateError } =
           await supabase
-          .from("execution_requests")
-          .update({
-            status: "failed",
-            verdict: "Runtime Error",
-            error_message: "Only Python is supported right now.",
-          })
-          .eq("id", executionRequest.id)
-          .select("id")
-          .maybeSingle();
+            .from("execution_requests")
+            .update({
+              status: "failed",
+              verdict: "Runtime Error",
+              error_message: "Only Python is supported right now.",
+            })
+            .eq("id", executionRequest.id)
+            .select("id")
+            .maybeSingle();
 
         if (failureUpdateError || !failedExecution) {
           console.error("Failed to mark unsupported execution in Supabase:", {

@@ -5,9 +5,12 @@ import {
   ChevronDown,
   ChevronUp,
   SquareCheck,
+  RotateCcwClock
 } from "lucide-react";
 import { ProblemCodeEditor } from "@/features/practice/problem-page/code-editor/components/problem-code-editor";
 import { ProblemTestCasesPanel } from "@/features/practice/problem-page/code-editor/components/problem-test-cases-panel";
+import { SubmissionsPanel } from "@/features/practice/problem-page/code-editor/components/submissions-panel";
+import type { SubmissionHistory } from "@/features/practice/problem-page/problem/types";
 import type { ProblemEditorPanelProps } from "@/features/practice/problem-page/code-editor/types";
 import {
   Group,
@@ -22,12 +25,35 @@ export function ProblemEditorPanel({
   class_name,
   starterCodeMap,
   visibleTestCases,
-  hiddenTestCases
+  submission_history
 }: ProblemEditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [isTestCaseSelected, setIsTestCaseSelected] = useState<boolean>(true);
+  const [submissionLoadRequest, setSubmissionLoadRequest] = useState<{
+    submission: SubmissionHistory;
+    requestId: number;
+  } | null>(null);
+  const submissionLoadRequestId = useRef(0);
   
   const panelRef = useRef<PanelImperativeHandle>(null);
+
+  const handleLoadSubmission = (submission: SubmissionHistory) => {
+    submissionLoadRequestId.current += 1;
+    setSubmissionLoadRequest({
+      submission,
+      requestId: submissionLoadRequestId.current,
+    });
+  };
+
+  const handleRunStart = () => {
+    setIsTestCaseSelected(true);
+    setIsOpenConsole(true);
+  };
+
+  const handleSubmitStart = () => {
+    setIsTestCaseSelected(false);
+    setIsOpenConsole(true);
+  };
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -62,9 +88,9 @@ export function ProblemEditorPanel({
               function_name={function_name}
               class_name={class_name}
               starterCodeMap={starterCodeMap}
-              visibleTestCases={visibleTestCases}
-              hiddenTestCases={hiddenTestCases}
-              setIsOpenConsole={setIsOpenConsole}
+              onRunStart={handleRunStart}
+              onSubmitStart={handleSubmitStart}
+              submissionLoadRequest={submissionLoadRequest}
             />
           </Panel>
 
@@ -98,6 +124,14 @@ export function ProblemEditorPanel({
                   Testcase
                 </button>
 
+                <button
+                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent ${isTestCaseSelected ? "opacity-50" : ""}`}
+                  onClick={() => setIsTestCaseSelected(false)}
+                >
+                  <RotateCcwClock className="p-0.5 text-emerald-400" />
+                  Submissions
+                </button>
+
                 <div className="h-4 border-r border-border transition-opacity duration-150 group-hover:opacity-0" />
               </div>
 
@@ -112,10 +146,13 @@ export function ProblemEditorPanel({
             </div>
 
             {/* Console Content */}
-            <div className="min-h-0 flex-1 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-hidden">
               { isTestCaseSelected ? 
                 <ProblemTestCasesPanel testCases={visibleTestCases} /> : 
-                <div></div>
+                <SubmissionsPanel
+                  submissions={submission_history}
+                  onLoadSubmission={handleLoadSubmission}
+                />
               }
             </div>
           </Panel>

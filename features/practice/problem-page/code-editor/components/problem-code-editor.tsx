@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Editor from "@monaco-editor/react";
 import { ChevronDown, Play, RotateCcw, Send } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
@@ -21,12 +22,21 @@ export function ProblemCodeEditor({
   function_name,
   class_name,
   starterCodeMap,
-  visibleTestCases,
-  setIsOpenConsole,
+  onRunStart,
+  onSubmitStart,
+  submissionLoadRequest,
 }: ProblemCodeEditorPanelProps) {
   const { resolvedTheme } = useTheme();
+  const router = useRouter();
   const [ submissionStatus, setSubmissionStatus ] = useState<"success" | "failure" | null>(null);
   const [ executionsStatus, setExecutionStatus ] = useState<ExecutionStatus>("idle");
+  const [ submissionRefreshKey, setSubmissionRefreshKey ] = useState(0);
+
+  useEffect(() => {
+    if (submissionRefreshKey > 0) {
+      router.refresh();
+    }
+  }, [router, submissionRefreshKey]);
 
   const {
     code,
@@ -39,15 +49,40 @@ export function ProblemCodeEditor({
     starterCodeMap,
   });
 
+  const lastProcessedSubmissionRequestId = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (
+      !submissionLoadRequest ||
+      lastProcessedSubmissionRequestId.current ===
+        submissionLoadRequest.requestId
+    ) {
+      return;
+    }
+
+    lastProcessedSubmissionRequestId.current = submissionLoadRequest.requestId;
+    const submissionCode = submissionLoadRequest.submission.source_code;
+
+    if (
+      code !== submissionCode &&
+      !window.confirm(
+        "Load this submission into the editor? Your current code will be replaced.",
+      )
+    ) {
+      return;
+    }
+
+    handleEditorChange(submissionCode);
+  }, [code, handleEditorChange, submissionLoadRequest]);
+
   const { run } = useProblemRunner({
     problemId: problem_id,
     language,
     code,
-    visibleTestCases,
     functionName: function_name,
     className: class_name,
     setExecutionStatus,
-    onRunStart: () => setIsOpenConsole(true),
+    onRunStart,
   });
 
   const { submit } = useProblemSubmitter({
@@ -57,9 +92,12 @@ export function ProblemCodeEditor({
     functionName: function_name,
     className: class_name,
     setExecutionStatus,
-    onSubmitStart: () => setIsOpenConsole(true),
+    onSubmitStart,
     onSubmitEnd: (result) => {
       setSubmissionStatus(result.success ? "success" : "failure");
+      if (result.recorded) {
+        setSubmissionRefreshKey((key) => key + 1);
+      }
     },
   });
 

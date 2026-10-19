@@ -6,6 +6,7 @@ import type {
   ProblemRecord,
   ProblemExample,
   TestCase,
+  SubmissionHistory,
 } from "@/features/practice/problem-page/problem/types";
 
 type ProblemPageProps = {
@@ -16,6 +17,15 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   const { id } = await params;
 
   const supabase = await createClient();
+
+  const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    console.log(userError);
+  }
 
   const { data: problem, error: problemError } = await supabase
     .from("problems")
@@ -65,18 +75,18 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
 
   const problemVisibleTestCases = (visibleTestCases ?? []) as TestCase[];
 
-  const { data: hiddenTestCases, error: hiddenTestCasesError } = await supabase
-    .from("test_cases")
-    .select()
+   const { data: submissionHistory, error: submissionHistoryError } = await supabase
+    .from("submissions")
+    .select("id, problem_id, source_code, verdict, submitted_at")
+    .eq("user_id", user?.id)
     .eq("problem_id", id)
-    .eq("is_hidden", true)
-    .order("order_index", { ascending: true });
+    .order("submitted_at", { ascending: true });
 
-  if (hiddenTestCasesError) {
-    console.log(hiddenTestCasesError);
+  if (submissionHistoryError) {
+    console.error("Failed to fetch visible test cases:", submissionHistoryError);
   }
 
-  const problemHiddenTestCases = (hiddenTestCases ?? []) as TestCase[];
+  const problemSubmissionHistory = (submissionHistory ?? []) as SubmissionHistory[];
 
   const starterCodeMap = Object.fromEntries(
     (starterCode ?? []).map((row) => [
@@ -91,7 +101,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
       examples={(examples ?? []) as ProblemExample[]}
       starterCodeMap={starterCodeMap}
       visibleTestCases={problemVisibleTestCases}
-      hiddenTestCases={problemHiddenTestCases}
+      submissionHistory={problemSubmissionHistory}
     />
   );
 }

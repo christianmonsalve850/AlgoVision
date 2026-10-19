@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 
     const { data: testCases, error: testCaseError } = await supabase
       .from("test_cases")
-      .select("id, input, is_hidden, order_index")
+      .select("id, input, expected_output, is_hidden, order_index")
       .eq("problem_id", problemId)
       .eq("is_hidden", false)
       .order("order_index", { ascending: true });
@@ -83,7 +83,19 @@ export async function POST(request: Request) {
           functionName,
           testCases: (testCases ?? []).map(({ id, input }) => ({ id, input })),
         });
-        return NextResponse.json(executionResult, { status: 200 });
+        const expectedOutputs = new Map(
+          (testCases ?? []).map(({ id, expected_output }) => [
+            id,
+            expected_output,
+          ]),
+        );
+        return NextResponse.json(
+          executionResult.map((result) => ({
+            ...result,
+            expectedOutput: expectedOutputs.get(result.testCaseId),
+          })),
+          { status: 200 },
+        );
       default:
         return NextResponse.json(
           {
