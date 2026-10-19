@@ -41,7 +41,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
         <p className="mt-1 text-neutral-400">{lesson.description}</p>
       </div>
 
-      <LessonMdxSteps slug={title.toString()} />
+      <LessonMdxSteps lessonId={lesson.id} slug={title.toString()} />
     </main>
   );
 }

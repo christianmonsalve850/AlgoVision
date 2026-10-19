@@ -39,7 +39,11 @@ export default async function StepPage({ params }: StepPageProps) {
         <p className="mt-1 text-neutral-400">{lesson.description}</p>
       </div>
 
-      <LessonMdxSteps slug={title.toString()} step={step} />
+      <LessonMdxSteps
+        lessonId={lesson.id}
+        slug={title.toString()}
+        step={step}
+      />
     </main>
   );
 }
