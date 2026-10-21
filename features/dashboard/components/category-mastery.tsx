@@ -1,17 +1,17 @@
 import { Progress } from "@/components/ui/progress";
-import { createClient } from "@/lib/supabase/server";
 import { FolderOpen } from "lucide-react";
 
 export interface CategoryCompletionItem {
   category: string | null;
-  completion_percentage: number | null;
+  completed_lessons_count: number;
+  total_lessons_count: number;
 }
 
 export interface CategoryMasteryProps {
   categoryCompletion: CategoryCompletionItem[] | null;
 }
 
-export default async function CategoryMastery({categoryCompletion} : CategoryMasteryProps) {
+export default function CategoryMastery({categoryCompletion} : CategoryMasteryProps) {
 
   if (categoryCompletion && categoryCompletion.length < 1) {
     return (
@@ -49,7 +49,8 @@ export default async function CategoryMastery({categoryCompletion} : CategoryMas
 
       <div className="flex flex-col gap-4">
         {categoryCompletion?.map((category) => {
-          const percentage = Math.round(category.completion_percentage ?? 0);
+          const completionPercentage = (category.completed_lessons_count / category.total_lessons_count) * 100;
+          const percentage = Math.round(completionPercentage ?? 0);
 
           return (
             <div

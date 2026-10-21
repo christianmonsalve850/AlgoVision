@@ -47,4 +47,17 @@ export async function saveLessonProgress({
   if (error) {
     throw new Error(`Failed to save lesson progress: ${error.message}`);
   }
+
+  const { error: activityLogError } = await supabase.from("activity_log").insert({
+    user_id: user.id,
+    action_type: "lesson",
+    action_id: lessonId,
+    completed,
+  });
+
+  if (activityLogError) {
+    throw new Error(
+      `Lesson progress was saved, but the activity log could not be saved: ${activityLogError.message}`,
+    );
+  }
 }

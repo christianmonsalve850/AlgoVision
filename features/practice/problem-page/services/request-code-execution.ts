@@ -1,18 +1,6 @@
-import type { UseCodeExecuterOptions } from "@/app/types/api-types";
+import type { UseCodeExecuterOptions, SubmissionExecutionSummary, SubmitExecutionOptions, TraceApiCaseResult, RunExecutionOptions } from "@/app/types/api-types";
 import type { TraceStep } from "@/lib/trace-types";
 import type { TraceCaseResult } from "@/lib/docker-runner/types";
-
-type RunExecutionOptions = UseCodeExecuterOptions & { operation: "run" };
-type SubmitExecutionOptions = UseCodeExecuterOptions & { operation: "submit" };
-type TraceApiCaseResult = TraceCaseResult & { expectedOutput: unknown };
-
-export interface SubmissionExecutionSummary {
-    executionId: string;
-    status: string;
-    verdict: string;
-    passed: number;
-    total: number;
-}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -172,6 +160,13 @@ export async function requestExecutePython ({
             className: className,
             functionName: functionName,
             mode: mode,
+            ...(operation === "submit"
+                ? {
+                      timeZone:
+                          Intl.DateTimeFormat().resolvedOptions().timeZone ||
+                          "UTC",
+                  }
+                : {}),
         }),
     });
 

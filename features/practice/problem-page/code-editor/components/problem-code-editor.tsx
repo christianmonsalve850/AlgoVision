@@ -158,7 +158,8 @@ export function ProblemCodeEditor({
 
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-500"
+            disabled={executionsStatus === "submitting"}
+            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
             onClick={submit}
           >
             { executionsStatus == "submitting" ? <Spinner /> : <Send className="size-4" />}
