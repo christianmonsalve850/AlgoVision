@@ -5,7 +5,22 @@ import { executePython } from "@/lib/docker-runner/docker-runner";
 
 export const runtime = "nodejs";
 
-function isExecutionRequest(value: unknown): value is UseCodeExecuterOptions {
+type SubmitExecutionRequest = UseCodeExecuterOptions & { timeZone: string };
+
+function isTimeZone(value: unknown): value is string {
+  if (typeof value !== "string" || value.length === 0) {
+    return false;
+  }
+
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: value });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function isExecutionRequest(value: unknown): value is SubmitExecutionRequest {
   if (typeof value !== "object" || value === null) {
     return false;
   }
@@ -22,7 +37,8 @@ function isExecutionRequest(value: unknown): value is UseCodeExecuterOptions {
     typeof request.functionName === "string" &&
     request.functionName.length > 0 &&
     typeof request.mode === "string" &&
-    request.mode.length > 0
+    request.mode.length > 0 &&
+    isTimeZone(request.timeZone)
   );
 }
 
@@ -42,7 +58,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const { problemId, language, sourceCode, className, functionName } = body;
+  const { problemId, language, sourceCode, className, functionName, timeZone } =
+    body;
 
   try {
     const supabase = await createClient();
@@ -188,6 +205,34 @@ export async function POST(request: Request) {
         }
 
         if (executionResult.verdict === "accepted") {
+          const { error: streakError } = await supabase.rpc(
+            "record_accepted_problem",
+            {
+              p_user_id: user.id,
+              p_time_zone: timeZone,
+            },
+          );
+
+          if (streakError) {
+            console.error("Failed to update user streak:", {
+              code: streakError.code,
+              message: streakError.message,
+              details: streakError.details,
+              hint: streakError.hint,
+            });
+
+            return NextResponse.json(
+              {
+                error: {
+                  code: "STREAK_UPDATE_FAILED",
+                  message:
+                    "The solution was accepted, but streak progress could not be updated.",
+                },
+              },
+              { status: 500 },
+            );
+          }
+
           const { error: userProblemProgressError } = await supabase
             .from("user_problem_progress")
             .insert({

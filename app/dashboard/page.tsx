@@ -6,6 +6,34 @@ import RecentActivity from "@/features/dashboard/components/recent-activity";
 import CategoryMastery from "@/features/dashboard/components/category-mastery";
 import { createClient } from "@/lib/supabase/server";
 
+function getCurrentStreak(
+  streak: number | null | undefined,
+  lastSolvedDate: string | null | undefined,
+  timeZone: string | null | undefined,
+) {
+  if (!streak || !lastSolvedDate) {
+    return 0;
+  }
+
+  const dateParts = new Intl.DateTimeFormat("en-US", {
+    timeZone: timeZone ?? "UTC",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const dateValues = Object.fromEntries(
+    dateParts.map(({ type, value }) => [type, value]),
+  );
+  const today = `${dateValues.year}-${dateValues.month}-${dateValues.day}`;
+  const yesterday = new Date(
+    Date.parse(`${today}T00:00:00Z`) - 24 * 60 * 60 * 1000,
+  )
+    .toISOString()
+    .slice(0, 10);
+
+  return lastSolvedDate === today || lastSolvedDate === yesterday ? streak : 0;
+}
+
 export default async function Dashboard() {
   const supabase = await createClient();
 
@@ -16,7 +44,7 @@ export default async function Dashboard() {
   const { data: progress, error: progressError } = await supabase
     .from("user_progress")
     .select(
-      "streak, lessons_completed, latest_problem_id, interviews_completed, problems_solved",
+      "streak, last_solved_date, time_zone, lessons_completed, latest_problem_id, interviews_completed, problems_solved",
     )
     .eq("user_id", user?.id)
     .single();
@@ -24,6 +52,12 @@ export default async function Dashboard() {
   if (progressError) {
     console.log(progressError);
   }
+
+  const currentStreak = getCurrentStreak(
+    progress?.streak,
+    progress?.last_solved_date,
+    progress?.time_zone,
+  );
 
   const { data: problem, error: problemError } = await supabase
     .from("problems")
@@ -74,7 +108,7 @@ export default async function Dashboard() {
           icon_bg="bg-orange-500/10 dark: bg-orange-500/20"
           icon_color="text-orange-600 dark:text-orange-400"
           title="Current Streak"
-          value={progress?.streak}
+          value={String(currentStreak)}
           subtext="days in a row"
         />
         <SmallWidget
