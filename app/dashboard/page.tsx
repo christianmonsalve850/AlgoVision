@@ -116,8 +116,8 @@ export default async function Dashboard() {
           icon_bg="bg-amber-500/10 dark: bg-amber-500/20"
           icon_color="text-amber-600 dark:text-amber-400"
           title="Latest Problem"
-          value={problem?.difficulty ?? "--"}
-          subtext={problem?.title ?? ""}
+          value={problem?.title ?? ""}
+          subtext={problem?.difficulty ?? "--"}
         />
         <SmallWidget
           icon={BookOpen}

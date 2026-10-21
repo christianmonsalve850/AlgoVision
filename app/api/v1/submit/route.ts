@@ -267,6 +267,33 @@ export async function POST(request: Request) {
           }
         }
 
+        const { error: insertLatestProblemError } = await supabase
+          .from("user_progress")
+          .update({
+            latest_problem_id: problemId,
+          })
+          .eq("user_id", user.id);
+
+        if (insertLatestProblemError) {
+          console.error("Failed to insert latest problem attempted metadata:", {
+            code: insertLatestProblemError.code,
+            message: insertLatestProblemError.message,
+            details: insertLatestProblemError.details,
+            hint: insertLatestProblemError.hint,
+          });
+
+          return NextResponse.json(
+            {
+              error: {
+                code: "INSERT_FAILED",
+                message:
+                  "Failed to insert latest problem attempted metadata. Check the server logs for details.",
+              },
+            },
+            { status: 500 },
+          );
+        }
+
         return NextResponse.json(
           {
             executionId: executionRequest.id,
