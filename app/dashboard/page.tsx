@@ -80,12 +80,13 @@ export default async function Dashboard() {
   const { data: categoryCompletion, error: categoryCompletionError } =
     await supabase
       .from("category_completion_rates")
-      .select("category, completion_percentage")
+      .select("category, completed_lessons_count, total_lessons_count")
       .eq("user_id", user?.id);
 
   if (categoryCompletionError) {
     console.log(categoryCompletionError);
   }
+
 
   return (
     <main className="flex min-h-[calc(100vh-4rem)] flex-col bg-background p-6 gap-5">
