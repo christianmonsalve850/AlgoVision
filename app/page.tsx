@@ -1,32 +1,21 @@
-'use client'
+import { redirect } from "next/navigation";
+import Hero from "@/features/hero/components/hero";
+import { createClient } from "@/lib/supabase/server";
 
-import { useRef } from "react";
-import { HeroIntro } from "@/features/hero/components/hero-intro";
-import { AppDemo } from "@/features/hero/components/app-demo";
-import { Mastery } from "@/features/hero/components/mastery";
-import { Journey } from "@/features/hero/components/journey";
-import { HeroFooter } from "@/features/hero/components/hero-footer";
-import { HeroBottom } from "@/features/hero/components/hero-bottom";
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
-export default function Hero() {
-  const nextSectionRef = useRef<HTMLHeadingElement>(null);
+  if (error) {
+    throw new Error(`Failed to check the current user: ${error.message}`);
+  }
 
-  return (
-    <main>
-      <div className="flex flex-col items-center justify-center w-full max-w-5xl px-6 mx-auto text-center mt-4">
+  if (user) {
+    redirect("/practice");
+  }
 
-        <HeroIntro nextSectionRef={nextSectionRef} />
-
-        <AppDemo nextSectionRef={nextSectionRef} />
-
-        <Mastery />
-
-        <Journey /> 
-
-        <HeroBottom />
-      </div>
-
-      <HeroFooter />
-    </main>
-  );
+  return <Hero />;
 }

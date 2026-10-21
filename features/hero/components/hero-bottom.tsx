@@ -1,6 +1,7 @@
-
+import { useRouter } from "next/navigation"
 
 export function HeroBottom() {
+    const router = useRouter();
     return (
         <section className="flex flex-col justify-center items-center mb-20 gap-y-6">
             <h2 className="max-w-4xl sm:text-xl tracking-tight md:text-3xl font-bold">
@@ -9,7 +10,10 @@ export function HeroBottom() {
             <p className="text-md text-muted-foreground/80 leading-relaxed">
                 Join thousands of developers who learn better through visualization.
             </p>
-            <button className="py-3 px-5 bg-foreground text-background font-semibold rounded-lg">
+            <button 
+                className="py-3 px-5 bg-foreground text-background font-semibold rounded-lg"
+                onClick={() => router.replace('/login')}
+            >
                 Get Started Free
             </button>
         </section>
