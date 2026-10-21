@@ -204,6 +204,35 @@ export async function POST(request: Request) {
           );
         }
 
+        const { error: activityLogError } = await supabase
+          .from("activity_log")
+          .insert({
+            user_id: user.id,
+            action_type: "problem",
+            action_id: problemId,
+            completed: executionResult.verdict === "accepted",
+          });
+
+        if (activityLogError) {
+          console.error("Failed to insert problem activity log:", {
+            code: activityLogError.code,
+            message: activityLogError.message,
+            details: activityLogError.details,
+            hint: activityLogError.hint,
+          });
+
+          return NextResponse.json(
+            {
+              error: {
+                code: "ACTIVITY_LOG_FAILED",
+                message:
+                  "The submission was recorded, but its activity could not be saved.",
+              },
+            },
+            { status: 500 },
+          );
+        }
+
         if (executionResult.verdict === "accepted") {
           const { error: streakError } = await supabase.rpc(
             "record_accepted_problem",
