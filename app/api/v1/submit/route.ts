@@ -74,17 +74,18 @@ export async function POST(request: Request) {
       );
     }
 
-    const { data: executionRequest, error: exectuionRequestInsertError } = await supabase
-      .from("execution_requests")
-      .insert({
-        problem_id: problemId,
-        user_id: user.id,
-        language: language,
-        status: "pending",
-        mode: "run",
-      })
-      .select("id")
-      .single();
+    const { data: executionRequest, error: exectuionRequestInsertError } =
+      await supabase
+        .from("execution_requests")
+        .insert({
+          problem_id: problemId,
+          user_id: user.id,
+          language: language,
+          status: "pending",
+          mode: "run",
+        })
+        .select("id")
+        .single();
 
     if (exectuionRequestInsertError) {
       console.error("Failed to insert execution metadata into Supabase:", {
@@ -186,10 +187,41 @@ export async function POST(request: Request) {
           );
         }
 
-        console.info(
-          "Execution metadata updated in Supabase:",
-          updatedExecution,
-        );
+        if (executionResult.verdict === "accepted") {
+          const { error: userProblemProgressError } = await supabase
+            .from("user_problem_progress")
+            .insert({
+              problem_id: problemId,
+              user_id: user.id,
+              solved: true,
+              language: language,
+              code: sourceCode,
+            });
+
+          if (userProblemProgressError) {
+            console.error(
+              "Failed to insert execution metadata into Supabase:",
+              {
+                code: userProblemProgressError.code,
+                message: userProblemProgressError.message,
+                details: userProblemProgressError.details,
+                hint: userProblemProgressError.hint,
+              },
+            );
+
+            return NextResponse.json(
+              {
+                error: {
+                  code: "INSERT_FAILED",
+                  message:
+                    "Failed to insert execution metadata. Check the server logs for details.",
+                },
+              },
+              { status: 500 },
+            );
+          }
+        }
+
         return NextResponse.json(
           {
             executionId: executionRequest.id,
