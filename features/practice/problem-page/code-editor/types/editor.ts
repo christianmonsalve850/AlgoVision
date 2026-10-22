@@ -12,6 +12,8 @@ export type ProblemEditorProps = {
 };
 
 export interface ProblemEditorPanelProps {
+  isAiHintsOpen: boolean;
+  onAiHintsOpenChange: (isOpen: boolean) => void;
   problem_id: string;
   function_name: string;
   class_name: string;
@@ -21,6 +23,8 @@ export interface ProblemEditorPanelProps {
 }
 
 export interface ProblemCodeEditorPanelProps {
+  isAiHintsOpen: boolean;
+  onAiHintsOpenChange: (isOpen: boolean) => void;
   problem_id: string;
   function_name: string;
   class_name: string;

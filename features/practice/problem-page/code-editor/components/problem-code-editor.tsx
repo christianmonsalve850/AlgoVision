@@ -16,8 +16,11 @@ import { useProblemSubmitter } from "@/features/practice/problem-page/hooks/use-
 import { SubmissionOverlay } from "@/features/practice/problem-page/code-editor/components/submission-overlay";
 import { Spinner } from "@/components/ui/spinner";
 import { ExecutionStatus } from "@/features/practice/problem-page/types";
+import { AIHintsDrawer } from "@/features/practice/problem-page/code-editor/components/ai-hints-drawer";
 
 export function ProblemCodeEditor({
+  isAiHintsOpen,
+  onAiHintsOpenChange,
   problem_id,
   function_name,
   class_name,
@@ -115,6 +118,11 @@ export function ProblemCodeEditor({
         onClose={() => setSubmissionStatus(null)}
         durationMs={2000}
       />
+      <AIHintsDrawer
+        isOpen={isAiHintsOpen}
+        onClose={() => onAiHintsOpenChange(false)}
+        problemTitle="Container With Most Water"
+      />
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex items-center gap-2">
@@ -139,6 +147,12 @@ export function ProblemCodeEditor({
         </div>
 
         <div className="flex items-center gap-2">
+          <button 
+              onClick={() => onAiHintsOpenChange(true)}
+              className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
+          >
+              <span>AI Hints</span>
+          </button>
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
