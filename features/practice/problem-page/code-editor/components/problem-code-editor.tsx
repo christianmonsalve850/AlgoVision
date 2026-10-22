@@ -16,6 +16,7 @@ import { useProblemSubmitter } from "@/features/practice/problem-page/hooks/use-
 import { SubmissionOverlay } from "@/features/practice/problem-page/code-editor/components/submission-overlay";
 import { Spinner } from "@/components/ui/spinner";
 import { ExecutionStatus } from "@/features/practice/problem-page/types";
+import { AIHintsDrawer } from "@/features/practice/problem-page/code-editor/components/ai-hints-drawer";
 
 export function ProblemCodeEditor({
   problem_id,
@@ -31,6 +32,7 @@ export function ProblemCodeEditor({
   const [ submissionStatus, setSubmissionStatus ] = useState<"success" | "failure" | null>(null);
   const [ executionsStatus, setExecutionStatus ] = useState<ExecutionStatus>("idle");
   const [ submissionRefreshKey, setSubmissionRefreshKey ] = useState(0);
+  const [isAiOpen, setIsAiOpen] = useState(false);
 
   useEffect(() => {
     if (submissionRefreshKey > 0) {
@@ -115,6 +117,11 @@ export function ProblemCodeEditor({
         onClose={() => setSubmissionStatus(null)}
         durationMs={2000}
       />
+      <AIHintsDrawer 
+        isOpen={isAiOpen} 
+        onClose={() => setIsAiOpen(false)} 
+        problemTitle="Container With Most Water" 
+    />
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex items-center gap-2">
@@ -139,6 +146,12 @@ export function ProblemCodeEditor({
         </div>
 
         <div className="flex items-center gap-2">
+          <button 
+              onClick={() => setIsAiOpen(true)}
+              className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
+          >
+              <span>AI Hints</span>
+          </button>
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
