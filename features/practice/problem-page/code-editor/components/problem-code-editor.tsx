@@ -19,6 +19,8 @@ import { ExecutionStatus } from "@/features/practice/problem-page/types";
 import { AIHintsDrawer } from "@/features/practice/problem-page/code-editor/components/ai-hints-drawer";
 
 export function ProblemCodeEditor({
+  isAiHintsOpen,
+  onAiHintsOpenChange,
   problem_id,
   function_name,
   class_name,
@@ -32,7 +34,6 @@ export function ProblemCodeEditor({
   const [ submissionStatus, setSubmissionStatus ] = useState<"success" | "failure" | null>(null);
   const [ executionsStatus, setExecutionStatus ] = useState<ExecutionStatus>("idle");
   const [ submissionRefreshKey, setSubmissionRefreshKey ] = useState(0);
-  const [isAiOpen, setIsAiOpen] = useState(false);
 
   useEffect(() => {
     if (submissionRefreshKey > 0) {
@@ -118,8 +119,8 @@ export function ProblemCodeEditor({
         durationMs={2000}
       />
       <AIHintsDrawer 
-        isOpen={isAiOpen} 
-        onClose={() => setIsAiOpen(false)} 
+        isOpen={isAiHintsOpen}
+        onClose={() => onAiHintsOpenChange(false)}
         problemTitle="Container With Most Water" 
     />
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -147,7 +148,7 @@ export function ProblemCodeEditor({
 
         <div className="flex items-center gap-2">
           <button 
-              onClick={() => setIsAiOpen(true)}
+              onClick={() => onAiHintsOpenChange(true)}
               className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
           >
               <span>AI Hints</span>

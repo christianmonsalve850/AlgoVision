@@ -20,6 +20,8 @@ import {
 } from "react-resizable-panels";
 
 export function ProblemEditorPanel({
+  isAiHintsOpen,
+  onAiHintsOpenChange,
   problem_id,
   function_name,
   class_name,
@@ -84,6 +86,8 @@ export function ProblemEditorPanel({
           {/* Code Editor */}
           <Panel id="code-editor" defaultSize={70}>
             <ProblemCodeEditor
+              isAiHintsOpen={isAiHintsOpen}
+              onAiHintsOpenChange={onAiHintsOpenChange}
               problem_id={problem_id}
               function_name={function_name}
               class_name={class_name}

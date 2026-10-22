@@ -36,6 +36,7 @@ export function ProblemPageShell({
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState<PlaybackSpeed>(1);
+  const [isAiHintsOpen, setIsAiHintsOpen] = useState(false);
 
   const lastStepIndex = trace.length - 1;
   const isAtEnd = trace.length === 0 || currentStepIndex >= lastStepIndex;
@@ -107,6 +108,8 @@ export function ProblemPageShell({
         </Separator>
         <Panel id="problem-editor" defaultSize={50}>
           <ProblemEditorPanel
+            isAiHintsOpen={isAiHintsOpen}
+            onAiHintsOpenChange={setIsAiHintsOpen}
             problem_id={problem.id}
             function_name={problem.function_name}
             class_name={problem.class_name}
@@ -115,8 +118,21 @@ export function ProblemPageShell({
             submission_history={submissionHistory}
           />
         </Panel>
-        <Separator className="group relative flex w-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-x border-border">
-          <div className="h-8 w-1 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
+        <Separator
+          disabled={isAiHintsOpen}
+          className={`group relative flex w-2 items-center justify-center bg-transparent border-x border-border ${
+            isAiHintsOpen
+              ? "cursor-default"
+              : "transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40"
+          }`}
+        >
+          <div
+            className={`h-8 w-1 rounded-full bg-border/60 ${
+              isAiHintsOpen
+                ? ""
+                : "transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500"
+            }`}
+          />
         </Separator>
         <Panel
           id="problem-visualization"
