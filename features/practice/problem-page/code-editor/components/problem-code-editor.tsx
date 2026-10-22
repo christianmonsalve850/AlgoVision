@@ -118,11 +118,11 @@ export function ProblemCodeEditor({
         onClose={() => setSubmissionStatus(null)}
         durationMs={2000}
       />
-      <AIHintsDrawer 
+      <AIHintsDrawer
         isOpen={isAiHintsOpen}
         onClose={() => onAiHintsOpenChange(false)}
-        problemTitle="Container With Most Water" 
-    />
+        problemTitle="Container With Most Water"
+      />
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex items-center gap-2">
