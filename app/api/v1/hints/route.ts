@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { problem, userCode, failedTests, requestedHintType } = body;
+  const { userHintRequest, problem, userCode, failedTests, requestedHintType } = body;
 
   try {
     const client = new OpenAI();
@@ -75,6 +75,7 @@ export async function POST(request: Request) {
       - Set revealsSolution to false unless the response substantially gives away the solution.
     `.trim(),
       input: `
+      User Hint Request: ${userHintRequest}
       Problem: ${problem.title}
       User Code: ${userCode}
       Failed Tests: ${failedTests}

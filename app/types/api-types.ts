@@ -37,6 +37,7 @@ export type FailedTest = {
 export type HintType = "pattern" | "complexity" | "data_structure";
 
 export interface HintOptions {
+  userHintRequest: string;
   problem: Problem;
   userCode: string
   failedTests: FailedTest[]
