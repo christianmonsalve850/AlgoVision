@@ -13,7 +13,7 @@ function isReturnHint(value: unknown): value is { hint: string; revealsSolution:
 }
 
 export async function requestAiHint({
-    userHintRequest,
+    query,
     problem,
     userCode,
     failedTests,
@@ -25,7 +25,7 @@ export async function requestAiHint({
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            userHintRequest,
+            query,
             problem,
             userCode,
             failedTests,

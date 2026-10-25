@@ -11,11 +11,13 @@ function isValidHintPayload(value: unknown): value is HintOptions {
     return false;
   }
 
+  const query = value.hint;
   const problem = value.problem;
   const failedTests = value.failedTests;
   const requestedHintType = value.requestedHintType;
 
   return (
+    typeof query === "string" &&
     typeof problem.title === "string" &&
     typeof problem.description === "string" &&
     Array.isArray(problem.constraints) &&
@@ -53,7 +55,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { userHintRequest, problem, userCode, failedTests, requestedHintType } = body;
+  const { query, problem, userCode, failedTests, requestedHintType } = body;
 
   try {
     const client = new OpenAI();
@@ -75,7 +77,7 @@ export async function POST(request: Request) {
       - Set revealsSolution to false unless the response substantially gives away the solution.
     `.trim(),
       input: `
-      User Hint Request: ${userHintRequest}
+      User Hint Request: ${query}
       Problem: ${problem.title}
       User Code: ${userCode}
       Failed Tests: ${failedTests}
