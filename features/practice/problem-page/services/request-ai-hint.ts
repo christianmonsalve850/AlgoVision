@@ -13,12 +13,11 @@ function isReturnHint(value: unknown): value is { hint: string; revealsSolution:
 }
 
 export async function requestAiHint({
-    query,
     problemId,
     problem,
     userCode,
     executionId,
-    requestedHintType,
+    hintLevel,
 }: HintOptions) : Promise<ReturnHint> {
     const response = await fetch('/api/v1/hints', {
         method: 'POST',
@@ -26,12 +25,11 @@ export async function requestAiHint({
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            query,
             problemId,
             problem,
             userCode,
             executionId,
-            requestedHintType,
+            hintLevel,
         }),
     });
 

@@ -30,15 +30,14 @@ export type Problem = {
   constraints: string[];
 };
 
-export type HintType = "pattern" | "complexity" | "data_structure";
+export type HintLevel = 1 | 2 | 3;
 
 export interface HintOptions {
-  query: string;
   problemId: string;
   problem: Problem;
   userCode: string;
   executionId: string | null;
-  requestedHintType: HintType | null;
+  hintLevel: HintLevel;
 }
 
 export type ReturnHint =

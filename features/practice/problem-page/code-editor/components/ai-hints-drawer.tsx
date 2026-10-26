@@ -1,32 +1,30 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
+import type { HintLevel } from "@/app/types/api-types";
 import type { ProblemRecord } from "@/features/practice/problem-page/problem/types";
 import { requestAiHint } from "@/features/practice/problem-page/services/request-ai-hint";
-import type { HintType } from "@/app/types/api-types";
 
-const hintCategoryLabels: Record<HintType, string> = {
-  pattern: "Pattern",
-  complexity: "Complexity",
-  data_structure: "Data Structure",
-};
-
-const quickHintRequests: {
-  label: string;
-  requestedHintType?: HintType;
-  query?: string;
-  requiresSubmission?: boolean;
+const hintSteps: {
+  level: HintLevel;
+  title: string;
+  description: string;
 }[] = [
-  { label: "Pattern", requestedHintType: "pattern" },
-  { label: "Complexity", requestedHintType: "complexity" },
-  { label: "Data Structure", requestedHintType: "data_structure" },
-  { label: "General", query: "Give me a general hint to help me make progress." },
+  {
+    level: 1,
+    title: "Nudge",
+    description: "A question or concept to help you think about your next step.",
+  },
+  {
+    level: 2,
+    title: "More direction",
+    description: "A focused pointer toward the relevant part of your approach.",
+  },
+  {
+    level: 3,
+    title: "Strong hint",
+    description: "A specific strategy or key insight, without the full solution.",
+  },
 ];
-
-interface Message {
-  id: string;
-  sender: "user" | "ai";
-  text: string;
-}
 
 interface AIHintsDrawerProps {
   isOpen: boolean;
@@ -45,55 +43,26 @@ export function AIHintsDrawer({
   userCode,
   executionId,
 }: AIHintsDrawerProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      sender: "ai",
-      text: `Hi! I'm your AI coding assistant for "${problem.title}". Stuck or need a nudge? Ask me a question, but remember I won't write the code for you!`,
-    },
-  ]);
-  const [inputValue, setInputValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const messageIdCounter = useRef(1);
+  const [hints, setHints] = useState<Partial<Record<HintLevel, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<HintLevel, string>>>({});
+  const [loadingLevel, setLoadingLevel] = useState<HintLevel | null>(null);
 
-  const getNextMessageId = () => {
-    messageIdCounter.current += 1;
-    return messageIdCounter.current.toString();
-  };
+  const nextHintLevel: HintLevel | null = !hints[1]
+    ? 1
+    : !hints[2]
+      ? 2
+      : !hints[3]
+        ? 3
+        : null;
 
-  const handleSendMessage = async (
-    textToSend?: string,
-    requestedHintType: HintType | null = null,
-    requiresSubmission = false,
-  ) => {
-    const query = (textToSend ?? inputValue).trim();
-    if ((!query && !requestedHintType) || isLoading) return;
+  const requestHint = async (hintLevel: HintLevel) => {
+    if (hintLevel !== nextHintLevel || loadingLevel !== null) return;
 
-    if (requiresSubmission && !executionId) {
-      const responseId = getNextMessageId();
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: responseId,
-          sender: "ai",
-          text: "Submit your code first so I can give a hint based on its failed tests.",
-        },
-      ]);
-      return;
-    }
+    setLoadingLevel(hintLevel);
+    setErrors((previous) => ({ ...previous, [hintLevel]: undefined }));
 
-    const userMsg: Message = {
-      id: getNextMessageId(),
-      sender: "user",
-      text: query || (requestedHintType ? hintCategoryLabels[requestedHintType] : ""),
-    };
-
-    setMessages((prev) => [...prev, userMsg]);
-    if (!textToSend) setInputValue("");
-    setIsLoading(true);
     try {
       const result = await requestAiHint({
-        query,
         problemId,
         problem: {
           title: problem.title,
@@ -102,29 +71,21 @@ export function AIHintsDrawer({
         },
         userCode,
         executionId,
-        requestedHintType,
+        hintLevel,
       });
-      const responseId = getNextMessageId();
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: responseId,
-          sender: "ai",
-          text: result?.hint ?? "I couldn't generate a hint just now. Please try again.",
-        },
-      ]);
+
+      if (!result?.hint) {
+        throw new Error("The hint service returned an empty hint.");
+      }
+
+      setHints((previous) => ({ ...previous, [hintLevel]: result.hint }));
     } catch {
-      const responseId = getNextMessageId();
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: responseId,
-          sender: "ai",
-          text: "I couldn't reach the hint service. Please try again in a moment.",
-        },
-      ]);
+      setErrors((previous) => ({
+        ...previous,
+        [hintLevel]: "Couldn't generate this hint. Please try again.",
+      }));
     } finally {
-      setIsLoading(false);
+      setLoadingLevel(null);
     }
   };
 
@@ -152,96 +113,108 @@ export function AIHintsDrawer({
         className="pointer-events-auto min-w-0"
       >
         <div className="flex h-full flex-col border-l border-border bg-background text-foreground shadow-2xl">
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background">
-            <div className="flex items-center space-x-2">
-              <span>✨</span>
+          <div className="flex items-center justify-between border-b border-border px-4 py-3">
+            <div className="flex items-center gap-2">
+              <span aria-hidden="true">✨</span>
               <h2 className="text-sm font-semibold tracking-wide">
-                AI Hint Assistant
+                Step-by-step hints
               </h2>
             </div>
             <button
               onClick={onClose}
-              className="text-foreground hover:text-muted-foreground p-1 rounded-md transition-colors"
+              className="rounded-md p-1 text-foreground transition-colors hover:text-muted-foreground"
               aria-label="Close AI Hints"
             >
               ✕
             </button>
           </div>
 
-          {/* Quick Prompt Chips */}
-          <div className="p-3 border-b border-border bg-background">
-            <p className="text-[11px] font-medium text-foreground mb-2">
-              Request a hint category:
+          <div className="flex-1 space-y-3 overflow-y-auto p-4">
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              Reveal one hint at a time. Each step gets more specific and is
+              generated from your code and latest submission summary, not from
+              earlier hints.
             </p>
-            <div className="flex flex-col gap-1.5 items-start">
-              {quickHintRequests.map((hintRequest) => (
-                <button
-                  key={hintRequest.label}
-                  onClick={() =>
-                    handleSendMessage(
-                      hintRequest.query,
-                      hintRequest.requestedHintType ?? null,
-                      hintRequest.requiresSubmission,
-                    )
-                  }
-                  className="text-xs bg-background hover:bg-muted text-foreground px-3 py-1 rounded-full transition-colors border border-border"
-                >
-                  {hintRequest.label}
-                </button>
-              ))}
-            </div>
-          </div>
 
-          {/* Chat Messages Feed */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex flex-col ${
-                  msg.sender === "user" ? "items-end" : "items-start"
-                }`}
-              >
-                <div
-                  className={`max-w-[85%] rounded-lg p-3 text-xs leading-relaxed ${
-                    msg.sender === "user"
-                      ? "bg-emerald-700 text-white rounded-br-none"
-                      : "bg-muted text-foreground border border-border rounded-bl-none"
+            {hintSteps.map(({ level, title, description }) => {
+              const hint = hints[level];
+              const error = errors[level];
+              const isLoading = loadingLevel === level;
+              const isLocked = level !== nextHintLevel && !hint;
+
+              return (
+                <section
+                  key={level}
+                  aria-labelledby={`hint-title-${level}`}
+                  className={`rounded-lg border p-3 ${
+                    isLocked
+                      ? "border-border/60 bg-muted/30 opacity-70"
+                      : "border-border bg-background"
                   }`}
                 >
-                  {msg.text}
-                </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex items-center space-x-2 text-xs text-zinc-400 bg-zinc-800/50 p-3 rounded-lg w-max border border-zinc-800">
-                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" />
-                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.4s]" />
-                <span>Thinking...</span>
-              </div>
-            )}
-          </div>
+                  <div className="mb-2 flex items-start gap-3">
+                    <span
+                      className={`flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+                        hint
+                          ? "bg-emerald-600 text-white"
+                          : "bg-muted text-muted-foreground"
+                      }`}
+                    >
+                      {level}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <h3
+                        id={`hint-title-${level}`}
+                        className="text-sm font-medium"
+                      >
+                        {title}
+                      </h3>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        {description}
+                      </p>
+                    </div>
+                  </div>
 
-          {/* Input Bar */}
-          <div className="p-3 border-t border-border bg-background">
-            <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                placeholder="Ask for a nudge or hint..."
-                className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-xs text-foreground placeholder-zinc-500 focus:outline-none focus:border-emerald-500"
-              />
-              <button
-                onClick={() => handleSendMessage()}
-                disabled={isLoading || !inputValue.trim()}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-lg text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                Send
-              </button>
-            </div>
+                  {hint && (
+                    <p className="ml-9 whitespace-pre-wrap rounded-md bg-muted p-3 text-xs leading-relaxed">
+                      {hint}
+                    </p>
+                  )}
+
+                  {error && (
+                    <p role="alert" className="ml-9 mb-2 text-xs text-red-500">
+                      {error}
+                    </p>
+                  )}
+
+                  {!hint && (
+                    <div className="ml-9">
+                      <button
+                        type="button"
+                        onClick={() => requestHint(level)}
+                        disabled={isLocked || loadingLevel !== null}
+                        className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {isLoading
+                          ? "Generating..."
+                          : error
+                            ? "Try again"
+                            : isLocked
+                              ? `Unlock after Hint ${level - 1}`
+                              : "Reveal hint"}
+                      </button>
+                    </div>
+                  )}
+                </section>
+              );
+            })}
+
+            {nextHintLevel === null && (
+              <p className="text-center text-xs text-muted-foreground">
+                You’ve revealed all three hints. Keep working through the
+                problem with what you’ve uncovered.
+              </p>
+            )}
           </div>
         </div>
       </Panel>

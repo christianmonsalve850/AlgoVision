@@ -13,14 +13,12 @@ function isValidHintPayload(value: unknown): value is HintOptions {
     return false;
   }
 
-  const query = value.query;
   const problemId = value.problemId;
   const problem = value.problem;
   const executionId = value.executionId;
-  const requestedHintType = value.requestedHintType;
+  const hintLevel = value.hintLevel;
 
   return (
-    typeof query === "string" &&
     typeof problemId === "string" &&
     problemId.length > 0 &&
     typeof problem.title === "string" &&
@@ -32,12 +30,7 @@ function isValidHintPayload(value: unknown): value is HintOptions {
     typeof value.userCode === "string" &&
     (executionId === null ||
       (typeof executionId === "string" && executionId.length > 0)) &&
-    (requestedHintType === null ||
-      requestedHintType === "pattern" ||
-      requestedHintType === "complexity" ||
-      requestedHintType === "data_structure") &&
-    ((query.trim().length > 0 && requestedHintType === null) ||
-      (query.trim().length === 0 && requestedHintType !== null))
+    (hintLevel === 1 || hintLevel === 2 || hintLevel === 3)
   );
 }
 
@@ -89,12 +82,11 @@ export async function POST(request: Request) {
   }
 
   const {
-    query,
     problemId,
     problem,
     userCode,
     executionId,
-    requestedHintType,
+    hintLevel,
   } = body;
 
   try {
@@ -148,13 +140,12 @@ export async function POST(request: Request) {
       reasoning: { effort: "medium" },
       instructions: AI_INSTRUCTORS_SYSTEM_PROMPT,
       input: `
-      User Hint Query: ${query || "none (category-only request)"}
+      Hint Level: ${hintLevel}
       Problem: ${problem.title}
       Problem Description: ${problem.description}
       Constraints: ${problem.constraints.join("; ")}
       User Code: ${userCode}
       Failure Summary: ${failureSummary}
-      Requested Hint Type: ${requestedHintType ?? "none"}
     `,
       text: {
         format: {
