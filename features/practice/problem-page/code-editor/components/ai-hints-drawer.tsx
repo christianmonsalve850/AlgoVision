@@ -1,5 +1,26 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
+import type { ProblemRecord } from "@/features/practice/problem-page/problem/types";
+import { requestAiHint } from "@/features/practice/problem-page/services/request-ai-hint";
+import type { HintType } from "@/app/types/api-types";
+
+const hintCategoryLabels: Record<HintType, string> = {
+  pattern: "Pattern",
+  complexity: "Complexity",
+  data_structure: "Data Structure",
+};
+
+const quickHintRequests: {
+  label: string;
+  requestedHintType?: HintType;
+  query?: string;
+  requiresSubmission?: boolean;
+}[] = [
+  { label: "Pattern", requestedHintType: "pattern" },
+  { label: "Complexity", requestedHintType: "complexity" },
+  { label: "Data Structure", requestedHintType: "data_structure" },
+  { label: "General", query: "Give me a general hint to help me make progress." },
+];
 
 interface Message {
   id: string;
@@ -10,49 +31,101 @@ interface Message {
 interface AIHintsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  problemTitle: string;
+  problemId: string;
+  problem: ProblemRecord;
+  userCode: string;
+  executionId: string | null;
 }
 
 export function AIHintsDrawer({
   isOpen,
   onClose,
-  problemTitle,
+  problemId,
+  problem,
+  userCode,
+  executionId,
 }: AIHintsDrawerProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
       sender: "ai",
-      text: `Hi! I'm your AI coding assistant for "${problemTitle}". Stuck or need a nudge? Ask me a question, but remember I won't write the code for you!`,
+      text: `Hi! I'm your AI coding assistant for "${problem.title}". Stuck or need a nudge? Ask me a question, but remember I won't write the code for you!`,
     },
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const messageIdCounter = useRef(1);
 
-  // Placeholder for sending user query to the AI backend
-  const handleSendMessage = (textToSend?: string) => {
-    const query = textToSend || inputValue;
-    if (!query.trim()) return;
+  const getNextMessageId = () => {
+    messageIdCounter.current += 1;
+    return messageIdCounter.current.toString();
+  };
+
+  const handleSendMessage = async (
+    textToSend?: string,
+    requestedHintType: HintType | null = null,
+    requiresSubmission = false,
+  ) => {
+    const query = (textToSend ?? inputValue).trim();
+    if ((!query && !requestedHintType) || isLoading) return;
+
+    if (requiresSubmission && !executionId) {
+      const responseId = getNextMessageId();
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: responseId,
+          sender: "ai",
+          text: "Submit your code first so I can give a hint based on its failed tests.",
+        },
+      ]);
+      return;
+    }
 
     const userMsg: Message = {
-      id: Date.now().toString(),
+      id: getNextMessageId(),
       sender: "user",
-      text: query,
+      text: query || (requestedHintType ? hintCategoryLabels[requestedHintType] : ""),
     };
 
     setMessages((prev) => [...prev, userMsg]);
     if (!textToSend) setInputValue("");
     setIsLoading(true);
-
-    // TODO: Implement actual AI API call here with constraints (no full code output)
-    setTimeout(() => {
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        sender: "ai",
-        text: `[Placeholder AI Hint]: That's a great question about ${problemTitle}. Think about how your two pointers move when comparing heights...`,
-      };
-      setMessages((prev) => [...prev, aiResponse]);
+    try {
+      const result = await requestAiHint({
+        query,
+        problemId,
+        problem: {
+          title: problem.title,
+          description: problem.description,
+          constraints: problem.constraints,
+        },
+        userCode,
+        executionId,
+        requestedHintType,
+      });
+      const responseId = getNextMessageId();
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: responseId,
+          sender: "ai",
+          text: result?.hint ?? "I couldn't generate a hint just now. Please try again.",
+        },
+      ]);
+    } catch {
+      const responseId = getNextMessageId();
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: responseId,
+          sender: "ai",
+          text: "I couldn't reach the hint service. Please try again in a moment.",
+        },
+      ]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   if (!isOpen) return null;
@@ -99,20 +172,22 @@ export function AIHintsDrawer({
           {/* Quick Prompt Chips */}
           <div className="p-3 border-b border-border bg-background">
             <p className="text-[11px] font-medium text-foreground mb-2">
-              Suggested prompts:
+              Request a hint category:
             </p>
-            <div className="flex flex-wrap gap-1.5">
-              {[
-                "Am I using the right pattern?",
-                "Why is my time complexity high?",
-                "Give me a hint without spoiling the code",
-              ].map((chip, idx) => (
+            <div className="flex flex-col gap-1.5 items-start">
+              {quickHintRequests.map((hintRequest) => (
                 <button
-                  key={idx}
-                  onClick={() => handleSendMessage(chip)}
-                  className="text-xs bg-background hover:bg-muted text-foreground px-2.5 py-1 rounded-full transition-colors border border-border"
+                  key={hintRequest.label}
+                  onClick={() =>
+                    handleSendMessage(
+                      hintRequest.query,
+                      hintRequest.requestedHintType ?? null,
+                      hintRequest.requiresSubmission,
+                    )
+                  }
+                  className="text-xs bg-background hover:bg-muted text-foreground px-3 py-1 rounded-full transition-colors border border-border"
                 >
-                  {chip}
+                  {hintRequest.label}
                 </button>
               ))}
             </div>
@@ -161,7 +236,8 @@ export function AIHintsDrawer({
               />
               <button
                 onClick={() => handleSendMessage()}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-lg text-xs font-medium transition-colors"
+                disabled={isLoading || !inputValue.trim()}
+                className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-lg text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Send
               </button>

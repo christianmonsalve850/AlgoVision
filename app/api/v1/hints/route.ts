@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 import type { HintOptions } from "@/app/types/api-types";
+import { AI_INSTRUCTORS_SYSTEM_PROMPT } from "@/app/api/v1/hints/instructions";
 import OpenAI from "openai";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -11,13 +13,16 @@ function isValidHintPayload(value: unknown): value is HintOptions {
     return false;
   }
 
-  const query = value.hint;
+  const query = value.query;
+  const problemId = value.problemId;
   const problem = value.problem;
-  const failedTests = value.failedTests;
+  const executionId = value.executionId;
   const requestedHintType = value.requestedHintType;
 
   return (
     typeof query === "string" &&
+    typeof problemId === "string" &&
+    problemId.length > 0 &&
     typeof problem.title === "string" &&
     typeof problem.description === "string" &&
     Array.isArray(problem.constraints) &&
@@ -25,18 +30,46 @@ function isValidHintPayload(value: unknown): value is HintOptions {
       (constraint: unknown) => typeof constraint === "string",
     ) &&
     typeof value.userCode === "string" &&
-    Array.isArray(failedTests) &&
-    failedTests.every(
-      (test: unknown) =>
-        isRecord(test) &&
-        typeof test.input === "string" &&
-        typeof test.expected === "string" &&
-        typeof test.actual === "string",
-    ) &&
-    (requestedHintType === "pattern" ||
+    (executionId === null ||
+      (typeof executionId === "string" && executionId.length > 0)) &&
+    (requestedHintType === null ||
+      requestedHintType === "pattern" ||
       requestedHintType === "complexity" ||
-      requestedHintType === "data_structure")
+      requestedHintType === "data_structure") &&
+    ((query.trim().length > 0 && requestedHintType === null) ||
+      (query.trim().length === 0 && requestedHintType !== null))
   );
+}
+
+function isGradeTestResult(
+  value: unknown,
+): value is { passed: boolean; status: string } {
+  return (
+    isRecord(value) &&
+    typeof value.passed === "boolean" &&
+    typeof value.status === "string"
+  );
+}
+
+function getFailureSummary(payload: unknown) {
+  if (
+    !isRecord(payload) ||
+    !Array.isArray(payload.results) ||
+    !payload.results.every(isGradeTestResult)
+  ) {
+    throw new Error("Stored execution results have an invalid format.");
+  }
+
+  const failedResults = payload.results.filter((result) => !result.passed);
+
+  return {
+    total: payload.results.length,
+    failed: failedResults.length,
+    wrongAnswer: failedResults.filter((result) => result.status === "failed")
+      .length,
+    runtimeError: failedResults.filter((result) => result.status === "error")
+      .length,
+  };
 }
 
 export async function POST(request: Request) {
@@ -55,49 +88,87 @@ export async function POST(request: Request) {
     );
   }
 
-  const { query, problem, userCode, failedTests, requestedHintType } = body;
+  const {
+    query,
+    problemId,
+    problem,
+    userCode,
+    executionId,
+    requestedHintType,
+  } = body;
 
   try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    let failureSummary = "No submission results available.";
+
+    if (executionId) {
+      const { data: execution, error: executionError } = await supabase
+        .from("execution_requests")
+        .select("output_payload")
+        .eq("id", executionId)
+        .eq("user_id", user.id)
+        .eq("problem_id", problemId)
+        .eq("status", "completed")
+        .maybeSingle();
+
+      if (executionError) {
+        console.error("Failed to load hint execution results:", executionError);
+        return NextResponse.json(
+          { error: "Failed to load submission results." },
+          { status: 500 },
+        );
+      }
+
+      if (!execution) {
+        return NextResponse.json(
+          { error: "Submission not found." },
+          { status: 404 },
+        );
+      }
+
+      const summary = getFailureSummary(execution.output_payload);
+      failureSummary =
+        `Total tests: ${summary.total}; failed: ${summary.failed}; ` +
+        `wrong answers: ${summary.wrongAnswer}; runtime errors: ${summary.runtimeError}.`;
+    }
+
     const client = new OpenAI();
 
     const response = await client.responses.create({
       model: "gpt-6-luna",
-      instructions: `
-      You are AlgoVision’s educational coding coach.
-
-      Give one concise, actionable hint based on the supplied problem, learner code,
-      and failed tests.
-
-      Rules:
-      - Never provide complete code, pseudocode that is directly implementable, or a full algorithm.
-      - Do not name the exact final solution unless the learner has reached hint level 3.
-      - Focus on a misconception, a useful question, or the next concept to investigate.
-      - Refer to the learner’s code or failing test when useful.
-      - Return the required structured response.
-      - Set revealsSolution to false unless the response substantially gives away the solution.
-    `.trim(),
+      reasoning: { effort: "medium" },
+      instructions: AI_INSTRUCTORS_SYSTEM_PROMPT,
       input: `
-      User Hint Request: ${query}
+      User Hint Query: ${query || "none (category-only request)"}
       Problem: ${problem.title}
+      Problem Description: ${problem.description}
+      Constraints: ${problem.constraints.join("; ")}
       User Code: ${userCode}
-      Failed Tests: ${failedTests}
-      Requested Hint Type: ${requestedHintType}
+      Failure Summary: ${failureSummary}
+      Requested Hint Type: ${requestedHintType ?? "none"}
     `,
       text: {
         format: {
           name: "hint_response",
           type: "json_schema",
+          strict: true,
           schema: {
-            strict: true,
-            schema: {
-              type: "object",
-              properties: {
-                hint: { type: "string" },
-                revealsSolution: { type: "boolean" },
-              },
-              required: ["hint", "revealsSolution"],
-              additionalProperties: false,
+            type: "object",
+            properties: {
+              hint: { type: "string" },
+              revealsSolution: { type: "boolean" },
             },
+            required: ["hint", "revealsSolution"],
+            additionalProperties: false,
           },
         },
       },

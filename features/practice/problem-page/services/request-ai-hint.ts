@@ -14,9 +14,10 @@ function isReturnHint(value: unknown): value is { hint: string; revealsSolution:
 
 export async function requestAiHint({
     query,
+    problemId,
     problem,
     userCode,
-    failedTests,
+    executionId,
     requestedHintType,
 }: HintOptions) : Promise<ReturnHint> {
     const response = await fetch('/api/v1/hints', {
@@ -26,9 +27,10 @@ export async function requestAiHint({
         },
         body: JSON.stringify({
             query,
+            problemId,
             problem,
             userCode,
-            failedTests,
+            executionId,
             requestedHintType,
         }),
     });

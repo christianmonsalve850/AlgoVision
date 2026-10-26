@@ -1,4 +1,4 @@
-import type { SubmissionHistory } from "@/features/practice/problem-page/problem/types";
+import type { ProblemRecord, SubmissionHistory } from "@/features/practice/problem-page/problem/types";
 import type { TestCase } from "./test-case";
 
 export type Language = "Python";
@@ -15,6 +15,7 @@ export interface ProblemEditorPanelProps {
   isAiHintsOpen: boolean;
   onAiHintsOpenChange: (isOpen: boolean) => void;
   problem_id: string;
+  problem: ProblemRecord;
   function_name: string;
   class_name: string;
   starterCodeMap: StarterCodeMap;
@@ -26,6 +27,7 @@ export interface ProblemCodeEditorPanelProps {
   isAiHintsOpen: boolean;
   onAiHintsOpenChange: (isOpen: boolean) => void;
   problem_id: string;
+  problem: ProblemRecord;
   function_name: string;
   class_name: string;
   starterCodeMap: StarterCodeMap;

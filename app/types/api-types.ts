@@ -11,40 +11,41 @@ export interface UseCodeExecuterOptions {
 }
 
 export type RunExecutionOptions = UseCodeExecuterOptions & { operation: "run" };
-export type SubmitExecutionOptions = UseCodeExecuterOptions & { operation: "submit" };
+export type SubmitExecutionOptions = UseCodeExecuterOptions & {
+  operation: "submit";
+};
 export type TraceApiCaseResult = TraceCaseResult & { expectedOutput: unknown };
 
 export interface SubmissionExecutionSummary {
-    executionId: string;
-    status: string;
-    verdict: string;
-    passed: number;
-    total: number;
+  executionId: string;
+  status: string;
+  verdict: string;
+  passed: number;
+  total: number;
 }
 
 export type Problem = {
   title: string;
   description: string;
   constraints: string[];
-}
-
-export type FailedTest = {
-  input: string;
-  expected: string;
-  actual: string;
-}
+};
 
 export type HintType = "pattern" | "complexity" | "data_structure";
 
 export interface HintOptions {
   query: string;
+  problemId: string;
   problem: Problem;
-  userCode: string
-  failedTests: FailedTest[]
-  requestedHintType: HintType;
+  userCode: string;
+  executionId: string | null;
+  requestedHintType: HintType | null;
 }
 
-export type ReturnHint = {
-  hint: string;
-  revealsSolution: boolean;
-} | null | undefined | void
+export type ReturnHint =
+  | {
+      hint: string;
+      revealsSolution: boolean;
+    }
+  | null
+  | undefined
+  | void;

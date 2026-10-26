@@ -22,6 +22,7 @@ export function ProblemCodeEditor({
   isAiHintsOpen,
   onAiHintsOpenChange,
   problem_id,
+  problem,
   function_name,
   class_name,
   starterCodeMap,
@@ -34,6 +35,8 @@ export function ProblemCodeEditor({
   const [ submissionStatus, setSubmissionStatus ] = useState<"success" | "failure" | null>(null);
   const [ executionsStatus, setExecutionStatus ] = useState<ExecutionStatus>("idle");
   const [ submissionRefreshKey, setSubmissionRefreshKey ] = useState(0);
+  const [ latestExecutionId, setLatestExecutionId ] = useState<string | null>(null);
+  const [ latestSubmittedCode, setLatestSubmittedCode ] = useState("");
 
   useEffect(() => {
     if (submissionRefreshKey > 0) {
@@ -95,9 +98,14 @@ export function ProblemCodeEditor({
     functionName: function_name,
     className: class_name,
     setExecutionStatus,
-    onSubmitStart,
+    onSubmitStart: () => {
+      setLatestExecutionId(null);
+      setLatestSubmittedCode(code);
+      onSubmitStart();
+    },
     onSubmitEnd: (result) => {
       setSubmissionStatus(result.success ? "success" : "failure");
+      setLatestExecutionId(result.executionId ?? null);
       if (result.recorded) {
         setSubmissionRefreshKey((key) => key + 1);
       }
@@ -121,7 +129,10 @@ export function ProblemCodeEditor({
       <AIHintsDrawer
         isOpen={isAiHintsOpen}
         onClose={() => onAiHintsOpenChange(false)}
-        problemTitle="Container With Most Water"
+        problem={problem}
+        problemId={problem_id}
+        userCode={latestExecutionId ? latestSubmittedCode : code}
+        executionId={latestExecutionId}
       />
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
