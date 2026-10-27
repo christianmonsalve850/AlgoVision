@@ -140,7 +140,8 @@ export async function POST(request: Request) {
       );
     }
 
-    let failureSummary = "No submission results available.";
+    let failureSummary =
+      "No matching submission results are available for the current code.";
 
     if (executionId) {
       const { data: execution, error: executionError } = await supabase
@@ -167,10 +168,28 @@ export async function POST(request: Request) {
         );
       }
 
-      const summary = getFailureSummary(execution.output_payload);
-      failureSummary =
-        `Total tests: ${summary.total}; failed: ${summary.failed}; ` +
-        `wrong answers: ${summary.wrongAnswer}; runtime errors: ${summary.runtimeError}.`;
+      const { data: submission, error: submissionError } = await supabase
+        .from("submissions")
+        .select("source_code")
+        .eq("execution_request_id", executionId)
+        .eq("user_id", user.id)
+        .eq("problem_id", problemId)
+        .maybeSingle();
+
+      if (submissionError) {
+        console.error("Failed to load submitted code for hint context:", submissionError);
+        return NextResponse.json(
+          { error: "Failed to verify submission code." },
+          { status: 500 },
+        );
+      }
+
+      if (submission?.source_code === userCode) {
+        const summary = getFailureSummary(execution.output_payload);
+        failureSummary =
+          `Total tests: ${summary.total}; failed: ${summary.failed}; ` +
+          `wrong answers: ${summary.wrongAnswer}; runtime errors: ${summary.runtimeError}.`;
+      }
     }
 
     const client = new OpenAI();
