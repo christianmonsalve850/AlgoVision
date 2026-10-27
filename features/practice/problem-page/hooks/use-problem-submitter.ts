@@ -40,6 +40,7 @@ export function useProblemSubmitter({
                 const submissionResult: SubmissionResult = {
                     success: result.verdict === "accepted",
                     recorded: true,
+                    executionId: result.executionId,
                     verdict: result.verdict,
                     passed: result.passed,
                     total: result.total,

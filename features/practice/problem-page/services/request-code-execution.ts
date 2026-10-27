@@ -124,9 +124,11 @@ function parseSubmissionSummary(value: unknown): SubmissionExecutionSummary {
 export function requestExecutePython(
     options: RunExecutionOptions,
 ): Promise<TraceApiCaseResult[]>;
+
 export function requestExecutePython(
     options: SubmitExecutionOptions,
 ): Promise<SubmissionExecutionSummary>;
+
 export async function requestExecutePython ({
     operation,
     problemId,
@@ -189,7 +191,6 @@ export async function requestExecutePython ({
         throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    console.log("Execution API response:", result);
     return operation === "run"
         ? parseTraceResults(result)
         : parseSubmissionSummary(result);

@@ -10,15 +10,42 @@ export interface UseCodeExecuterOptions {
   functionName: string;
 }
 
-
 export type RunExecutionOptions = UseCodeExecuterOptions & { operation: "run" };
-export type SubmitExecutionOptions = UseCodeExecuterOptions & { operation: "submit" };
+export type SubmitExecutionOptions = UseCodeExecuterOptions & {
+  operation: "submit";
+};
 export type TraceApiCaseResult = TraceCaseResult & { expectedOutput: unknown };
 
 export interface SubmissionExecutionSummary {
-    executionId: string;
-    status: string;
-    verdict: string;
-    passed: number;
-    total: number;
+  executionId: string;
+  status: string;
+  verdict: string;
+  passed: number;
+  total: number;
 }
+
+export type Problem = {
+  title: string;
+  description: string;
+  constraints: string[];
+};
+
+export type HintLevel = 1 | 2 | 3;
+
+export interface HintOptions {
+  problemId: string;
+  problem: Problem;
+  userCode: string;
+  executionId: string | null;
+  hintLevel: HintLevel;
+  timeZone: string;
+}
+
+export type ReturnHint =
+  | {
+      hint: string;
+      revealsSolution: boolean;
+    }
+  | null
+  | undefined
+  | void;

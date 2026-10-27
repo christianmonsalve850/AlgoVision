@@ -43,3 +43,6 @@ next-env.d.ts
 
 # ignore workers for now
 /workers
+
+# ignore example file
+example.mjs

@@ -111,6 +111,7 @@ export function ProblemPageShell({
             isAiHintsOpen={isAiHintsOpen}
             onAiHintsOpenChange={setIsAiHintsOpen}
             problem_id={problem.id}
+            problem={problem}
             function_name={problem.function_name}
             class_name={problem.class_name}
             starterCodeMap={starterCodeMap}

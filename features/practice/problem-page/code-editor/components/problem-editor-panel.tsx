@@ -23,6 +23,7 @@ export function ProblemEditorPanel({
   isAiHintsOpen,
   onAiHintsOpenChange,
   problem_id,
+  problem,
   function_name,
   class_name,
   starterCodeMap,
@@ -89,6 +90,7 @@ export function ProblemEditorPanel({
               isAiHintsOpen={isAiHintsOpen}
               onAiHintsOpenChange={onAiHintsOpenChange}
               problem_id={problem_id}
+              problem={problem}
               function_name={function_name}
               class_name={class_name}
               starterCodeMap={starterCodeMap}
