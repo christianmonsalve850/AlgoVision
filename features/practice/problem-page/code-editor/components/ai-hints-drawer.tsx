@@ -6,6 +6,7 @@ import {
   HintRequestError,
   requestAiHint,
 } from "@/features/practice/problem-page/services/request-ai-hint";
+import Markdown from "react-markdown";
 
 const hintSteps: {
   level: HintLevel;
@@ -15,7 +16,8 @@ const hintSteps: {
   {
     level: 1,
     title: "Nudge",
-    description: "A question or concept to help you think about your next step.",
+    description:
+      "A question or concept to help you think about your next step.",
   },
   {
     level: 2,
@@ -25,7 +27,8 @@ const hintSteps: {
   {
     level: 3,
     title: "Strong hint",
-    description: "A specific strategy or key insight, without the full solution.",
+    description:
+      "A specific strategy or key insight, without the full solution.",
   },
 ];
 
@@ -99,7 +102,8 @@ export function AIHintsDrawer({
         ...previous,
         [hintLevel]: {
           message: errorMessage,
-          rateLimited: error instanceof HintRequestError && error.status === 429,
+          rateLimited:
+            error instanceof HintRequestError && error.status === 429,
         },
       }));
     } finally {
@@ -194,9 +198,21 @@ export function AIHintsDrawer({
                   </div>
 
                   {hint && (
-                    <p className="ml-9 whitespace-pre-wrap rounded-md bg-muted p-3 text-xs leading-relaxed">
-                      {hint}
-                    </p>
+                    <div className="ml-9 whitespace-pre-wrap rounded-md bg-muted p-3 text-xs leading-relaxed">
+                      <Markdown
+                        components={{
+                          code({ children }) {
+                            return (
+                              <code className="rounded bg-background px-1 py-0.5 font-mono text-emerald-400">
+                                {children}
+                              </code>
+                            );
+                          },
+                        }}
+                      >
+                        {hint}
+                      </Markdown>
+                    </div>
                   )}
 
                   {error && (
@@ -211,7 +227,9 @@ export function AIHintsDrawer({
                         type="button"
                         onClick={() => requestHint(level)}
                         disabled={
-                          isLocked || loadingLevel !== null || error?.rateLimited
+                          isLocked ||
+                          loadingLevel !== null ||
+                          error?.rateLimited
                         }
                         className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
                       >
@@ -221,9 +239,9 @@ export function AIHintsDrawer({
                             ? "Daily limit reached"
                             : error
                               ? "Try again"
-                            : isLocked
-                              ? `Unlock after Hint ${level - 1}`
-                              : "Reveal hint"}
+                              : isLocked
+                                ? `Unlock after Hint ${level - 1}`
+                                : "Reveal hint"}
                       </button>
                     </div>
                   )}
