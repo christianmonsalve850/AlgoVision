@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import type { HintLevel } from "@/app/types/api-types";
 import type { ProblemRecord } from "@/features/practice/problem-page/problem/types";
-import { requestAiHint } from "@/features/practice/problem-page/services/request-ai-hint";
+import {
+  HintRequestError,
+  requestAiHint,
+} from "@/features/practice/problem-page/services/request-ai-hint";
 
 const hintSteps: {
   level: HintLevel;
@@ -44,8 +47,12 @@ export function AIHintsDrawer({
   executionId,
 }: AIHintsDrawerProps) {
   const [hints, setHints] = useState<Partial<Record<HintLevel, string>>>({});
-  const [errors, setErrors] = useState<Partial<Record<HintLevel, string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<HintLevel, { message: string; rateLimited: boolean }>>
+  >({});
   const [loadingLevel, setLoadingLevel] = useState<HintLevel | null>(null);
+
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const nextHintLevel: HintLevel | null = !hints[1]
     ? 1
@@ -72,6 +79,7 @@ export function AIHintsDrawer({
         userCode,
         executionId,
         hintLevel,
+        timeZone,
       });
 
       if (!result?.hint) {
@@ -79,10 +87,20 @@ export function AIHintsDrawer({
       }
 
       setHints((previous) => ({ ...previous, [hintLevel]: result.hint }));
-    } catch {
+    } catch (error) {
+      const errorMessage =
+        error instanceof HintRequestError && error.status === 429
+          ? error.resetDate
+            ? `You've used all your hints for today. Your hints reset on ${error.resetDate}.`
+            : "You've used all your hints for today. Please try again tomorrow."
+          : "Couldn't generate this hint. Please try again.";
+
       setErrors((previous) => ({
         ...previous,
-        [hintLevel]: "Couldn't generate this hint. Please try again.",
+        [hintLevel]: {
+          message: errorMessage,
+          rateLimited: error instanceof HintRequestError && error.status === 429,
+        },
       }));
     } finally {
       setLoadingLevel(null);
@@ -183,7 +201,7 @@ export function AIHintsDrawer({
 
                   {error && (
                     <p role="alert" className="ml-9 mb-2 text-xs text-red-500">
-                      {error}
+                      {error.message}
                     </p>
                   )}
 
@@ -192,13 +210,17 @@ export function AIHintsDrawer({
                       <button
                         type="button"
                         onClick={() => requestHint(level)}
-                        disabled={isLocked || loadingLevel !== null}
+                        disabled={
+                          isLocked || loadingLevel !== null || error?.rateLimited
+                        }
                         className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {isLoading
                           ? "Generating..."
-                          : error
-                            ? "Try again"
+                          : error?.rateLimited
+                            ? "Daily limit reached"
+                            : error
+                              ? "Try again"
                             : isLocked
                               ? `Unlock after Hint ${level - 1}`
                               : "Reveal hint"}

@@ -1,5 +1,16 @@
 import type { HintOptions, ReturnHint } from "@/app/types/api-types";
 
+export class HintRequestError extends Error {
+    constructor(
+        message: string,
+        public readonly status: number,
+        public readonly resetDate?: string,
+    ) {
+        super(message);
+        this.name = "HintRequestError";
+    }
+}
+
 function isReturnHint(value: unknown): value is { hint: string; revealsSolution: boolean } {
     return (
         typeof value === "object" &&
@@ -18,6 +29,7 @@ export async function requestAiHint({
     userCode,
     executionId,
     hintLevel,
+    timeZone
 }: HintOptions) : Promise<ReturnHint> {
     const response = await fetch('/api/v1/hints', {
         method: 'POST',
@@ -30,6 +42,7 @@ export async function requestAiHint({
             userCode,
             executionId,
             hintLevel,
+            timeZone,
         }),
     });
 
@@ -46,11 +59,21 @@ export async function requestAiHint({
     }
 
     if (!response.ok) {
-        console.error("Fetch hint API request failed:", {
-            status: response.status,
-            body: result,
-        });
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorBody =
+            typeof result === "object" && result !== null && !Array.isArray(result)
+                ? result
+                : null;
+        throw new HintRequestError(
+            errorBody && "error" in errorBody && typeof errorBody.error === "string"
+                ? errorBody.error
+                : `HTTP error! status: ${response.status}`,
+            response.status,
+            errorBody &&
+                "resetDate" in errorBody &&
+                typeof errorBody.resetDate === "string"
+                ? errorBody.resetDate
+                : undefined,
+        );
     }
 
     if (!isReturnHint(result)) {

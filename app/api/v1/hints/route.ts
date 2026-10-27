@@ -8,6 +8,19 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function isTimeZone(value: unknown): value is string {
+  if (typeof value !== "string" || value.length === 0) {
+    return false;
+  }
+
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: value });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function isValidHintPayload(value: unknown): value is HintOptions {
   if (!isRecord(value) || !isRecord(value.problem)) {
     return false;
@@ -17,6 +30,7 @@ function isValidHintPayload(value: unknown): value is HintOptions {
   const problem = value.problem;
   const executionId = value.executionId;
   const hintLevel = value.hintLevel;
+  const timeZone = value.timeZone;
 
   return (
     typeof problemId === "string" &&
@@ -30,7 +44,8 @@ function isValidHintPayload(value: unknown): value is HintOptions {
     typeof value.userCode === "string" &&
     (executionId === null ||
       (typeof executionId === "string" && executionId.length > 0)) &&
-    (hintLevel === 1 || hintLevel === 2 || hintLevel === 3)
+    (hintLevel === 1 || hintLevel === 2 || hintLevel === 3) &&
+    isTimeZone(timeZone)
   );
 }
 
@@ -81,13 +96,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const {
-    problemId,
-    problem,
-    userCode,
-    executionId,
-    hintLevel,
-  } = body;
+  const { problemId, problem, userCode, executionId, hintLevel, timeZone } =
+    body;
 
   try {
     const supabase = await createClient();
@@ -98,6 +108,36 @@ export async function POST(request: Request) {
 
     if (userError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { data: dailyHintConsumption, error: dailyHintError } =
+      await supabase.rpc("consume_daily_hint", { p_time_zone: timeZone });
+
+    if (dailyHintError) {
+      console.error("Failed to update user streak:", {
+        code: dailyHintError.code,
+        message: dailyHintError.message,
+        details: dailyHintError.details,
+        hint: dailyHintError.hint,
+      });
+
+      return NextResponse.json(
+        { error: "AI hints rate limit failed." },
+        { status: 500 },
+      );
+    }
+
+    const usage = dailyHintConsumption?.[0];
+
+    if (!usage?.allowed) {
+      return NextResponse.json(
+        {
+          error: "Daily hint limit reached.",
+          remaining: usage?.remaining ?? 0,
+          resetDate: usage?.reset_date,
+        },
+        { status: 429 },
+      );
     }
 
     let failureSummary = "No submission results available.";
@@ -168,8 +208,7 @@ export async function POST(request: Request) {
     const hintData = JSON.parse(response.output_text);
 
     return NextResponse.json(hintData, { status: 200 });
-
-  } catch(error) {
+  } catch (error) {
     return NextResponse.json(
       {
         error: {

@@ -38,6 +38,7 @@ export interface HintOptions {
   userCode: string;
   executionId: string | null;
   hintLevel: HintLevel;
+  timeZone: string;
 }
 
 export type ReturnHint =
