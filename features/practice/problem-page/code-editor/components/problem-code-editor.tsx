@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Editor from "@monaco-editor/react";
-import { ChevronDown, Play, RotateCcw, Send } from "lucide-react";
+import { ChevronDown, Play, RotateCcw, Send, Lightbulb } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
 import { languageOptions } from "@/features/practice/problem-page/code-editor/constants/languages";
 import type {
@@ -160,35 +160,32 @@ export function ProblemCodeEditor({
         <div className="flex items-center gap-2">
           <button 
               onClick={() => onAiHintsOpenChange(true)}
-              className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
+              className="inline-flex items-center gap-2 rounded-lg border border-border p-1.5 text-sm text-foreground transition-colors hover:bg-muted"
           >
-              <span>AI Hints</span>
+              <span><Lightbulb className="size-4.5"/></span>
           </button>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
+            className="inline-flex items-center gap-2 rounded-lg border border-border p-1.5 text-sm text-foreground transition-colors hover:bg-muted"
             onClick={handleReset}
           >
-            <RotateCcw className="size-4" />
-            Reset
+            <RotateCcw className="size-4.5" />
           </button>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
+            className="inline-flex items-center gap-2 rounded-lg border border-border p-1.5 text-sm text-foreground transition-colors hover:bg-muted"
             onClick={run}
           >
-            { executionsStatus == "running" ? <Spinner /> : <Play className="size-4" />}
-            Run
+            { executionsStatus == "running" ? <Spinner className="size-4.5" /> : <Play className="size-4.5" />}
           </button>
 
           <button
             type="button"
             disabled={executionsStatus === "submitting"}
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-lg border border-emerald-500 dark:border-emerald-700 bg-emerald-600 p-1.5 text-sm font-medium text-white transition-colors hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
             onClick={submit}
           >
-            { executionsStatus == "submitting" ? <Spinner /> : <Send className="size-4" />}
-            Submit
+            { executionsStatus == "submitting" ? <Spinner className="size-4.5" /> : <Send className="size-4.5" />}
           </button>
         </div>
       </div>
