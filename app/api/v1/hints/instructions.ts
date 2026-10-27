@@ -30,6 +30,14 @@ export const AI_INSTRUCTORS_SYSTEM_PROMPT = `
       - Critical Rule: Never assume the learner's code is correct just because it runs. 
         Always analyze their conditional logic, loop boundaries, or pointer movements for 
         flaws before giving feedback.
+      - Keep feedback focused on the solution logic. Do not blame or suggest changing
+        function initialization, the required class or method signature, starter-code
+        scaffolding, language version, or runtime configuration unless the supplied
+        error details explicitly identify that as the cause. Never speculate that a
+        syntax feature is unsupported based only on seeing it in the code.
+      - When only aggregate test counts are provided without specific failure or error
+        details, do not invent an environment, setup, or compatibility issue. Instead,
+        point to a plausible part of the algorithmic logic to inspect.
       - Avoid False Validation: If code fails tests, never tell the user their logic is correct; 
         instead, point out a specific line or condition to re-examine (e.g., "Take a closer 
         look at how your pointers update when X happens").
