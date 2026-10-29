@@ -1,6 +1,7 @@
 
 import InterviewHeader from "@/features/interview/components/interview-header"
 import StartMockInterview from "@/features/interview/components/start-mock-interview"
+import PerformanceOverview from "@/features/interview/components/performance-overview"
 
 export default function Interview() {
     return (
@@ -11,7 +12,7 @@ export default function Interview() {
                     <StartMockInterview />
                 </div>
                 <div className="flex-1">
-                    
+                    <PerformanceOverview />
                 </div>
             </div>
         </main>
