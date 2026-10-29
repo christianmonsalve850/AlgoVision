@@ -2,6 +2,7 @@
 import InterviewHeader from "@/features/interview/components/interview-header"
 import StartMockInterview from "@/features/interview/components/start-mock-interview"
 import PerformanceOverview from "@/features/interview/components/performance-overview"
+import ScoreDistribution from "@/features/interview/components/score-distribution"
 
 export default function Interview() {
     return (
@@ -11,8 +12,9 @@ export default function Interview() {
                 <div className="flex-2">
                     <StartMockInterview />
                 </div>
-                <div className="flex-1">
+                <div className="flex flex-col gap-8 flex-1">
                     <PerformanceOverview />
+                    <ScoreDistribution />
                 </div>
             </div>
         </main>
