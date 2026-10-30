@@ -23,3 +23,19 @@ export interface ReadyToStartProps {
     duration: Duration,
     onStartAssesment?: () => void;
 }
+
+export type InterviewResult = "Passed" | "Partial" | "Failed"
+
+
+export interface Session {
+    difficulty: Difficulty;
+    duration: Duration;
+    date: Date;
+    problemsSolved: number;
+    score: number;
+    result: InterviewResult;
+}
+
+export interface RecentSessionProps {
+    sessions: Session[];
+}
