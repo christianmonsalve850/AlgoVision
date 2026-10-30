@@ -13,21 +13,21 @@ const resultStyles: Record<
 > = {
     Passed: {
         icon: CircleCheck,
-        iconClass: "size-5 stroke-3 text-emerald-500",
-        badgeClass: "rounded-full bg-emerald-500/20 px-3 py-1",
-        labelClass: "text-emerald-500 font-semibold",
+        iconClass: "size-5 stroke-3 text-emerald-700 dark:text-emerald-400",
+        badgeClass: "rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 px-3 py-1",
+        labelClass: "text-emerald-700 dark:text-emerald-400 font-semibold",
     },
     Partial: {
         icon: CircleAlert,
-        iconClass: "size-5 stroke-3 text-orange-600",
-        badgeClass: "rounded-full bg-orange-600/20 px-3 py-1",
-        labelClass: "text-orange-600 font-semibold",
+        iconClass: "size-5 stroke-3 text-amber-700 dark:text-amber-400",
+        badgeClass: "rounded-full bg-amber-500/10 dark:bg-amber-500/20 px-3 py-1",
+        labelClass: "text-amber-700 dark:text-amber-400 font-semibold",
     },
     Failed: {
         icon: XCircle,
-        iconClass: "size-5 stroke-3 text-yellow-500",
-        badgeClass: "rounded-full bg-yellow-500/20 px-3 py-1",
-        labelClass: "text-yellow-500 font-semibold",
+        iconClass: "size-5 stroke-3 text-red-700 dark:text-red-400",
+        badgeClass: "rounded-full bg-red-500/10 dark:bg-red-500/20 px-3 py-1",
+        labelClass: "text-red-700 dark:text-red-400 font-semibold",
     },
 };
 
