@@ -3,11 +3,33 @@ import { AssessmentNavProps } from "@/features/interview/assessment/types";
 import { Clock3, LogOut } from "lucide-react";
 import CountdownTimer from "@/features/interview/assessment/components/CountdownTimer";
 
+const difficultyClasses: Record<
+  AssessmentNavProps["difficulty"],
+  { background: string; foreground: string; border: string }
+> = {
+  Easy: {
+    background: "bg-emerald-500/10 dark:bg-emerald-500/15",
+    foreground: "text-difficulty-easy-foreground",
+    border: "border-emerald-500/30",
+  },
+  Medium: {
+    background: "bg-amber-500/10 dark:bg-amber-500/15",
+    foreground: "text-difficulty-medium-foreground",
+    border: "border-amber-500/30",
+  },
+  Hard: {
+    background: "bg-rose-500/10 dark:bg-rose-500/15",
+    foreground: "text-difficulty-hard-foreground",
+    border: "border-rose-500/30",
+  },
+};
 
 export function AssessmentNav({
   onQuitOpen,
   initialTimeMinutes,
+  difficulty,
 } : AssessmentNavProps) {
+  const difficultyStyle = difficultyClasses[difficulty];
 
   return (
     <header className="sticky top-0 flex h-16 w-full items-center border-b border-border bg-background/90 px-6 backdrop-blur justify-between py-5">
@@ -15,10 +37,10 @@ export function AssessmentNav({
       <div className="flex items-center gap-3 flex-1">
         <Brand />
         <div className="h-6 w-px bg-border" />
-        <div className="flex items-center justify-center border px-3 py-1.5 rounded-full border-yellow-500/50 bg-yellow-500/10">
-          <span className="flex items-center justify-center gap-2 font-semibold text-yellow-500 text-xs">
-            <div className="w-1.5 h-1.5 bg-orange-400 rounded-full" />
-            Timed assessment · Medium
+        <div className={`flex items-center justify-center border px-3 py-1.5 rounded-full ${difficultyStyle.background} ${difficultyStyle.border}`}>
+          <span className={`flex items-center justify-center gap-2 font-semibold text-xs ${difficultyStyle.foreground}`}>
+            <div className="w-1.5 h-1.5 bg-current rounded-full" />
+            Timed assessment · {difficulty}
           </span>
         </div>
       </div>

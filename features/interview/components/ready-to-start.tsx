@@ -21,7 +21,11 @@ export default function ReadyToStart({
       </div>
       <button 
         className="flex gap-2 items-center justify-center text-background bg-foreground rounded-lg p-4 hover:bg-primary hover:text-primary-foreground active:scale-[0.98] transition-all duration-150 font-semibold"
-        onClick={() => router.replace("/interview/1")}
+        onClick={() =>
+          router.replace(
+            `/interview/1?duration=${duration}&difficulty=${difficulty}`
+          )
+        }
       >
         <CirclePlay />
         <span>Start Assessment</span>
