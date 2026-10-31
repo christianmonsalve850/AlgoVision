@@ -1,10 +1,14 @@
+
+
 import { ReadyToStartProps } from "@/features/interview/types";
 import { CirclePlay } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function ReadyToStart({
   difficulty,
   duration,
-}: ReadyToStartProps) {
+} : ReadyToStartProps) {
+  const router = useRouter();
   return (
     <div className="flex flex-col gap-4 rounded-lg p-6 bg-muted">
       <div>
@@ -15,7 +19,10 @@ export default function ReadyToStart({
           {difficulty} difficulty · {duration} mintues
         </p>
       </div>
-      <button className="flex gap-2 items-center justify-center text-background bg-foreground rounded-lg p-4 hover:bg-primary hover:text-primary-foreground active:scale-[0.98] transition-all duration-150 font-semibold">
+      <button 
+        className="flex gap-2 items-center justify-center text-background bg-foreground rounded-lg p-4 hover:bg-primary hover:text-primary-foreground active:scale-[0.98] transition-all duration-150 font-semibold"
+        onClick={() => router.replace("/interview/1")}
+      >
         <CirclePlay />
         <span>Start Assessment</span>
       </button>
