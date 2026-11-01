@@ -1,5 +1,5 @@
 
 
-export default function Description() {
+export default function Description({}) {
     
 }

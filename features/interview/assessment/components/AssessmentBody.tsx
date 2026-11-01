@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
+import { Lock, Settings, RotateCcw } from "lucide-react";
+
 type ProblemTab = "description" | "guidelines";
 
 export default function AssessmentBody() {
@@ -25,9 +27,11 @@ export default function AssessmentBody() {
               type="button"
               className={`relative h-full text-sm font-semibold capitalize ${problemTab === "description" ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
               onClick={() => setProblemTab("description")}
-            >  
+            >
               Description
-              {problemTab === "description" && <span className="absolute inset-x-0 bottom-0 h-0.5 bg-foreground" />}
+              {problemTab === "description" && (
+                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-foreground" />
+              )}
             </button>
             <button
               type="button"
@@ -35,7 +39,9 @@ export default function AssessmentBody() {
               onClick={() => setProblemTab("guidelines")}
             >
               Guidelines
-              {problemTab === "guidelines" && <span className="absolute inset-x-0 bottom-0 h-0.5 bg-foreground" />}
+              {problemTab === "guidelines" && (
+                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-foreground" />
+              )}
             </button>
           </div>
           <div className="min-h-0 flex-1 overflow-auto" />
@@ -50,7 +56,38 @@ export default function AssessmentBody() {
           defaultSize={60}
           minSize="35%"
           className="min-h-0 min-w-0 overflow-hidden"
-        />
+        >
+          <div className="flex h-12 shrink-0 items-center justify-between border-b border-border px-4 sm:px-6">
+            <div
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-1.5 text-sm font-medium text-foreground"
+              title="Python is the selected language"
+            >
+              <span>Python</span>
+              <Lock
+                aria-hidden="true"
+                className="size-3.5 text-muted-foreground"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                aria-label="Reset code"
+                title="Reset code"
+                className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <RotateCcw aria-hidden="true" className="size-4" />
+              </button>
+              <button
+                type="button"
+                aria-label="Editor settings"
+                title="Editor settings"
+                className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Settings aria-hidden="true" className="size-4" />
+              </button>
+            </div>
+          </div>
+        </Panel>
       </Group>
     </section>
   );
