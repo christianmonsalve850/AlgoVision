@@ -6,16 +6,17 @@ import { AssessmentNav } from "@/features/interview/assessment/components/Assess
 import QuitAssessmentModal from "@/features/interview/assessment/components/QuitAssessmentModal";
 import AssessmentBody from "@/features/interview/assessment/components/AssessmentBody";
 import type { AssessmentSessionProps } from "@/features/interview/assessment/types";
+import Footer from "@/features/interview/assessment/components/Footer";
 
 export default function AssessmentSession({
   sessionId,
   duration,
   difficulties,
   problems,
-  problemCount,
 }: AssessmentSessionProps) {
   const router = useRouter();
   const [quitOpen, setQuitOpen] = useState(false);
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
 
   return (
     <div
@@ -27,8 +28,15 @@ export default function AssessmentSession({
         initialTimeMinutes={duration}
         difficulties={difficulties}
       />
-      <AssessmentBody problems={problems} problemCount={problemCount} />
-
+      <AssessmentBody
+        problems={problems}
+        currentProblemIndex={currentProblemIndex}
+      />
+      <Footer
+        currentProblemIndex={currentProblemIndex}
+        problemCount={problems.length}
+        onProblemChange={setCurrentProblemIndex}
+      />
       <QuitAssessmentModal
         open={quitOpen}
         onCancel={() => setQuitOpen(false)}

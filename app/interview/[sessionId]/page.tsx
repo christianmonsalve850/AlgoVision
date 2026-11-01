@@ -155,7 +155,6 @@ export default async function InterviewSessionPage({
       duration={duration}
       difficulties={selectedDifficulties}
       problems={problems}
-      problemCount={problemCount}
     />
   );
 }

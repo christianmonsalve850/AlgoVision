@@ -12,9 +12,11 @@ import type {
 
 export default function AssessmentBody({
   problems,
-  problemCount,
+  currentProblemIndex,
 }: AssessmentBodyProps) {
   const [problemTab, setProblemTab] = useState<ProblemTab>("description");
+  const currentProblem = problems[currentProblemIndex];
+
   return (
     <section className="flex h-full min-h-0 flex-1">
       <Group
@@ -52,8 +54,16 @@ export default function AssessmentBody({
             </button>
           </div>
           <div className="p-6">
-            {problemTab === "description" ? (
-              <Description problems={problems} problemCount={problemCount} />
+            {problemTab === "description" && currentProblem ? (
+              <Description
+                problem={currentProblem}
+                problemNumber={currentProblemIndex + 1}
+                problemCount={problems.length}
+              />
+            ) : problemTab === "description" ? (
+              <p className="text-sm text-muted-foreground">
+                No problems are available for this assessment.
+              </p>
             ) : (
               <Guidelines />
             )}

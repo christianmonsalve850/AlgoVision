@@ -7,7 +7,6 @@ export type AssessmentSessionProps = {
   duration: Duration;
   difficulties: Difficulty[];
   problems: ProblemDescription[];
-  problemCount: number;
 };
 
 export interface AssessmentNavProps {
@@ -33,13 +32,20 @@ export type ProblemExample = {
 };
 
 export type DescriptionProps = {
-  problems: ProblemDescription[];
+  problem: ProblemDescription;
+  problemNumber: number;
   problemCount: number;
 };
 
 export type ProblemTab = "description" | "guidelines";
 
 export type AssessmentBodyProps = {
-    problems: ProblemDescription[];
-    problemCount: number;
+  problems: ProblemDescription[];
+  currentProblemIndex: number;
 }
+
+export type AssessmentFooterProps = {
+  currentProblemIndex: number;
+  problemCount: number;
+  onProblemChange: (index: number) => void;
+};
