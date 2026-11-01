@@ -7,13 +7,17 @@ import { useRouter } from "next/navigation";
 export default function ReadyToStart({
   difficulties,
   duration,
+  problemCount,
 } : ReadyToStartProps) {
   const router = useRouter();
   const difficultyLabel =
     difficulties.length === 0 ? "Random difficulty" : difficulties.join(" + ");
 
   const startAssessment = () => {
-    const searchParams = new URLSearchParams({ duration: String(duration) });
+    const searchParams = new URLSearchParams({
+      duration: String(duration),
+      problemCount: String(problemCount),
+    });
 
     if (difficulties.length === 0) {
       searchParams.set("difficulty", "Random");
@@ -33,7 +37,8 @@ export default function ReadyToStart({
           Ready to Start?
         </h2>
         <p className="text-sm text-muted-foreground">
-          {difficultyLabel} · {duration} minutes
+          {difficultyLabel} · {duration} minutes · {problemCount}{" "}
+          {problemCount === 1 ? "problem" : "problems"}
         </p>
       </div>
       <button 

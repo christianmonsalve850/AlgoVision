@@ -12,6 +12,7 @@ export default function AssessmentSession({
   duration,
   difficulties,
   problems,
+  problemCount,
 }: AssessmentSessionProps) {
   const router = useRouter();
   const [quitOpen, setQuitOpen] = useState(false);
@@ -26,7 +27,7 @@ export default function AssessmentSession({
         initialTimeMinutes={duration}
         difficulties={difficulties}
       />
-      <AssessmentBody problems={problems} />
+      <AssessmentBody problems={problems} problemCount={problemCount} />
 
       <QuitAssessmentModal
         open={quitOpen}

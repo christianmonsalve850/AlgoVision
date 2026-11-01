@@ -9,14 +9,17 @@ const difficultyStyles: Record<Difficulty, string> = {
   Hard: "border-rose-500/30 bg-rose-500/10 text-rose-700 dark:text-rose-400",
 };
 
-export default function Description({ problems }: DescriptionProps) {
+export default function Description({
+  problems,
+  problemCount,
+}: DescriptionProps) {
   const problem = problems[0];
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-4 flex items-start justify-between gap-4">
         <div>
           <div className="mb-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Problem 01 / 01
+            Problem 01 / {problemCount.toString().padStart(2, '0')}
           </div>
           <h1 className="text-2xl font-semibold leading-tight tracking-tight">
             {problem.title}

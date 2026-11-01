@@ -21,6 +21,7 @@ export interface SelectDurationProps {
 export interface ReadyToStartProps {
     difficulties: Difficulty[],
     duration: Duration,
+    problemCount: number,
     onStartAssesment?: () => void;
 }
 

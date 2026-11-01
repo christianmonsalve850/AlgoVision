@@ -10,11 +10,13 @@ type InterviewSessionProps = {
   params: Promise<{ sessionId: string }>;
   searchParams: Promise<{
     duration?: string | string[];
+    problemCount?: string | string[];
     difficulty?: string | string[];
   }>;
 };
 
 const validDurations: Duration[] = [15, 30, 45, 60];
+const validProblemCounts = [1, 2, 3];
 const validDifficulties: Difficulty[] = ["Easy", "Medium", "Hard"];
 
 export default async function InterviewSessionPage({
@@ -23,11 +25,19 @@ export default async function InterviewSessionPage({
 }: InterviewSessionProps) {
   const [
     { sessionId },
-    { duration: durationParam, difficulty: difficultyParams },
+    {
+      duration: durationParam,
+      problemCount: problemCountParam,
+      difficulty: difficultyParams,
+    },
   ] = await Promise.all([params, searchParams]);
   const parsedDuration =
     typeof durationParam === "string" ? Number(durationParam) : NaN;
   const duration = validDurations.find((value) => value === parsedDuration) ?? 30;
+  const parsedProblemCount =
+    typeof problemCountParam === "string" ? Number(problemCountParam) : NaN;
+  const problemCount =
+    validProblemCounts.find((value) => value === parsedProblemCount) ?? 2;
   const requestedDifficulties =
     typeof difficultyParams === "string"
       ? [difficultyParams]
@@ -51,7 +61,7 @@ export default async function InterviewSessionPage({
   const { data: problemRows, error: problemError } = await supabase.rpc(
     "get_random_assessment_problems",
     {
-      p_problem_limit: 2,
+      p_problem_limit: problemCount,
       p_difficulties: selectedDifficulties.length
         ? selectedDifficulties
         : null,
@@ -145,6 +155,7 @@ export default async function InterviewSessionPage({
       duration={duration}
       difficulties={selectedDifficulties}
       problems={problems}
+      problemCount={problemCount}
     />
   );
 }

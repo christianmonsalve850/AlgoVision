@@ -6,12 +6,14 @@ import SelectDuration from "@/features/interview/components/select-duration";
 import { useState } from "react";
 import type { Difficulty, Duration } from "@/features/interview/types";
 import ReadyToStart from "@/features/interview/components/ready-to-start";
+import ProblemCountSelector from "@/features/interview/components/problem-count-selector";
 
 export default function StartMockInterview() {
   const [selectedDifficulties, setSelectedDifficulties] =
     useState<Difficulty[]>(["Easy"]);
   const [selectedDuration, setSelectedDuration] =
     useState<Duration>(30);
+  const [problemCount, setProblemCount] = useState(2);
 
   const toggleDifficulty = (difficulty: Difficulty) => {
     setSelectedDifficulties((current) =>
@@ -117,9 +119,16 @@ export default function StartMockInterview() {
           />
         </div>
       </div>
+      <ProblemCountSelector
+        minProblems={1}
+        maxProblems={3}
+        value={problemCount}
+        onValueChange={setProblemCount}
+      />
       <ReadyToStart
         difficulties={selectedDifficulties}
         duration={selectedDuration}
+        problemCount={problemCount}
       />
     </div>
   );

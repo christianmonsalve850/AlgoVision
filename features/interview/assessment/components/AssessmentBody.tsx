@@ -5,9 +5,15 @@ import { Group, Panel, Separator } from "react-resizable-panels";
 import { Lock, Settings, RotateCcw } from "lucide-react";
 import Guidelines from "@/features/interview/assessment/components/Guidelines";
 import Description from "@/features/interview/assessment/components/Description";
-import type { ProblemTab, AssessmentBodyProps } from "@/features/interview/assessment/types";
+import type {
+  ProblemTab,
+  AssessmentBodyProps,
+} from "@/features/interview/assessment/types";
 
-export default function AssessmentBody({ problems } : AssessmentBodyProps) {
+export default function AssessmentBody({
+  problems,
+  problemCount,
+}: AssessmentBodyProps) {
   const [problemTab, setProblemTab] = useState<ProblemTab>("description");
   return (
     <section className="flex h-full min-h-0 flex-1">
@@ -46,7 +52,11 @@ export default function AssessmentBody({ problems } : AssessmentBodyProps) {
             </button>
           </div>
           <div className="p-6">
-            {problemTab === "description" ? <Description problems={problems} /> : <Guidelines />}
+            {problemTab === "description" ? (
+              <Description problems={problems} problemCount={problemCount} />
+            ) : (
+              <Guidelines />
+            )}
           </div>
         </Panel>
 
