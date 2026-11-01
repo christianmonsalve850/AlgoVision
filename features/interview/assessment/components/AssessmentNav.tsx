@@ -2,9 +2,10 @@ import { Brand } from "@/components/layout/brand";
 import { AssessmentNavProps } from "@/features/interview/assessment/types";
 import { Clock3, LogOut } from "lucide-react";
 import CountdownTimer from "@/features/interview/assessment/components/CountdownTimer";
+import type { Difficulty } from "@/features/interview/types";
 
 const difficultyClasses: Record<
-  AssessmentNavProps["difficulty"],
+  Difficulty,
   { background: string; foreground: string; border: string }
 > = {
   Easy: {
@@ -27,9 +28,22 @@ const difficultyClasses: Record<
 export function AssessmentNav({
   onQuitOpen,
   initialTimeMinutes,
-  difficulty,
+  difficulties,
 } : AssessmentNavProps) {
-  const difficultyStyle = difficultyClasses[difficulty];
+  const difficultyLabel =
+    difficulties.length === 0
+      ? "Random"
+      : difficulties.length === 3
+        ? "Any difficulty"
+        : difficulties.join(" + ");
+  const [onlyDifficulty] = difficulties;
+  const difficultyStyle = difficulties.length === 1 && onlyDifficulty
+    ? difficultyClasses[onlyDifficulty]
+    : {
+        background: "bg-muted",
+        foreground: "text-muted-foreground",
+        border: "border-border",
+      };
 
   return (
     <header className="sticky top-0 flex h-16 w-full items-center border-b border-border bg-background/90 px-6 backdrop-blur justify-between py-5">
@@ -40,7 +54,7 @@ export function AssessmentNav({
         <div className={`flex items-center justify-center border px-3 py-1.5 rounded-full ${difficultyStyle.background} ${difficultyStyle.border}`}>
           <span className={`flex items-center justify-center gap-2 font-semibold text-xs ${difficultyStyle.foreground}`}>
             <div className="w-1.5 h-1.5 bg-current rounded-full" />
-            Timed assessment · {difficulty}
+            Timed assessment · {difficultyLabel}
           </span>
         </div>
       </div>

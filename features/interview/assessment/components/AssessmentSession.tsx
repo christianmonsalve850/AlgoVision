@@ -4,19 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AssessmentNav } from "@/features/interview/assessment/components/AssessmentNav";
 import QuitAssessmentModal from "@/features/interview/assessment/components/QuitAssessmentModal";
-import type { Difficulty, Duration } from "@/features/interview/types";
 import AssessmentBody from "@/features/interview/assessment/components/AssessmentBody";
-
-type AssessmentSessionProps = {
-  sessionId: string;
-  duration: Duration;
-  difficulty: Difficulty;
-};
+import type { AssessmentSessionProps } from "@/features/interview/assessment/types";
 
 export default function AssessmentSession({
   sessionId,
   duration,
-  difficulty,
+  difficulties,
+  problems,
 }: AssessmentSessionProps) {
   const router = useRouter();
   const [quitOpen, setQuitOpen] = useState(false);
@@ -29,9 +24,9 @@ export default function AssessmentSession({
       <AssessmentNav
         onQuitOpen={() => setQuitOpen(true)}
         initialTimeMinutes={duration}
-        difficulty={difficulty}
+        difficulties={difficulties}
       />
-      <AssessmentBody />
+      <AssessmentBody problems={problems} />
 
       <QuitAssessmentModal
         open={quitOpen}

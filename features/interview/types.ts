@@ -5,7 +5,7 @@ export type Difficulty = "Easy" | "Medium" | "Hard";
 export interface InterviewDifficultyProps {
     difficulty: Difficulty;
     subtext: string;
-    selectedDifficulty: Difficulty;
+    isSelected: boolean;
     onSelectedDifficulty: () => void;
     difficultyColor?: string;
 }
@@ -19,7 +19,7 @@ export interface SelectDurationProps {
 }
 
 export interface ReadyToStartProps {
-    difficulty: Difficulty,
+    difficulties: Difficulty[],
     duration: Duration,
     onStartAssesment?: () => void;
 }
