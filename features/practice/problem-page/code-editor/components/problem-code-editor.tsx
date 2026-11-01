@@ -2,9 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Editor from "@monaco-editor/react";
 import { ChevronDown, Play, RotateCcw, Send, Lightbulb } from "lucide-react";
-import { useTheme } from "@/components/theme/theme-provider";
+import { MonacoCodeEditor } from "@/components/code-editor/monaco-code-editor";
 import { languageOptions } from "@/features/practice/problem-page/code-editor/constants/languages";
 import type {
   Language,
@@ -30,7 +29,6 @@ export function ProblemCodeEditor({
   onSubmitStart,
   submissionLoadRequest,
 }: ProblemCodeEditorPanelProps) {
-  const { resolvedTheme } = useTheme();
   const router = useRouter();
   const [ submissionStatus, setSubmissionStatus ] = useState<"success" | "failure" | null>(null);
   const [ executionsStatus, setExecutionStatus ] = useState<ExecutionStatus>("idle");
@@ -198,28 +196,11 @@ export function ProblemCodeEditor({
             </div>
           </div>
           <div className="h-full overflow-hidden bg-background">
-            <Editor
-              height="100%"
+            <MonacoCodeEditor
               defaultLanguage="python"
               language={activeLanguage.extension}
               value={code}
               onChange={handleEditorChange}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                lineNumbers: "on",
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-                roundedSelection: false,
-                renderLineHighlight: "all",
-                padding: { top: 16, bottom: 16 },
-                tabSize: 4,
-                fixedOverflowWidgets: true,
-                smoothScrolling: true,
-                cursorSmoothCaretAnimation: "on",
-                wordWrap: "on",
-              }}
-              theme={`vs-${resolvedTheme}`}
             />
           </div>
         </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import { Lock, Settings, RotateCcw } from "lucide-react";
+import { MonacoCodeEditor } from "@/components/code-editor/monaco-code-editor";
 import Guidelines from "@/features/interview/assessment/components/Guidelines";
 import Description from "@/features/interview/assessment/components/Description";
 import type {
@@ -15,7 +16,33 @@ export default function AssessmentBody({
   currentProblemIndex,
 }: AssessmentBodyProps) {
   const [problemTab, setProblemTab] = useState<ProblemTab>("description");
+  const [codeByProblem, setCodeByProblem] = useState<Record<string, string>>(
+    {},
+  );
   const currentProblem = problems[currentProblemIndex];
+  const code = currentProblem ? codeByProblem[currentProblem.id] ?? "" : "";
+
+  const handleEditorChange = (value: string | undefined) => {
+    if (!currentProblem) {
+      return;
+    }
+
+    setCodeByProblem((previousCode) => ({
+      ...previousCode,
+      [currentProblem.id]: value ?? "",
+    }));
+  };
+
+  const handleResetCode = () => {
+    if (!currentProblem) {
+      return;
+    }
+
+    setCodeByProblem((previousCode) => ({
+      ...previousCode,
+      [currentProblem.id]: "",
+    }));
+  };
 
   return (
     <section className="flex h-full min-h-0 flex-1">
@@ -78,7 +105,7 @@ export default function AssessmentBody({
           id="assessment-editor"
           defaultSize={70}
           minSize="35%"
-          className="min-h-0 min-w-0 overflow-hidden"
+          className="flex min-h-0 min-w-0 flex-col overflow-hidden"
         >
           <div className="flex h-12 shrink-0 items-center justify-between border-b border-border px-4 sm:px-6">
             <div
@@ -96,6 +123,7 @@ export default function AssessmentBody({
                 type="button"
                 aria-label="Reset code"
                 title="Reset code"
+                onClick={handleResetCode}
                 className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <RotateCcw aria-hidden="true" className="size-4" />
@@ -109,6 +137,14 @@ export default function AssessmentBody({
                 <Settings aria-hidden="true" className="size-4" />
               </button>
             </div>
+          </div>
+          <div className="min-h-0 flex-1">
+            <MonacoCodeEditor
+              defaultLanguage="python"
+              language="python"
+              value={code}
+              onChange={handleEditorChange}
+            />
           </div>
         </Panel>
       </Group>
