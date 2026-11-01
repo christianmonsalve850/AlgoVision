@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import { Lock, Settings, RotateCcw } from "lucide-react";
+import Guidelines from "@/features/interview/assessment/components/Guidelines";
 
 type ProblemTab = "description" | "guidelines";
 
@@ -12,14 +13,14 @@ export default function AssessmentBody() {
     <section className="flex h-full min-h-0 flex-1">
       <Group
         orientation="horizontal"
-        defaultLayout={{ "assessment-details": 40, "assessment-editor": 60 }}
+        defaultLayout={{ "assessment-details": 30, "assessment-editor": 70 }}
         className="h-full min-h-0 flex-1"
       >
         <Panel
           id="assessment-details"
-          defaultSize={40}
+          defaultSize={30}
           minSize="25%"
-          maxSize="65%"
+          maxSize="50%"
           className="flex min-h-0 min-w-0 flex-col overflow-hidden"
         >
           <div className="flex h-12 shrink-0 items-stretch gap-4 border-b border-border px-6">
@@ -44,7 +45,9 @@ export default function AssessmentBody() {
               )}
             </button>
           </div>
-          <div className="min-h-0 flex-1 overflow-auto" />
+          <div className="p-6">
+            {problemTab === "description" ? null : <Guidelines />}
+          </div>
         </Panel>
 
         <Separator className="group relative flex w-2 self-stretch items-center justify-center border-x border-border bg-transparent transition-colors hover:bg-muted/40 active:bg-muted/60">
@@ -53,7 +56,7 @@ export default function AssessmentBody() {
 
         <Panel
           id="assessment-editor"
-          defaultSize={60}
+          defaultSize={70}
           minSize="35%"
           className="min-h-0 min-w-0 overflow-hidden"
         >
