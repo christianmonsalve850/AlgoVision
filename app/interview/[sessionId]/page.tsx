@@ -5,59 +5,117 @@ import type {
   ProblemExample,
 } from "@/features/interview/assessment/types";
 import { createClient } from "@/lib/supabase/server";
+import { notFound } from "next/navigation";
 
 type InterviewSessionProps = {
   params: Promise<{ sessionId: string }>;
-  searchParams: Promise<{
-    duration?: string | string[];
-    problemCount?: string | string[];
-    difficulty?: string | string[];
-  }>;
 };
 
 const validDurations: Duration[] = [15, 30, 45, 60];
 const validProblemCounts = [1, 2, 3];
 const validDifficulties: Difficulty[] = ["Easy", "Medium", "Hard"];
 
-export default async function InterviewSessionPage({
-  params,
-  searchParams,
-}: InterviewSessionProps) {
-  const [
-    { sessionId },
-    {
-      duration: durationParam,
-      problemCount: problemCountParam,
-      difficulty: difficultyParams,
-    },
-  ] = await Promise.all([params, searchParams]);
-  const parsedDuration =
-    typeof durationParam === "string" ? Number(durationParam) : NaN;
-  const duration = validDurations.find((value) => value === parsedDuration) ?? 30;
-  const parsedProblemCount =
-    typeof problemCountParam === "string" ? Number(problemCountParam) : NaN;
-  const problemCount =
-    validProblemCounts.find((value) => value === parsedProblemCount) ?? 2;
-  const requestedDifficulties =
-    typeof difficultyParams === "string"
-      ? [difficultyParams]
-      : (difficultyParams ?? []);
-  let selectedDifficulties: Difficulty[];
+function isDifficulty(value: unknown): value is Difficulty {
+  return validDifficulties.some((difficulty) => difficulty === value);
+}
 
-  if (requestedDifficulties.length === 0) {
-    selectedDifficulties = ["Easy"];
-  } else if (requestedDifficulties.includes("Random")) {
-    selectedDifficulties = [];
-  } else {
-    selectedDifficulties = validDifficulties.filter((value) =>
-      requestedDifficulties.includes(value),
-    );
-    if (selectedDifficulties.length === 0) {
-      selectedDifficulties = ["Easy"];
+function parseDifficulties(value: unknown): Difficulty[] | null {
+  let parsedValue = value;
+
+  if (typeof parsedValue === "string") {
+    try {
+      parsedValue = JSON.parse(parsedValue);
+    } catch {
+      return null;
     }
   }
 
+  if (parsedValue === null) {
+    return [];
+  }
+
+  if (Array.isArray(parsedValue) && parsedValue.every(isDifficulty)) {
+    return parsedValue;
+  }
+
+  return null;
+}
+
+export default async function InterviewSessionPage({
+  params,
+}: InterviewSessionProps) {
+  const { sessionId } = await params;
   const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    throw new Error("Failed to verify assessment session access.", {
+      cause: userError,
+    });
+  }
+
+  if (!user) {
+    notFound();
+  }
+
+  const { data: session, error: sessionError } = await supabase
+    .from("sessions")
+    .select("id, duration, difficulties, problem_count")
+    .eq("id", sessionId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (sessionError?.code === "22P02") {
+    notFound();
+  }
+
+  if (sessionError) {
+    throw new Error("Failed to load assessment session.", {
+      cause: sessionError,
+    });
+  }
+
+  if (!session) {
+    notFound();
+  }
+
+  const storedDuration =
+    typeof session.duration === "string"
+      ? Number(session.duration)
+      : session.duration;
+
+  const storedProblemCount =
+    typeof session.problem_count === "string"
+      ? Number(session.problem_count)
+      : session.problem_count;
+
+  const duration = validDurations.find((value) => value === storedDuration);
+
+  const problemCount = validProblemCounts.find(
+    (value) => value === storedProblemCount,
+  );
+
+  const selectedDifficulties = parseDifficulties(session.difficulties);
+
+  if (!duration || !problemCount || selectedDifficulties === null) {
+    const invalidFields = [
+      !duration ? `duration=${JSON.stringify(session.duration)}` : null,
+      !problemCount
+        ? `problem_count=${JSON.stringify(session.problem_count)}`
+        : null,
+      selectedDifficulties === null
+        ? `difficulties=${JSON.stringify(session.difficulties)}`
+        : null,
+    ].filter((field): field is string => field !== null);
+    const details = `Invalid assessment session configuration: ${invalidFields.join(", ")}`;
+
+    console.error(details);
+    throw new Error(details);
+  }
+
   const { data: problemRows, error: problemError } = await supabase.rpc(
     "get_random_assessment_problems",
     {

@@ -32,22 +32,7 @@ export default function ReadyToStart({
         problemCount,
       });
 
-      const searchParams = new URLSearchParams({
-        duration: String(duration),
-        problemCount: String(problemCount),
-      });
-
-      if (difficulties.length === 0) {
-        searchParams.set("difficulty", "Random");
-      } else {
-        difficulties.forEach((difficulty) =>
-          searchParams.append("difficulty", difficulty),
-        );
-      }
-
-      router.replace(
-        `/interview/${encodeURIComponent(sessionId)}?${searchParams.toString()}`,
-      );
+      router.replace(`/interview/${encodeURIComponent(sessionId)}`);
     } catch (error) {
       console.error("Failed to start assessment session:", error);
       setStartError(
