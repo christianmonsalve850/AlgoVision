@@ -1,4 +1,5 @@
 import { LucideIcon } from "lucide-react";
+import type { SupportedLanguage } from "@/features/code-editor/languages";
 
 export type Difficulty = "Easy" | "Medium" | "Hard";
 
@@ -22,6 +23,7 @@ export interface ReadyToStartProps {
     difficulties: Difficulty[],
     duration: Duration,
     problemCount: number,
+    language: SupportedLanguage,
     onStartAssesment?: () => void;
 }
 

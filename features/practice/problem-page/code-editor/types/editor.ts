@@ -1,7 +1,8 @@
 import type { ProblemRecord, SubmissionHistory } from "@/features/practice/problem-page/problem/types";
 import type { TestCase } from "./test-case";
+import type { SupportedLanguage } from "@/features/code-editor/languages";
 
-export type Language = "Python";
+export type Language = Extract<SupportedLanguage, "Python">;
 
 export type StarterCodeMap = Partial<Record<Language, string>>;
 

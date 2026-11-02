@@ -1,7 +1,8 @@
 import type { Difficulty } from "@/features/practice/components/difficulty-badge";
 import type { PatternName } from "@/features/practice/types/pattern-types";
+import type { SupportedLanguage } from "@/features/code-editor/languages";
 
-export type Language = "Python" | "JavaScript" | "Java";
+export type Language = SupportedLanguage;
 
 export type StarterCodeMap = Partial<Record<Language, string>>;
 

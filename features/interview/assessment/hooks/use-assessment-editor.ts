@@ -3,15 +3,13 @@ import {
   UseAssessmentEditorOptions,
   UseAssessmentEditorReturn,
 } from "@/features/interview/assessment/types";
-import { Language } from "@/features/practice/problem-page/code-editor/types";
 
 export function useAssessmentEditor({
   sessionId,
   problemId,
+  language,
   starterCodeMap,
-  defaultLanguage = "Python",
 }: UseAssessmentEditorOptions): UseAssessmentEditorReturn {
-  const [language, setLanguage] = useState<Language>(defaultLanguage);
   const [code, setCode] = useState(starterCodeMap[language] ?? "");
 
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -31,10 +29,6 @@ export function useAssessmentEditor({
     const defaultCode = starterCodeMap[language] ?? "";
     setCode(defaultCode);
     localStorage.setItem(compositeKey, defaultCode);
-  };
-
-  const handleLanguageChange = (newLang: Language) => {
-    setLanguage(newLang);
   };
 
   const handleEditorChange = (value: string | undefined) => {
@@ -57,7 +51,6 @@ export function useAssessmentEditor({
   return {
     code,
     language,
-    handleLanguageChange,
     handleReset,
     handleEditorChange,
   };

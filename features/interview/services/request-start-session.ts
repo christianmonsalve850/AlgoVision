@@ -1,4 +1,3 @@
-import type { Difficulty, Duration } from "@/features/interview/types";
 import type { RequestStartSessionOptions, StartSessionResponse } from "@/app/types/api-types";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -9,6 +8,7 @@ export async function requestStartSession({
   difficulties,
   duration,
   problemCount,
+  language,
 }: RequestStartSessionOptions): Promise<StartSessionResponse> {
   const response = await fetch("/api/v1/sessions", {
     method: "POST",
@@ -19,6 +19,7 @@ export async function requestStartSession({
       difficulties,
       duration,
       problemCount,
+      language,
     }),
   });
 

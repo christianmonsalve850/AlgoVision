@@ -10,6 +10,7 @@ export default function ReadyToStart({
   difficulties,
   duration,
   problemCount,
+  language,
 }: ReadyToStartProps) {
   const router = useRouter();
   const [isStarting, setIsStarting] = useState(false);
@@ -30,6 +31,7 @@ export default function ReadyToStart({
         difficulties,
         duration,
         problemCount,
+        language,
       });
 
       router.replace(`/interview/${encodeURIComponent(sessionId)}`);
@@ -54,6 +56,8 @@ export default function ReadyToStart({
         <p className="text-sm text-muted-foreground">
           {difficultyLabel} · {duration} minutes · {problemCount}{" "}
           {problemCount === 1 ? "problem" : "problems"}
+          {" · "}
+          {language}
         </p>
       </div>
       <button

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import type { RequestStartSessionOptions } from "@/app/types/api-types";
 import type { Difficulty, Duration } from "@/features/interview/types";
+import { isSupportedLanguage } from "@/features/code-editor/languages";
 import type { ProblemDescription } from "@/features/interview/assessment/types";
 
 
@@ -24,7 +25,9 @@ function isValidRequestBody(body: unknown): body is RequestStartSessionOptions {
     validDurations.some((duration) => duration === body.duration) &&
     "problemCount" in body &&
     typeof body.problemCount === "number" &&
-    validProblemCounts.includes(body.problemCount)
+    validProblemCounts.includes(body.problemCount) &&
+    "language" in body &&
+    isSupportedLanguage(body.language)
   );
 }
 
@@ -44,7 +47,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { difficulties, duration, problemCount } = body;
+  const { difficulties, duration, problemCount, language } = body;
 
   try {
     const supabase = await createClient();
@@ -65,6 +68,7 @@ export async function POST(request: Request) {
         difficulties: difficulties,
         duration: duration,
         problem_count: problemCount,
+        language,
       })
       .select("id, difficulties")
       .single();

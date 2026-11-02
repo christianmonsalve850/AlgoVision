@@ -6,7 +6,8 @@ import type {
 } from "@/features/interview/assessment/types";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
-import type { StarterCodeMap } from "@/features/practice/problem-page/code-editor/types/editor";
+import type { StarterCodeMap } from "@/features/practice/problem-page/problem/types";
+import { isSupportedLanguage } from "@/features/code-editor/languages";
 
 type InterviewSessionProps = {
   params: Promise<{ sessionId: string }>;
@@ -64,7 +65,7 @@ export default async function InterviewSessionPage({
 
   const { data: session, error: sessionError } = await supabase
     .from("sessions")
-    .select("id, duration, difficulties, problem_count, started_at")
+    .select("id, duration, difficulties, problem_count, started_at, language")
     .eq("id", sessionId)
     .eq("user_id", user.id)
     .maybeSingle();
@@ -100,8 +101,11 @@ export default async function InterviewSessionPage({
   );
 
   const selectedDifficulties = parseDifficulties(session.difficulties);
+  const language = isSupportedLanguage(session.language)
+    ? session.language
+    : null;
 
-  if (!duration || !problemCount || selectedDifficulties === null) {
+  if (!duration || !problemCount || selectedDifficulties === null || !language) {
     const invalidFields = [
       !duration ? `duration=${JSON.stringify(session.duration)}` : null,
       !problemCount
@@ -110,6 +114,7 @@ export default async function InterviewSessionPage({
       selectedDifficulties === null
         ? `difficulties=${JSON.stringify(session.difficulties)}`
         : null,
+      !language ? `language=${JSON.stringify(session.language)}` : null,
     ].filter((field): field is string => field !== null);
     const details = `Invalid assessment session configuration: ${invalidFields.join(", ")}`;
 
@@ -243,7 +248,7 @@ export default async function InterviewSessionPage({
     .from("problem_starter_code")
     .select("problem_id, starter_code")
     .in("problem_id", orderedProblemIds)
-    .eq("language", "Python");
+    .eq("language", language);
 
   if (starterCodeError) {
     throw new Error("Failed to load assessment starter code.", {
@@ -255,7 +260,7 @@ export default async function InterviewSessionPage({
 
   for (const row of starterCodeRows ?? []) {
     starterCodeMaps[row.problem_id] = {
-      Python: row.starter_code.replace(/\\n/g, "\n"),
+      [language]: row.starter_code.replace(/\\n/g, "\n"),
     };
   }
 
@@ -265,6 +270,7 @@ export default async function InterviewSessionPage({
     <AssessmentSession
       sessionId={sessionId}
       sessionStartDate={sessionStartDate}
+      language={language}
       duration={duration}
       difficulties={selectedDifficulties}
       problems={problems}

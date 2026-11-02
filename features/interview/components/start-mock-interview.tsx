@@ -7,6 +7,8 @@ import { useState } from "react";
 import type { Difficulty, Duration } from "@/features/interview/types";
 import ReadyToStart from "@/features/interview/components/ready-to-start";
 import ProblemCountSelector from "@/features/interview/components/problem-count-selector";
+import InterviewLanguageSelector from "@/features/interview/components/interview-language-selector";
+import type { SupportedLanguage } from "@/features/code-editor/languages";
 
 export default function StartMockInterview() {
   const [selectedDifficulties, setSelectedDifficulties] =
@@ -14,6 +16,8 @@ export default function StartMockInterview() {
   const [selectedDuration, setSelectedDuration] =
     useState<Duration>(30);
   const [problemCount, setProblemCount] = useState(2);
+  const [selectedLanguage, setSelectedLanguage] =
+    useState<SupportedLanguage>("Python");
 
   const toggleDifficulty = (difficulty: Difficulty) => {
     setSelectedDifficulties((current) =>
@@ -119,6 +123,20 @@ export default function StartMockInterview() {
           />
         </div>
       </div>
+      <div className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+            Select Language
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your language will be locked once the assessment starts.
+          </p>
+        </div>
+        <InterviewLanguageSelector
+          language={selectedLanguage}
+          onLanguageChange={setSelectedLanguage}
+        />
+      </div>
       <ProblemCountSelector
         minProblems={1}
         maxProblems={3}
@@ -129,6 +147,7 @@ export default function StartMockInterview() {
         difficulties={selectedDifficulties}
         duration={selectedDuration}
         problemCount={problemCount}
+        language={selectedLanguage}
       />
     </div>
   );

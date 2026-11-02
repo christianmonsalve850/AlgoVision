@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import { Lock, Settings, RotateCcw } from "lucide-react";
 import { MonacoCodeEditor } from "@/components/code-editor/monaco-code-editor";
+import { SUPPORTED_LANGUAGES } from "@/features/code-editor/languages";
 import Guidelines from "@/features/interview/assessment/components/Guidelines";
 import Description from "@/features/interview/assessment/components/Description";
 import type {
@@ -16,6 +17,7 @@ const EMPTY_STARTER_CODE_MAP = {};
 
 export default function AssessmentBody({
   sessionId,
+  language,
   problems,
   currentProblemIndex,
   starterCodeMaps,
@@ -24,9 +26,14 @@ export default function AssessmentBody({
 
   const currentProblem = problems[currentProblemIndex];
 
-  const { code, handleReset, handleEditorChange } = useAssessmentEditor({
+  const {
+    code,
+    handleReset,
+    handleEditorChange,
+  } = useAssessmentEditor({
     sessionId,
     problemId: currentProblem?.id ?? "",
+    language,
     starterCodeMap: currentProblem
       ? starterCodeMaps[currentProblem.id] ?? EMPTY_STARTER_CODE_MAP
       : EMPTY_STARTER_CODE_MAP,
@@ -98,9 +105,9 @@ export default function AssessmentBody({
           <div className="flex h-12 shrink-0 items-center justify-between border-b border-border px-4 sm:px-6">
             <div
               className="inline-flex items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-1.5 text-sm font-medium text-foreground"
-              title="Python is the selected language"
+              title="Language selected during interview setup"
             >
-              <span>Python</span>
+              <span>{language}</span>
               <Lock
                 aria-hidden="true"
                 className="size-3.5 text-muted-foreground"
@@ -128,8 +135,8 @@ export default function AssessmentBody({
           </div>
           <div className="min-h-0 flex-1">
             <MonacoCodeEditor
-              defaultLanguage="python"
-              language="python"
+              defaultLanguage={SUPPORTED_LANGUAGES[language].monacoLanguage}
+              language={SUPPORTED_LANGUAGES[language].monacoLanguage}
               value={code}
               onChange={handleEditorChange}
             />

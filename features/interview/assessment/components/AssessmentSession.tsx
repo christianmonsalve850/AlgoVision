@@ -11,6 +11,7 @@ import Footer from "@/features/interview/assessment/components/Footer";
 export default function AssessmentSession({
   sessionId,
   sessionStartDate,
+  language,
   duration,
   difficulties,
   problems,
@@ -22,7 +23,6 @@ export default function AssessmentSession({
 
   return (
     <div
-      data-session-id={sessionId}
       className="flex h-dvh min-h-0 flex-col overflow-hidden"
     >
       <AssessmentNav
@@ -33,6 +33,7 @@ export default function AssessmentSession({
       />
       <AssessmentBody
         sessionId={sessionId}
+        language={language}
         problems={problems}
         currentProblemIndex={currentProblemIndex}
         starterCodeMaps={starterCodeMaps}
