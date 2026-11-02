@@ -108,8 +108,6 @@ export async function POST(request: Request) {
         );
     }
   } catch (error) {
-    console.error("Failed to process execution request:", error);
-
     return NextResponse.json(
       {
         error: {

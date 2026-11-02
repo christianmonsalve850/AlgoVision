@@ -1,33 +1,63 @@
+"use client";
 
-
-import { ReadyToStartProps } from "@/features/interview/types";
+import type { ReadyToStartProps } from "@/features/interview/types";
 import { CirclePlay } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { requestStartSession } from "@/features/interview/services/request-start-session";
 
 export default function ReadyToStart({
   difficulties,
   duration,
   problemCount,
-} : ReadyToStartProps) {
+}: ReadyToStartProps) {
   const router = useRouter();
+  const [isStarting, setIsStarting] = useState(false);
+  const [startError, setStartError] = useState<string | null>(null);
   const difficultyLabel =
     difficulties.length === 0 ? "Random difficulty" : difficulties.join(" + ");
 
-  const startAssessment = () => {
-    const searchParams = new URLSearchParams({
-      duration: String(duration),
-      problemCount: String(problemCount),
-    });
-
-    if (difficulties.length === 0) {
-      searchParams.set("difficulty", "Random");
-    } else {
-      difficulties.forEach((difficulty) =>
-        searchParams.append("difficulty", difficulty),
-      );
+  const startAssessment = async () => {
+    if (isStarting) {
+      return;
     }
 
-    router.replace(`/interview/1?${searchParams.toString()}`);
+    setIsStarting(true);
+    setStartError(null);
+
+    try {
+      const { sessionId } = await requestStartSession({
+        difficulties,
+        duration,
+        problemCount,
+      });
+
+      const searchParams = new URLSearchParams({
+        duration: String(duration),
+        problemCount: String(problemCount),
+      });
+
+      if (difficulties.length === 0) {
+        searchParams.set("difficulty", "Random");
+      } else {
+        difficulties.forEach((difficulty) =>
+          searchParams.append("difficulty", difficulty),
+        );
+      }
+
+      router.replace(
+        `/interview/${encodeURIComponent(sessionId)}?${searchParams.toString()}`,
+      );
+    } catch (error) {
+      console.error("Failed to start assessment session:", error);
+      setStartError(
+        error instanceof Error
+          ? error.message
+          : "Could not start the assessment. Please try again.",
+      );
+    } finally {
+      setIsStarting(false);
+    }
   };
 
   return (
@@ -41,13 +71,21 @@ export default function ReadyToStart({
           {problemCount === 1 ? "problem" : "problems"}
         </p>
       </div>
-      <button 
+      <button
+        type="button"
+        disabled={isStarting}
+        aria-busy={isStarting}
         className="flex gap-2 items-center justify-center text-background bg-foreground rounded-lg p-4 hover:bg-primary hover:text-primary-foreground active:scale-[0.98] transition-all duration-150 font-semibold"
         onClick={startAssessment}
       >
-        <CirclePlay />
-        <span>Start Assessment</span>
+        <CirclePlay aria-hidden="true" />
+        <span>{isStarting ? "Starting..." : "Start Assessment"}</span>
       </button>
+      {startError && (
+        <p role="alert" className="text-sm text-destructive">
+          {startError}
+        </p>
+      )}
     </div>
   );
 }

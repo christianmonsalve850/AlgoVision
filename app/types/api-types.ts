@@ -1,5 +1,6 @@
 import { Language } from "@/features/practice/problem-page/code-editor/types";
 import type { TraceCaseResult } from "@/lib/docker-runner/types";
+import type { Difficulty, Duration } from "@/features/interview/types";
 
 export interface UseCodeExecuterOptions {
   operation: "run" | "submit";
@@ -49,3 +50,13 @@ export type ReturnHint =
   | null
   | undefined
   | void;
+
+export interface RequestStartSessionOptions {
+  difficulties: Difficulty[];
+  duration: Duration;
+  problemCount: number;
+}
+
+export type StartSessionResponse = {
+  sessionId: string;
+};
