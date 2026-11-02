@@ -65,7 +65,7 @@ export default async function InterviewSessionPage({
 
   const { data: session, error: sessionError } = await supabase
     .from("sessions")
-    .select("id, duration, difficulties, problem_count, started_at, language")
+    .select("id, status, duration, difficulties, problem_count, started_at, language")
     .eq("id", sessionId)
     .eq("user_id", user.id)
     .maybeSingle();
@@ -81,6 +81,10 @@ export default async function InterviewSessionPage({
   }
 
   if (!session) {
+    notFound();
+  }
+
+  if (session.status !== "in_progress") {
     notFound();
   }
 

@@ -5,12 +5,16 @@ interface QuitAssessmentModalProps {
   open: boolean;
   onCancel: () => void;
   onConfirm: () => void;
+  isSubmitting: boolean;
+  error: string | null;
 }
 
 export default function QuitAssessmentModal({
   open,
   onCancel,
   onConfirm,
+  isSubmitting,
+  error,
 }: QuitAssessmentModalProps) {
   if (!open) return null;
 
@@ -33,19 +37,28 @@ export default function QuitAssessmentModal({
           marked as abandoned. You won&apos;t be able to resume the timer
           afterward.
         </p>
+        {error && (
+          <p role="alert" className="mt-3 text-sm text-destructive">
+            {error}
+          </p>
+        )}
         <div className="mt-6 flex justify-end gap-2">
           <button
+            type="button"
+            disabled={isSubmitting}
             onClick={onCancel}
-            className="h-10 rounded-md px-4 text-sm transition-colors hover:bg-muted"
+            className="h-10 rounded-md px-4 text-sm transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
           >
             Continue assessment
           </button>
           <button
+            type="button"
+            disabled={isSubmitting}
             onClick={onConfirm}
-            className="inline-flex h-10 items-center gap-2 rounded-md bg-rose-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-rose-500"
+            className="inline-flex h-10 items-center gap-2 rounded-md bg-rose-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <LogOut className="size-4" />
-            Quit assessment
+            {isSubmitting ? "Quitting..." : "Quit assessment"}
           </button>
         </div>
       </motion.div>

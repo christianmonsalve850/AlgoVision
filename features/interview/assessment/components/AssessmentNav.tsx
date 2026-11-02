@@ -30,7 +30,7 @@ export function AssessmentNav({
   initialTimeMinutes,
   difficulties,
   sessionStartDate,
-} : AssessmentNavProps) {
+}: AssessmentNavProps) {
   const difficultyLabel =
     difficulties.length === 0
       ? "Random"
@@ -38,13 +38,14 @@ export function AssessmentNav({
         ? "Any difficulty"
         : difficulties.join(" + ");
   const [onlyDifficulty] = difficulties;
-  const difficultyStyle = difficulties.length === 1 && onlyDifficulty
-    ? difficultyClasses[onlyDifficulty]
-    : {
-        background: "bg-muted",
-        foreground: "text-muted-foreground",
-        border: "border-border",
-      };
+  const difficultyStyle =
+    difficulties.length === 1 && onlyDifficulty
+      ? difficultyClasses[onlyDifficulty]
+      : {
+          background: "bg-muted",
+          foreground: "text-muted-foreground",
+          border: "border-border",
+        };
 
   return (
     <header className="sticky top-0 flex h-16 w-full items-center border-b border-border bg-background/90 px-6 backdrop-blur justify-between py-5">
@@ -52,8 +53,12 @@ export function AssessmentNav({
       <div className="flex items-center gap-3 flex-1">
         <Brand />
         <div className="h-6 w-px bg-border" />
-        <div className={`flex items-center justify-center border px-3 py-1.5 rounded-full ${difficultyStyle.background} ${difficultyStyle.border}`}>
-          <span className={`flex items-center justify-center gap-2 font-semibold text-xs ${difficultyStyle.foreground}`}>
+        <div
+          className={`flex items-center justify-center border px-3 py-1.5 rounded-full ${difficultyStyle.background} ${difficultyStyle.border}`}
+        >
+          <span
+            className={`flex items-center justify-center gap-2 font-semibold text-xs ${difficultyStyle.foreground}`}
+          >
             <div className="w-1.5 h-1.5 bg-current rounded-full" />
             Timed assessment · {difficultyLabel}
           </span>
@@ -79,7 +84,7 @@ export function AssessmentNav({
         >
           <LogOut className="size-4" />
         </button>
-    </div>
+      </div>
     </header>
   );
 }
