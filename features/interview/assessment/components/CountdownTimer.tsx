@@ -4,41 +4,56 @@ import { useEffect, useState } from "react";
 
 type CountdownTimerProps = {
   initialTimeMinutes: number;
+  sessionStartDate: string;
 };
 
 export default function CountdownTimer({
   initialTimeMinutes,
+  sessionStartDate,
 }: CountdownTimerProps) {
   if (!Number.isFinite(initialTimeMinutes) || initialTimeMinutes < 0) {
     throw new RangeError("initialTimeMinutes must be a non-negative number");
   }
 
   const initialTimeSeconds = Math.ceil(initialTimeMinutes * 60);
+  const sessionStartTime = Date.parse(sessionStartDate);
+
+  if (!Number.isFinite(sessionStartTime)) {
+    throw new RangeError("sessionStartDate must be a valid date string");
+  }
+
   const [remainingTimeSeconds, setRemainingTimeSeconds] =
     useState(initialTimeSeconds);
+  const endTime = sessionStartTime + initialTimeSeconds * 1000;
 
   useEffect(() => {
-    const endTime = Date.now() + initialTimeSeconds * 1000;
-
-    if (initialTimeSeconds === 0) return;
-
     const updateRemainingTime = () => {
       const nextRemainingTimeSeconds = Math.max(
         0,
-        Math.ceil((endTime - Date.now()) / 1000)
+        Math.ceil((endTime - Date.now()) / 1000),
       );
       setRemainingTimeSeconds(nextRemainingTimeSeconds);
 
       if (nextRemainingTimeSeconds === 0) {
-        window.clearInterval(intervalId);
+        if (intervalId !== undefined) {
+          window.clearInterval(intervalId);
+        }
       }
     };
 
-    const intervalId = window.setInterval(updateRemainingTime, 1000);
-    updateRemainingTime();
+    const timeoutId = window.setTimeout(updateRemainingTime, 0);
+    const intervalId =
+      initialTimeSeconds > 0 && endTime > Date.now()
+        ? window.setInterval(updateRemainingTime, 1000)
+        : undefined;
 
-    return () => window.clearInterval(intervalId);
-  }, [initialTimeSeconds]);
+    return () => {
+      window.clearTimeout(timeoutId);
+      if (intervalId !== undefined) {
+        window.clearInterval(intervalId);
+      }
+    };
+  }, [endTime, initialTimeSeconds]);
 
   const minutes = Math.floor(remainingTimeSeconds / 60)
     .toString()

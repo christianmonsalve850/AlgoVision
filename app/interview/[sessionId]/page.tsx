@@ -63,7 +63,7 @@ export default async function InterviewSessionPage({
 
   const { data: session, error: sessionError } = await supabase
     .from("sessions")
-    .select("id, duration, difficulties, problem_count")
+    .select("id, duration, difficulties, problem_count, started_at")
     .eq("id", sessionId)
     .eq("user_id", user.id)
     .maybeSingle();
@@ -210,6 +210,7 @@ export default async function InterviewSessionPage({
   return (
     <AssessmentSession
       sessionId={sessionId}
+      sessionStartDate={session.started_at}
       duration={duration}
       difficulties={selectedDifficulties}
       problems={problems}

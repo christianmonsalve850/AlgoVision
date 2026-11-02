@@ -10,6 +10,7 @@ import Footer from "@/features/interview/assessment/components/Footer";
 
 export default function AssessmentSession({
   sessionId,
+  sessionStartDate,
   duration,
   difficulties,
   problems,
@@ -27,6 +28,7 @@ export default function AssessmentSession({
         onQuitOpen={() => setQuitOpen(true)}
         initialTimeMinutes={duration}
         difficulties={difficulties}
+        sessionStartDate={sessionStartDate}
       />
       <AssessmentBody
         problems={problems}

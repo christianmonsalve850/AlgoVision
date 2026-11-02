@@ -29,6 +29,7 @@ export function AssessmentNav({
   onQuitOpen,
   initialTimeMinutes,
   difficulties,
+  sessionStartDate,
 } : AssessmentNavProps) {
   const difficultyLabel =
     difficulties.length === 0
@@ -65,6 +66,7 @@ export function AssessmentNav({
         <CountdownTimer
           key={initialTimeMinutes}
           initialTimeMinutes={initialTimeMinutes}
+          sessionStartDate={sessionStartDate}
         />
       </div>
 

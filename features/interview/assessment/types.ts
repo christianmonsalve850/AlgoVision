@@ -7,12 +7,14 @@ export type AssessmentSessionProps = {
   duration: Duration;
   difficulties: Difficulty[];
   problems: ProblemDescription[];
+  sessionStartDate: string;
 };
 
 export interface AssessmentNavProps {
     onQuitOpen: () => void;
     initialTimeMinutes: number;
     difficulties: Difficulty[];
+    sessionStartDate: string;
 }
 
 export type ProblemDescription = {
