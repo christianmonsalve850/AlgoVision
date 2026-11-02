@@ -116,18 +116,35 @@ export default async function InterviewSessionPage({
     throw new Error(details);
   }
 
-  const { data: problemRows, error: problemError } = await supabase.rpc(
-    "get_random_assessment_problems",
-    {
-      p_problem_limit: problemCount,
-      p_difficulties: selectedDifficulties.length
-        ? selectedDifficulties
-        : null,
-    },
-  );
+  const { data: sessionProblemRows, error: sessionProblemsError } =
+    await supabase
+      .from("session_problems")
+      .select("problem_id, problem_index")
+      .eq("session_id", session.id)
+      .order("problem_index", { ascending: true });
+
+  if (sessionProblemsError) {
+    throw new Error("Failed to load persisted assessment problems.", {
+      cause: sessionProblemsError,
+    });
+  }
+
+  if (!sessionProblemRows?.length) {
+    throw new Error("Assessment session has no persisted problems.");
+  }
+
+  if (sessionProblemRows.length !== problemCount) {
+    throw new Error("Assessment session problem count does not match its saved configuration.");
+  }
+
+  const problemIds = sessionProblemRows.map((row) => row.problem_id);
+  const { data: problemRows, error: problemError } = await supabase
+    .from("problems")
+    .select("id, title, description, difficulty, constraints")
+    .in("id", problemIds);
 
   if (problemError) {
-    throw new Error("Failed to load assessment problems.", {
+    throw new Error("Failed to load persisted assessment problem details.", {
       cause: problemError,
     });
   }
@@ -168,15 +185,29 @@ export default async function InterviewSessionPage({
         constraints: row.constraints,
       } satisfies Omit<ProblemDescription, "examples">;
     });
-  const problemIds = typedProblems.map((problem) => problem.id);
+  const problemsById = new Map(
+    typedProblems.map((problem) => [problem.id, problem]),
+  );
+  const orderedProblems = sessionProblemRows.map((sessionProblem) => {
+    const problem = problemsById.get(sessionProblem.problem_id);
+
+    if (!problem) {
+      throw new Error(
+        `Persisted assessment problem ${sessionProblem.problem_id} could not be found.`,
+      );
+    }
+
+    return problem;
+  });
+  const orderedProblemIds = orderedProblems.map((problem) => problem.id);
 
   let examplesByProblemId = new Map<string, ProblemExample[]>();
 
-  if (problemIds.length > 0) {
+  if (orderedProblemIds.length > 0) {
     const { data: exampleRows, error: examplesError } = await supabase
       .from("problem_examples")
       .select("problem_id, example_number, input, output, explanation")
-      .in("problem_id", problemIds)
+      .in("problem_id", orderedProblemIds)
       .order("example_number", { ascending: true });
 
     if (examplesError) {
@@ -200,17 +231,19 @@ export default async function InterviewSessionPage({
     }, new Map());
   }
 
-  const problems: ProblemDescription[] = typedProblems.map((problem) => {
+  const problems: ProblemDescription[] = orderedProblems.map((problem) => {
     return {
       ...problem,
       examples: examplesByProblemId.get(problem.id) ?? [],
     };
   });
 
+  const sessionStartDate = session.started_at;
+
   return (
     <AssessmentSession
       sessionId={sessionId}
-      sessionStartDate={session.started_at}
+      sessionStartDate={sessionStartDate}
       duration={duration}
       difficulties={selectedDifficulties}
       problems={problems}

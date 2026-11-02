@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import type { RequestStartSessionOptions } from "@/app/types/api-types";
 import type { Difficulty, Duration } from "@/features/interview/types";
+import type { ProblemDescription } from "@/features/interview/assessment/types";
+
 
 const validDifficulties: Difficulty[] = ["Easy", "Medium", "Hard"];
 const validDurations: Duration[] = [15, 30, 45, 60];
@@ -64,7 +66,7 @@ export async function POST(request: Request) {
         duration: duration,
         problem_count: problemCount,
       })
-      .select("id")
+      .select("id, difficulties")
       .single();
 
     if (sessionsError) {
@@ -81,6 +83,62 @@ export async function POST(request: Request) {
             code: "INSERT_FAILED",
             message:
               "Failed to insert session metadata. Check the server logs for details.",
+          },
+        },
+        { status: 500 },
+      );
+    }
+
+    const { data: selectedProblems, error: problemError } = await supabase.rpc(
+      "get_random_assessment_problems",
+      {
+        p_problem_limit: problemCount,
+        p_difficulties: difficulties.length ? difficulties : null,
+      },
+    );
+
+    if (problemError) {
+      return NextResponse.json(
+        {
+          error: {
+            code: "ASSESSMENT_PROBLEMS_ERROR",
+            message: problemError,
+          },
+        },
+        { status: 500 },
+      );
+    }
+
+    if (!selectedProblems || selectedProblems.length === 0) {
+      return NextResponse.json(
+        {
+          error: {
+            code: "ASSESSMENT_PROBLEMS_ERROR",
+            message: "No problems returned.",
+          },
+        },
+        { status: 500 },
+      );
+    }
+
+    const problems = selectedProblems as ProblemDescription[];
+
+    const sessionProblemRows = problems.map((problem, index) => ({
+      session_id: sessionData.id,
+      problem_id: problem.id,
+      problem_index: index + 1,
+    }));
+
+    const { error: insertError } = await supabase
+      .from("session_problems")
+      .insert(sessionProblemRows);
+
+    if (insertError) {
+      return NextResponse.json(
+        {
+          error: {
+            code: "INSERT_ERROR",
+            message: "Could not insert problem id's to database.",
           },
         },
         { status: 500 },
