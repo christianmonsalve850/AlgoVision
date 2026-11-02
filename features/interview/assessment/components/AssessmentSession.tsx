@@ -14,6 +14,7 @@ export default function AssessmentSession({
   duration,
   difficulties,
   problems,
+  starterCodeMaps,
 }: AssessmentSessionProps) {
   const router = useRouter();
   const [quitOpen, setQuitOpen] = useState(false);
@@ -31,8 +32,10 @@ export default function AssessmentSession({
         sessionStartDate={sessionStartDate}
       />
       <AssessmentBody
+        sessionId={sessionId}
         problems={problems}
         currentProblemIndex={currentProblemIndex}
+        starterCodeMaps={starterCodeMaps}
       />
       <Footer
         currentProblemIndex={currentProblemIndex}

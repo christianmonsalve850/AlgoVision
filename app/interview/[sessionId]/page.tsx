@@ -6,6 +6,7 @@ import type {
 } from "@/features/interview/assessment/types";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import type { StarterCodeMap } from "@/features/practice/problem-page/code-editor/types/editor";
 
 type InterviewSessionProps = {
   params: Promise<{ sessionId: string }>;
@@ -238,6 +239,26 @@ export default async function InterviewSessionPage({
     };
   });
 
+  const { data: starterCodeRows, error: starterCodeError } = await supabase
+    .from("problem_starter_code")
+    .select("problem_id, starter_code")
+    .in("problem_id", orderedProblemIds)
+    .eq("language", "Python");
+
+  if (starterCodeError) {
+    throw new Error("Failed to load assessment starter code.", {
+      cause: starterCodeError,
+    });
+  }
+
+  const starterCodeMaps: Record<string, StarterCodeMap> = {};
+
+  for (const row of starterCodeRows ?? []) {
+    starterCodeMaps[row.problem_id] = {
+      Python: row.starter_code.replace(/\\n/g, "\n"),
+    };
+  }
+
   const sessionStartDate = session.started_at;
 
   return (
@@ -247,6 +268,7 @@ export default async function InterviewSessionPage({
       duration={duration}
       difficulties={selectedDifficulties}
       problems={problems}
+      starterCodeMaps={starterCodeMaps}
     />
   );
 }

@@ -10,39 +10,27 @@ import type {
   ProblemTab,
   AssessmentBodyProps,
 } from "@/features/interview/assessment/types";
+import { useAssessmentEditor } from "@/features/interview/assessment/hooks/use-assessment-editor";
+
+const EMPTY_STARTER_CODE_MAP = {};
 
 export default function AssessmentBody({
+  sessionId,
   problems,
   currentProblemIndex,
+  starterCodeMaps,
 }: AssessmentBodyProps) {
   const [problemTab, setProblemTab] = useState<ProblemTab>("description");
-  const [codeByProblem, setCodeByProblem] = useState<Record<string, string>>(
-    {},
-  );
+
   const currentProblem = problems[currentProblemIndex];
-  const code = currentProblem ? codeByProblem[currentProblem.id] ?? "" : "";
 
-  const handleEditorChange = (value: string | undefined) => {
-    if (!currentProblem) {
-      return;
-    }
-
-    setCodeByProblem((previousCode) => ({
-      ...previousCode,
-      [currentProblem.id]: value ?? "",
-    }));
-  };
-
-  const handleResetCode = () => {
-    if (!currentProblem) {
-      return;
-    }
-
-    setCodeByProblem((previousCode) => ({
-      ...previousCode,
-      [currentProblem.id]: "",
-    }));
-  };
+  const { code, handleReset, handleEditorChange } = useAssessmentEditor({
+    sessionId,
+    problemId: currentProblem?.id ?? "",
+    starterCodeMap: currentProblem
+      ? starterCodeMaps[currentProblem.id] ?? EMPTY_STARTER_CODE_MAP
+      : EMPTY_STARTER_CODE_MAP,
+  });
 
   return (
     <section className="flex h-full min-h-0 flex-1">
@@ -123,7 +111,7 @@ export default function AssessmentBody({
                 type="button"
                 aria-label="Reset code"
                 title="Reset code"
-                onClick={handleResetCode}
+                onClick={handleReset}
                 className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <RotateCcw aria-hidden="true" className="size-4" />

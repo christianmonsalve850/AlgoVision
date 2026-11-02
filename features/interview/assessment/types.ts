@@ -1,6 +1,12 @@
 
 import type { Difficulty } from "@/features/interview/types";
 import type { Duration } from "@/features/interview/types";
+import type {
+  Language,
+  StarterCodeMap,
+} from "@/features/practice/problem-page/code-editor/types/editor";
+
+export type AssessmentStarterCodeMaps = Record<string, StarterCodeMap>;
 
 export type AssessmentSessionProps = {
   sessionId: string;
@@ -8,6 +14,7 @@ export type AssessmentSessionProps = {
   difficulties: Difficulty[];
   problems: ProblemDescription[];
   sessionStartDate: string;
+  starterCodeMaps: AssessmentStarterCodeMaps;
 };
 
 export interface AssessmentNavProps {
@@ -42,8 +49,10 @@ export type DescriptionProps = {
 export type ProblemTab = "description" | "guidelines";
 
 export type AssessmentBodyProps = {
+  sessionId: string;
   problems: ProblemDescription[];
   currentProblemIndex: number;
+  starterCodeMaps: AssessmentStarterCodeMaps;
 }
 
 export type AssessmentFooterProps = {
@@ -51,3 +60,18 @@ export type AssessmentFooterProps = {
   problemCount: number;
   onProblemChange: (index: number) => void;
 };
+
+export interface UseAssessmentEditorReturn {
+  code: string;
+  language: Language;
+  handleLanguageChange: (newLang: Language) => void;
+  handleReset: () => void;
+  handleEditorChange: (value: string | undefined) => void;
+}
+
+export interface UseAssessmentEditorOptions {
+  sessionId: string;
+  problemId: string;
+  starterCodeMap: StarterCodeMap;
+  defaultLanguage?: Language;
+}
