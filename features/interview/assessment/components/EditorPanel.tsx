@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, CodeXml, SquareCheck } from "lucide-react";
 import { MonacoCodeEditor } from "@/components/code-editor/monaco-code-editor";
 import type { EditorPanelProps } from "@/features/interview/assessment/types";
 import {
@@ -12,12 +12,14 @@ import {
 } from "react-resizable-panels";
 import { SUPPORTED_LANGUAGES } from "@/features/code-editor/languages";
 
+type ProblemTab = "testcase" | "output";
 export function EditorPanel({
   code,
   language,
   onCodeChange,
 }: EditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
+  const [problemTab, setProblemTab] = useState<ProblemTab>("testcase");
 
   const panelRef = useRef<PanelImperativeHandle>(null);
 
@@ -79,7 +81,24 @@ export function EditorPanel({
             {/* Console Header */}
             <div className="flex shrink-0 justify-between border-b border-border p-1">
               {/* Tab Buttons go Here */}
-              <div className="group flex items-center"></div>
+              <div className="group flex items-center">
+                <button
+                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent ${problemTab === "output" ? "opacity-50" : ""}`}
+                  onClick={() => setProblemTab("testcase")}
+                >
+                  <SquareCheck className="p-0.5 text-emerald-400" />
+                  Testcase
+                </button>
+                <div className="h-4 border-r border-border transition-opacity duration-150 group-hover:opacity-0" />
+                <button
+                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent ${problemTab === "testcase" ? "opacity-50" : ""}`}
+                  onClick={() => setProblemTab("output")}
+                >
+                  <CodeXml className="p-0.5 text-emerald-400" />
+                  Output
+                </button>
+                
+              </div>
 
               <div className="flex items-center pr-2">
                 <button
