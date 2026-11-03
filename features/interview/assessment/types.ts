@@ -92,3 +92,10 @@ export type TestcaseTabProps = {
   functionParameters: string[];
   functionParameterDefaults: Record<string, unknown>;
 };
+
+export type OutputTabProps = {
+  input: string | null;
+  stdout: string | null;
+  output: string | null;
+  error: string | null;
+};

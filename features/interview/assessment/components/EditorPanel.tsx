@@ -12,6 +12,7 @@ import {
 } from "react-resizable-panels";
 import { SUPPORTED_LANGUAGES } from "@/features/code-editor/languages";
 import TestcaseTab from "@/features/interview/assessment/components/TestcaseTab";
+import OutputTab from "@/features/interview/assessment/components/OutputTab";
 
 type ProblemTab = "testcase" | "output";
 export function EditorPanel({
@@ -127,7 +128,12 @@ export function EditorPanel({
                   functionParameterDefaults={functionParameterDefaults}
                 />
               ) : (
-                null
+                <OutputTab
+                  input={null}
+                  stdout={null}
+                  output={null}
+                  error={null}
+                />
               )}
             </div>
           </Panel>
