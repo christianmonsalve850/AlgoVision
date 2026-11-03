@@ -18,6 +18,8 @@ export function EditorPanel({
   code,
   language,
   onCodeChange,
+  problemId,
+  functionParameters,
 }: EditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [problemTab, setProblemTab] = useState<ProblemTab>("testcase");
@@ -118,7 +120,10 @@ export function EditorPanel({
             {/* Console Content */}
             <div className="min-h-0 flex-1 overflow-hidden p-6">
               {problemTab === "testcase" ? (
-                <TestcaseTab />
+                <TestcaseTab
+                  key={problemId}
+                  functionParameters={functionParameters}
+                />
               ) : (
                 null
               )}

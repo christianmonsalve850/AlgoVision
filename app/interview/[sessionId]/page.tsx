@@ -150,7 +150,9 @@ export default async function InterviewSessionPage({
   const problemIds = sessionProblemRows.map((row) => row.problem_id);
   const { data: problemRows, error: problemError } = await supabase
     .from("problems")
-    .select("id, title, description, difficulty, constraints")
+    .select(
+      "id, title, description, difficulty, constraints, function_parameters",
+    )
     .in("id", problemIds);
 
   if (problemError) {
@@ -182,7 +184,11 @@ export default async function InterviewSessionPage({
         typeof row.description !== "string" ||
         !problemDifficulty ||
         !Array.isArray(row.constraints) ||
-        !row.constraints.every((constraint) => typeof constraint === "string")
+        !row.constraints.every((constraint) => typeof constraint === "string") ||
+        !Array.isArray(row.function_parameters) ||
+        !row.function_parameters.every(
+          (parameter) => typeof parameter === "string",
+        )
       ) {
         throw new Error("An assessment problem had an invalid format.");
       }
@@ -193,6 +199,7 @@ export default async function InterviewSessionPage({
         difficulty: problemDifficulty,
         description: row.description,
         constraints: row.constraints,
+        function_parameters: row.function_parameters,
       } satisfies Omit<ProblemDescription, "examples">;
     });
   const problemsById = new Map(

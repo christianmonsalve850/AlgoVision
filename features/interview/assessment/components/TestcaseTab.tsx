@@ -1,8 +1,11 @@
 
 
 import { Braces } from "lucide-react";
+import { TestcaseTabProps } from "@/features/interview/assessment/types";
 
-export default function TestcaseTab() {
+export default function TestcaseTab({
+  functionParameters,
+}: TestcaseTabProps) {
   return (
     <div className="flex h-full min-h-0 w-full flex-col">
       <div className="mb-3 flex items-center justify-between gap-4">
@@ -15,7 +18,8 @@ export default function TestcaseTab() {
           </h2>
         </div>
         <span className="shrink-0 rounded-full border border-border bg-muted/40 px-2 py-1 font-mono text-[10px] text-muted-foreground">
-          2 parameters
+          {functionParameters.length}{" "}
+          {functionParameters.length === 1 ? "parameter" : "parameters"}
         </span>
       </div>
 
@@ -29,22 +33,29 @@ export default function TestcaseTab() {
         </div>
 
         <div className="grid gap-3 p-3 sm:grid-cols-2">
-          {[1].map((parameter) => (
-            <div key={parameter} className="space-y-1.5">
-              <label
-                htmlFor={`custom-testcase-parameter-${parameter}`}
-                className="font-mono text-[10px] font-medium uppercase tracking-wider text-muted-foreground"
-              >
-                Parameter {String(parameter).padStart(2, "0")}
-              </label>
-              <input
-                id={`custom-testcase-parameter-${parameter}`}
-                type="text"
-                placeholder={`Value for parameter ${parameter}`}
-                className="h-9 w-full rounded-md border border-border bg-background/80 px-3 font-mono text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground/55 focus-visible:border-emerald-500/60 focus-visible:ring-2 focus-visible:ring-emerald-500/20"
-              />
-            </div>
-          ))}
+          {functionParameters.length > 0 ? (
+            functionParameters.map((parameter, index) => (
+              <div key={`${parameter}-${index}`} className="space-y-1.5">
+                <label
+                  htmlFor={`custom-testcase-parameter-${index}`}
+                  className="font-mono text-xs font-medium text-muted-foreground"
+                >
+                  {parameter}
+                </label>
+                <input
+                  id={`custom-testcase-parameter-${index}`}
+                  type="text"
+                  aria-label={`Value for ${parameter}`}
+                  placeholder={`Value for ${parameter}`}
+                  className="h-9 w-full rounded-md border border-border bg-background/80 px-3 font-mono text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground/55 focus-visible:border-emerald-500/60 focus-visible:ring-2 focus-visible:ring-emerald-500/20"
+                />
+              </div>
+            ))
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              This function has no parameters.
+            </p>
+          )}
         </div>
       </div>
     </div>

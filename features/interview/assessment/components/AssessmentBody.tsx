@@ -133,7 +133,13 @@ export default function AssessmentBody({
             </div>
           </div>
           <div className="min-h-0 flex-1">
-            <EditorPanel code={code} language={language} onCodeChange={handleEditorChange} />
+            <EditorPanel
+              code={code}
+              language={language}
+              onCodeChange={handleEditorChange}
+              problemId={currentProblem?.id ?? ""}
+              functionParameters={currentProblem?.function_parameters ?? []}
+            />
           </div>
         </Panel>
       </Group>

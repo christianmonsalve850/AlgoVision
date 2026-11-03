@@ -30,6 +30,7 @@ export type ProblemDescription = {
   title: string;
   difficulty: Difficulty;
   description: string;
+  function_parameters: string[];
   examples: ProblemExample[];
   constraints: string[];
 };
@@ -79,6 +80,12 @@ export interface UseAssessmentEditorOptions {
 
 export type EditorPanelProps = {
   code: string;
-  language: Language; 
+  language: Language;
   onCodeChange: (value: string | undefined) => void;
-}
+  problemId: string;
+  functionParameters: string[];
+};
+
+export type TestcaseTabProps = {
+  functionParameters: string[];
+};
