@@ -138,7 +138,10 @@ export default function AssessmentBody({
               language={language}
               onCodeChange={handleEditorChange}
               problemId={currentProblem?.id ?? ""}
-              functionParameters={currentProblem?.function_parameters ?? []}
+              functionParameters={currentProblem?.functionParameters ?? []}
+              functionParameterDefaults={
+                currentProblem?.functionParameterDefaults ?? {}
+              }
             />
           </div>
         </Panel>

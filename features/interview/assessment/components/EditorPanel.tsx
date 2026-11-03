@@ -20,6 +20,7 @@ export function EditorPanel({
   onCodeChange,
   problemId,
   functionParameters,
+  functionParameterDefaults,
 }: EditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [problemTab, setProblemTab] = useState<ProblemTab>("testcase");
@@ -123,6 +124,7 @@ export function EditorPanel({
                 <TestcaseTab
                   key={problemId}
                   functionParameters={functionParameters}
+                  functionParameterDefaults={functionParameterDefaults}
                 />
               ) : (
                 null

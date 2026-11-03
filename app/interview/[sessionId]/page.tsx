@@ -21,6 +21,10 @@ function isDifficulty(value: unknown): value is Difficulty {
   return validDifficulties.some((difficulty) => difficulty === value);
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 function parseDifficulties(value: unknown): Difficulty[] | null {
   let parsedValue = value;
 
@@ -151,7 +155,7 @@ export default async function InterviewSessionPage({
   const { data: problemRows, error: problemError } = await supabase
     .from("problems")
     .select(
-      "id, title, description, difficulty, constraints, function_parameters",
+      "id, title, description, difficulty, constraints, function_parameters, function_parameter_defaults",
     )
     .in("id", problemIds);
 
@@ -188,7 +192,8 @@ export default async function InterviewSessionPage({
         !Array.isArray(row.function_parameters) ||
         !row.function_parameters.every(
           (parameter) => typeof parameter === "string",
-        )
+        ) ||
+        !isRecord(row.function_parameter_defaults)
       ) {
         throw new Error("An assessment problem had an invalid format.");
       }
@@ -199,7 +204,8 @@ export default async function InterviewSessionPage({
         difficulty: problemDifficulty,
         description: row.description,
         constraints: row.constraints,
-        function_parameters: row.function_parameters,
+        functionParameters: row.function_parameters,
+        functionParameterDefaults: row.function_parameter_defaults,
       } satisfies Omit<ProblemDescription, "examples">;
     });
   const problemsById = new Map(

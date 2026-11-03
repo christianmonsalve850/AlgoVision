@@ -5,6 +5,7 @@ import { TestcaseTabProps } from "@/features/interview/assessment/types";
 
 export default function TestcaseTab({
   functionParameters,
+  functionParameterDefaults,
 }: TestcaseTabProps) {
   return (
     <div className="flex h-full min-h-0 w-full flex-col">
@@ -46,8 +47,10 @@ export default function TestcaseTab({
                   id={`custom-testcase-parameter-${index}`}
                   type="text"
                   aria-label={`Value for ${parameter}`}
-                  placeholder={`Value for ${parameter}`}
-                  className="h-9 w-full rounded-md border border-border bg-background/80 px-3 font-mono text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground/55 focus-visible:border-emerald-500/60 focus-visible:ring-2 focus-visible:ring-emerald-500/20"
+                  defaultValue={JSON.stringify(
+                    functionParameterDefaults[parameter],
+                  )}
+                  className="h-9 w-full rounded-md border border-border bg-background/80 px-3 font-mono text-xs text-foreground outline-none transition-colors focus-visible:border-emerald-500/60 focus-visible:ring-2 focus-visible:ring-emerald-500/20"
                 />
               </div>
             ))

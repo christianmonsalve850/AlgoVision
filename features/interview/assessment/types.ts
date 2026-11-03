@@ -30,7 +30,8 @@ export type ProblemDescription = {
   title: string;
   difficulty: Difficulty;
   description: string;
-  function_parameters: string[];
+  functionParameters: string[];
+  functionParameterDefaults: Record<string, unknown>;
   examples: ProblemExample[];
   constraints: string[];
 };
@@ -84,8 +85,10 @@ export type EditorPanelProps = {
   onCodeChange: (value: string | undefined) => void;
   problemId: string;
   functionParameters: string[];
+  functionParameterDefaults: Record<string, unknown>;
 };
 
 export type TestcaseTabProps = {
   functionParameters: string[];
+  functionParameterDefaults: Record<string, unknown>;
 };
