@@ -11,6 +11,7 @@ import {
   PanelImperativeHandle,
 } from "react-resizable-panels";
 import { SUPPORTED_LANGUAGES } from "@/features/code-editor/languages";
+import TestcaseTab from "@/features/interview/assessment/components/TestcaseTab";
 
 type ProblemTab = "testcase" | "output";
 export function EditorPanel({
@@ -97,7 +98,6 @@ export function EditorPanel({
                   <CodeXml className="p-0.5 text-emerald-400" />
                   Output
                 </button>
-                
               </div>
 
               <div className="flex items-center pr-2">
@@ -114,6 +114,14 @@ export function EditorPanel({
                   {isOpenConsole ? <ChevronDown /> : <ChevronUp />}
                 </button>
               </div>
+            </div>
+            {/* Console Content */}
+            <div className="min-h-0 flex-1 overflow-hidden p-6">
+              {problemTab === "testcase" ? (
+                <TestcaseTab />
+              ) : (
+                null
+              )}
             </div>
           </Panel>
         </Group>
