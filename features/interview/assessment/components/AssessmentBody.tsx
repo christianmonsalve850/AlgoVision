@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import { Lock, Settings, RotateCcw } from "lucide-react";
-import { MonacoCodeEditor } from "@/components/code-editor/monaco-code-editor";
-import { SUPPORTED_LANGUAGES } from "@/features/code-editor/languages";
 import Guidelines from "@/features/interview/assessment/components/Guidelines";
 import Description from "@/features/interview/assessment/components/Description";
 import type {
@@ -12,6 +10,7 @@ import type {
   AssessmentBodyProps,
 } from "@/features/interview/assessment/types";
 import { useAssessmentEditor } from "@/features/interview/assessment/hooks/use-assessment-editor";
+import { EditorPanel } from "@/features/interview/assessment/components/EditorPanel";
 
 const EMPTY_STARTER_CODE_MAP = {};
 
@@ -134,12 +133,7 @@ export default function AssessmentBody({
             </div>
           </div>
           <div className="min-h-0 flex-1">
-            <MonacoCodeEditor
-              defaultLanguage={SUPPORTED_LANGUAGES[language].monacoLanguage}
-              language={SUPPORTED_LANGUAGES[language].monacoLanguage}
-              value={code}
-              onChange={handleEditorChange}
-            />
+            <EditorPanel code={code} language={language} onCodeChange={handleEditorChange} />
           </div>
         </Panel>
       </Group>

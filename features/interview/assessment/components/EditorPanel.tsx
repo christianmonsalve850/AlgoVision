@@ -1,0 +1,104 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { MonacoCodeEditor } from "@/components/code-editor/monaco-code-editor";
+import type { EditorPanelProps } from "@/features/interview/assessment/types";
+import {
+  Group,
+  Separator,
+  Panel,
+  PanelImperativeHandle,
+} from "react-resizable-panels";
+import { SUPPORTED_LANGUAGES } from "@/features/code-editor/languages";
+
+export function EditorPanel({
+  code,
+  language,
+  onCodeChange,
+}: EditorPanelProps) {
+  const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
+
+  const panelRef = useRef<PanelImperativeHandle>(null);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (panel) {
+      if (isOpenConsole) {
+        if (panel.isCollapsed()) {
+          panel.expand();
+        }
+        panel.resize(360);
+      } else {
+        if (!panel.isCollapsed()) {
+          panel.collapse();
+        }
+      }
+    }
+  }, [isOpenConsole]);
+
+  return (
+    <section className="flex h-full min-h-0 flex-col bg-background overflow-y-auto">
+      <div className="flex flex-1 min-h-0 flex-col gap-4">
+        <Group
+          orientation="vertical"
+          defaultLayout={{
+            "code-editor": 94.5,
+            console: 5.5,
+          }}
+        >
+          {/* Code Editor */}
+          <Panel id="code-editor" defaultSize={70}>
+            <MonacoCodeEditor
+              defaultLanguage={SUPPORTED_LANGUAGES[language].monacoLanguage}
+              language={SUPPORTED_LANGUAGES[language].monacoLanguage}
+              value={code}
+              onChange={onCodeChange}
+            />
+          </Panel>
+
+          {/* Resize Handle */}
+          <Separator className="group relative flex w-full h-2 items-center justify-center bg-transparent transition-colors hover:bg-zinc-800/20 active:bg-zinc-800/40 border-y border-border">
+            <div className="h-1 w-8 rounded-full bg-border/60 transition-colors group-hover:bg-emerald-400 group-active:bg-emerald-500" />
+          </Separator>
+
+          {/* Console */}
+          <Panel
+            panelRef={panelRef}
+            id="console"
+            collapsible
+            collapsedSize="40px"
+            minSize="40px"
+            maxSize="400px"
+            defaultSize="300px"
+            onResize={(size) => {
+              setIsOpenConsole(size.inPixels > 40);
+            }}
+            className="flex min-h-0 flex-col"
+          >
+            {/* Console Header */}
+            <div className="flex shrink-0 justify-between border-b border-border p-1">
+              {/* Tab Buttons go Here */}
+              <div className="group flex items-center"></div>
+
+              <div className="flex items-center pr-2">
+                <button
+                  type="button"
+                  aria-label={
+                    isOpenConsole ? "Collapse console" : "Expand console"
+                  }
+                  aria-expanded={isOpenConsole}
+                  aria-controls="console"
+                  className="rounded-sm text-muted-foreground hover:bg-accent"
+                  onClick={() => setIsOpenConsole(!isOpenConsole)}
+                >
+                  {isOpenConsole ? <ChevronDown /> : <ChevronUp />}
+                </button>
+              </div>
+            </div>
+          </Panel>
+        </Group>
+      </div>
+    </section>
+  );
+}

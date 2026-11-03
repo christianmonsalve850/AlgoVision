@@ -76,3 +76,9 @@ export interface UseAssessmentEditorOptions {
   language: Language;
   starterCodeMap: StarterCodeMap;
 }
+
+export type EditorPanelProps = {
+  code: string;
+  language: Language; 
+  onCodeChange: (value: string | undefined) => void;
+}
