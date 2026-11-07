@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Braces } from "lucide-react";
 import type { TestcaseTabProps } from "@/features/interview/assessment/types";
 
@@ -12,6 +12,8 @@ export default function TestcaseTab({
   onRunTestCase,
   onTestCaseChange,
   isRunning,
+  runRequest,
+  isHidden,
 }: TestcaseTabProps) {
   const [inputValues, setInputValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(
@@ -39,7 +41,7 @@ export default function TestcaseTab({
     onTestCaseChange();
   };
 
-  const runTestCase = () => {
+  const runTestCase = useCallback(() => {
     try {
       const input = Object.fromEntries(
         functionParameters.map((parameter) => [
@@ -57,10 +59,22 @@ export default function TestcaseTab({
           : "Could not read the test case.",
       );
     }
-  };
+  }, [expectedOutput, functionParameters, inputValues, onRunTestCase]);
+
+  const lastHandledRunRequest = useRef(0);
+  useEffect(() => {
+    if (runRequest === 0 || lastHandledRunRequest.current === runRequest) {
+      return;
+    }
+
+    lastHandledRunRequest.current = runRequest;
+    runTestCase();
+  }, [runRequest, runTestCase]);
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col overflow-y-auto">
+    <div
+      className={`${isHidden ? "hidden" : "flex"} h-full min-h-0 w-full flex-col overflow-y-auto`}
+    >
       <div className="mb-2 flex shrink-0 items-center justify-between gap-4">
         <div>
           <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -138,14 +152,6 @@ export default function TestcaseTab({
           {validationError}
         </p>
       )}
-      <button
-        type="button"
-        disabled={isRunning}
-        onClick={runTestCase}
-        className="mt-2 self-start rounded-md bg-foreground px-3 py-1.5 text-xs font-semibold text-background transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {isRunning ? "Running..." : "Run code"}
-      </button>
     </div>
   );
 }

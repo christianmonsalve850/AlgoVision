@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "ignoreDeprecations": "5.0"
+  },
+  "include": [
+    "features/interview/assessment/components/AssessmentSession.tsx",
+    "features/interview/assessment/components/AssessmentBody.tsx",
+    "features/interview/assessment/components/EditorPanel.tsx",
+    "features/interview/assessment/components/Footer.tsx",
+    "features/interview/assessment/components/OutputTab.tsx",
+    "features/interview/assessment/components/TestcaseTab.tsx",
+    "features/interview/assessment/types.ts",
+    "features/interview/assessment/utils/format-value.ts",
+    "lib/docker-runner/types.ts"
+  ],
+  "exclude": [".next", "node_modules"]
+}

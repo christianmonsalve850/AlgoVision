@@ -1,10 +1,13 @@
 import { ChevronLeft, ChevronRight, Send, Play } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import type { AssessmentFooterProps } from "@/features/interview/assessment/types";
 
 export default function Footer({
   currentProblemIndex,
   problemCount,
   onProblemChange,
+  onRun,
+  isRunning,
 }: AssessmentFooterProps) {
   const canGoToPreviousProblem = currentProblemIndex > 0;
   const canGoToNextProblem = currentProblemIndex < problemCount - 1;
@@ -41,9 +44,15 @@ export default function Footer({
       <div className="flex items-center justify-self-end gap-4">
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted"
+          disabled={isRunning}
+          onClick={onRun}
+          className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <Play className="size-3.5" />
+          {isRunning ? (
+            <Spinner className="size-3.5" />
+          ) : (
+            <Play className="size-3.5" />
+          )}
           Run
         </button>
         <button

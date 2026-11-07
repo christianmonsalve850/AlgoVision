@@ -31,6 +31,8 @@ export function EditorPanel({
   problemId,
   functionParameters,
   functionParameterDefaults,
+  runRequest,
+  onExecutionRunningChange,
 }: EditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [problemTab, setProblemTab] = useState<ProblemTab>("testcase");
@@ -48,6 +50,7 @@ export function EditorPanel({
     setIsOpenConsole(true);
     setProblemTab("output");
     setIsRunning(true);
+    onExecutionRunningChange(true);
     setExecutionError(null);
     setExecutionOutput({
       input,
@@ -74,6 +77,7 @@ export function EditorPanel({
       );
     } finally {
       setIsRunning(false);
+      onExecutionRunningChange(false);
     }
   };
 
@@ -175,17 +179,18 @@ export function EditorPanel({
             </div>
             {/* Console Content */}
             <div className="min-h-0 flex-1 overflow-hidden p-3">
-              {problemTab === "testcase" ? (
-                <TestcaseTab
-                  functionParameters={functionParameters}
-                  functionParameterDefaults={functionParameterDefaults}
-                  onRunTestCase={(input, expectedOutput) => {
-                    void runTestCase(input, expectedOutput);
-                  }}
-                  onTestCaseChange={clearExecutionOutput}
-                  isRunning={isRunning}
-                />
-              ) : (
+              <TestcaseTab
+                functionParameters={functionParameters}
+                functionParameterDefaults={functionParameterDefaults}
+                onRunTestCase={(input, expectedOutput) => {
+                  void runTestCase(input, expectedOutput);
+                }}
+                onTestCaseChange={clearExecutionOutput}
+                isRunning={isRunning}
+                runRequest={runRequest}
+                isHidden={problemTab !== "testcase"}
+              />
+              {problemTab === "output" && (
                 <OutputTab
                   input={executionOutput?.input ?? null}
                   expectedOutput={

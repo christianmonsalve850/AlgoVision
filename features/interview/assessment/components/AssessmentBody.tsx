@@ -20,6 +20,8 @@ export default function AssessmentBody({
   problems,
   currentProblemIndex,
   starterCodeMaps,
+  runRequest,
+  onExecutionRunningChange,
 }: AssessmentBodyProps) {
   const [problemTab, setProblemTab] = useState<ProblemTab>("description");
 
@@ -143,6 +145,8 @@ export default function AssessmentBody({
               functionParameterDefaults={
                 currentProblem?.functionParameterDefaults ?? {}
               }
+              runRequest={runRequest}
+              onExecutionRunningChange={onExecutionRunningChange}
             />
           </div>
         </Panel>

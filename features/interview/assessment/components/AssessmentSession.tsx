@@ -23,6 +23,8 @@ export default function AssessmentSession({
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [isAbandoning, setIsAbandoning] = useState(false);
   const [abandonError, setAbandonError] = useState<string | null>(null);
+  const [runRequest, setRunRequest] = useState(0);
+  const [isExecutionRunning, setIsExecutionRunning] = useState(false);
 
   const abandonAssessment = async () => {
     if (isAbandoning) {
@@ -60,11 +62,15 @@ export default function AssessmentSession({
         problems={problems}
         currentProblemIndex={currentProblemIndex}
         starterCodeMaps={starterCodeMaps}
+        runRequest={runRequest}
+        onExecutionRunningChange={setIsExecutionRunning}
       />
       <Footer
         currentProblemIndex={currentProblemIndex}
         problemCount={problems.length}
         onProblemChange={setCurrentProblemIndex}
+        onRun={() => setRunRequest((request) => request + 1)}
+        isRunning={isExecutionRunning}
       />
       <QuitAssessmentModal
         open={quitOpen}

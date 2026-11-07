@@ -57,12 +57,16 @@ export type AssessmentBodyProps = {
   problems: ProblemDescription[];
   currentProblemIndex: number;
   starterCodeMaps: AssessmentStarterCodeMaps;
+  runRequest: number;
+  onExecutionRunningChange: (isRunning: boolean) => void;
 }
 
 export type AssessmentFooterProps = {
   currentProblemIndex: number;
   problemCount: number;
   onProblemChange: (index: number) => void;
+  onRun: () => void;
+  isRunning: boolean;
 };
 
 export interface UseAssessmentEditorReturn {
@@ -86,6 +90,8 @@ export type EditorPanelProps = {
   problemId: string;
   functionParameters: string[];
   functionParameterDefaults: Record<string, unknown>;
+  runRequest: number;
+  onExecutionRunningChange: (isRunning: boolean) => void;
 };
 
 export type TestcaseTabProps = {
@@ -97,6 +103,8 @@ export type TestcaseTabProps = {
   ) => void;
   onTestCaseChange: () => void;
   isRunning: boolean;
+  runRequest: number;
+  isHidden: boolean;
 };
 
 export type OutputTabProps = {
