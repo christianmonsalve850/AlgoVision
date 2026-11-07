@@ -145,6 +145,9 @@ export default function AssessmentBody({
               functionParameterDefaults={
                 currentProblem?.functionParameterDefaults ?? {}
               }
+              defaultParameterExpectedOutput={
+                currentProblem?.defaultParameterExpectedOutput
+              }
               runRequest={runRequest}
               onExecutionRunningChange={onExecutionRunningChange}
             />

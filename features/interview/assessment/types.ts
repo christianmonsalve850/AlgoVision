@@ -32,6 +32,7 @@ export type ProblemDescription = {
   description: string;
   functionParameters: string[];
   functionParameterDefaults: Record<string, unknown>;
+  defaultParameterExpectedOutput: unknown;
   examples: ProblemExample[];
   constraints: string[];
 };
@@ -90,6 +91,7 @@ export type EditorPanelProps = {
   problemId: string;
   functionParameters: string[];
   functionParameterDefaults: Record<string, unknown>;
+  defaultParameterExpectedOutput: unknown;
   runRequest: number;
   onExecutionRunningChange: (isRunning: boolean) => void;
 };
@@ -97,6 +99,7 @@ export type EditorPanelProps = {
 export type TestcaseTabProps = {
   functionParameters: string[];
   functionParameterDefaults: Record<string, unknown>;
+  defaultParameterExpectedOutput: unknown;
   onRunTestCase: (
     input: Record<string, unknown>,
     expectedOutput: unknown,

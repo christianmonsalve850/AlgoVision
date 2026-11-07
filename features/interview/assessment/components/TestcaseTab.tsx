@@ -9,6 +9,7 @@ import type { TestcaseTabProps } from "@/features/interview/assessment/types";
 export default function TestcaseTab({
   functionParameters,
   functionParameterDefaults,
+  defaultParameterExpectedOutput,
   onRunTestCase,
   onTestCaseChange,
   isRunning,
@@ -23,7 +24,9 @@ export default function TestcaseTab({
       ]),
     ),
   );
-  const [expectedOutput, setExpectedOutput] = useState("");
+  const [expectedOutput, setExpectedOutput] = useState(
+    () => JSON.stringify(defaultParameterExpectedOutput) ?? "",
+  );
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const updateInput = (parameter: string, value: string) => {

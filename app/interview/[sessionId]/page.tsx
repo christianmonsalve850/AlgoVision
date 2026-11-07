@@ -155,7 +155,7 @@ export default async function InterviewSessionPage({
   const { data: problemRows, error: problemError } = await supabase
     .from("problems")
     .select(
-      "id, title, description, difficulty, constraints, function_parameters, function_parameter_defaults",
+      "id, title, description, difficulty, constraints, function_parameters, function_parameter_defaults, default_parameter_expected_output",
     )
     .in("id", problemIds);
 
@@ -206,6 +206,8 @@ export default async function InterviewSessionPage({
         constraints: row.constraints,
         functionParameters: row.function_parameters,
         functionParameterDefaults: row.function_parameter_defaults,
+        defaultParameterExpectedOutput:
+          row.default_parameter_expected_output,
       } satisfies Omit<ProblemDescription, "examples">;
     });
   const problemsById = new Map(

@@ -31,6 +31,7 @@ export function EditorPanel({
   problemId,
   functionParameters,
   functionParameterDefaults,
+  defaultParameterExpectedOutput,
   runRequest,
   onExecutionRunningChange,
 }: EditorPanelProps) {
@@ -211,6 +212,9 @@ export function EditorPanel({
               <TestcaseTab
                 functionParameters={functionParameters}
                 functionParameterDefaults={functionParameterDefaults}
+                defaultParameterExpectedOutput={
+                  defaultParameterExpectedOutput
+                }
                 onRunTestCase={(input, expectedOutput) => {
                   void runTestCase(input, expectedOutput);
                 }}
