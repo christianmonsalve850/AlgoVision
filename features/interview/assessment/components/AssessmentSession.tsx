@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AssessmentNav } from "@/features/interview/assessment/components/AssessmentNav";
 import QuitAssessmentModal from "@/features/interview/assessment/components/QuitAssessmentModal";
 import AssessmentBody from "@/features/interview/assessment/components/AssessmentBody";
 import type { AssessmentSessionProps } from "@/features/interview/assessment/types";
 import Footer from "@/features/interview/assessment/components/Footer";
-import { requestAbandonSession } from "@/features/interview/services/request-abandon-session";
+import {
+  requestAbandonSession,
+  requestTimeoutSession,
+} from "@/features/interview/services/request-abandon-session";
 
 export default function AssessmentSession({
   sessionId,
@@ -48,6 +51,14 @@ export default function AssessmentSession({
     }
   };
 
+  const timeoutAssessment = useCallback(async () => {
+    try {
+      await requestTimeoutSession(sessionId);
+    } catch (error) {
+      console.error("Failed to mark assessment session as timed out:", error);
+    }
+  }, [sessionId]);
+
   return (
     <div className="flex h-dvh min-h-0 flex-col overflow-hidden">
       <AssessmentNav
@@ -55,6 +66,7 @@ export default function AssessmentSession({
         initialTimeMinutes={duration}
         difficulties={difficulties}
         sessionStartDate={sessionStartDate}
+        onExpire={timeoutAssessment}
       />
       <AssessmentBody
         sessionId={sessionId}

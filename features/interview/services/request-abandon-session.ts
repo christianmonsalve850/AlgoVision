@@ -2,10 +2,17 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-export async function requestAbandonSession(sessionId: string): Promise<void> {
+async function requestSessionStatus(
+  sessionId: string,
+  status: "abandoned" | "timed_out",
+): Promise<void> {
   const response = await fetch(
     `/api/v1/sessions/${encodeURIComponent(sessionId)}`,
-    { method: "PATCH" },
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    },
   );
   const responseBody = await response.text();
 
@@ -24,7 +31,15 @@ export async function requestAbandonSession(sessionId: string): Promise<void> {
     throw new Error(
       typeof errorMessage === "string"
         ? errorMessage
-        : `Failed to abandon assessment session (HTTP ${response.status}).`,
+      : `Failed to update assessment session status (HTTP ${response.status}).`,
     );
   }
+}
+
+export async function requestAbandonSession(sessionId: string): Promise<void> {
+  await requestSessionStatus(sessionId, "abandoned");
+}
+
+export async function requestTimeoutSession(sessionId: string): Promise<void> {
+  await requestSessionStatus(sessionId, "timed_out");
 }

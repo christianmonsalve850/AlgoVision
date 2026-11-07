@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type CountdownTimerProps = {
   initialTimeMinutes: number;
   sessionStartDate: string;
+  onExpire: () => void;
 };
 
 export default function CountdownTimer({
   initialTimeMinutes,
   sessionStartDate,
+  onExpire,
 }: CountdownTimerProps) {
   if (!Number.isFinite(initialTimeMinutes) || initialTimeMinutes < 0) {
     throw new RangeError("initialTimeMinutes must be a non-negative number");
@@ -24,6 +26,7 @@ export default function CountdownTimer({
 
   const [remainingTimeSeconds, setRemainingTimeSeconds] =
     useState(initialTimeSeconds);
+  const expirationHandled = useRef(false);
   const endTime = sessionStartTime + initialTimeSeconds * 1000;
 
   useEffect(() => {
@@ -37,6 +40,10 @@ export default function CountdownTimer({
       if (nextRemainingTimeSeconds === 0) {
         if (intervalId !== undefined) {
           window.clearInterval(intervalId);
+        }
+        if (!expirationHandled.current) {
+          expirationHandled.current = true;
+          onExpire();
         }
       }
     };
@@ -53,7 +60,7 @@ export default function CountdownTimer({
         window.clearInterval(intervalId);
       }
     };
-  }, [endTime, initialTimeSeconds]);
+  }, [endTime, initialTimeSeconds, onExpire]);
 
   const minutes = Math.floor(remainingTimeSeconds / 60)
     .toString()

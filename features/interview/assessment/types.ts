@@ -23,6 +23,7 @@ export interface AssessmentNavProps {
     initialTimeMinutes: number;
     difficulties: Difficulty[];
     sessionStartDate: string;
+    onExpire: () => void;
 }
 
 export type ProblemDescription = {

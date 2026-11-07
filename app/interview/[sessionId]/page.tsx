@@ -88,6 +88,35 @@ export default async function InterviewSessionPage({
     notFound();
   }
 
+  const sessionStartTime = Date.parse(session.started_at);
+  const sessionDurationMinutes = Number(session.duration);
+  const sessionExpiryTime =
+    sessionStartTime + sessionDurationMinutes * 60_000;
+
+  if (
+    session.status === "in_progress" &&
+    Number.isFinite(sessionStartTime) &&
+    Number.isFinite(sessionDurationMinutes) &&
+    sessionDurationMinutes > 0 &&
+    Date.now() >= sessionExpiryTime
+  ) {
+    const { error: timeoutError } = await supabase
+      .from("sessions")
+      .update({ status: "timed_out" })
+      .eq("id", session.id)
+      .eq("user_id", user.id)
+      .eq("status", "in_progress");
+
+    if (timeoutError) {
+      throw new Error(
+        "Failed to mark expired assessment session as timed out.",
+        { cause: timeoutError },
+      );
+    }
+
+    notFound();
+  }
+
   if (session.status !== "in_progress") {
     notFound();
   }
