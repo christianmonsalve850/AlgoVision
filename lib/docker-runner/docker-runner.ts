@@ -5,6 +5,8 @@ import type {
   ExecutionResult,
   GradeExecutionPayload,
   GradeExecutionResult,
+  SingleTestExecutionPayload,
+  SingleTestExecutionResult,
   TraceCaseResult,
   TraceExecutionPayload,
 } from "@/lib/docker-runner/types";
@@ -334,6 +336,10 @@ export function executePython(
 export function executePython(
   internalPayload: GradeExecutionPayload,
 ): Promise<GradeExecutionResult>;
+
+export function executePython(
+  internalPayload: SingleTestExecutionPayload,
+): Promise<SingleTestExecutionResult>;
 
 export function executePython(
   internalPayload: ExecutionPayload,

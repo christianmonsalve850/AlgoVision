@@ -134,6 +134,7 @@ export default function AssessmentBody({
           </div>
           <div className="min-h-0 flex-1">
             <EditorPanel
+              key={currentProblem?.id}
               code={code}
               language={language}
               onCodeChange={handleEditorChange}

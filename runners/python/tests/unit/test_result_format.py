@@ -1,4 +1,61 @@
-from harness import run_submission
+from harness import run_single_test, run_submission
+from runner import run_once
+
+
+def test_single_test_returns_only_one_case_result():
+    result = run_single_test(
+        source_code=(
+            "class Solution:\n"
+            "    def solve(self, value):\n"
+            "        return value + 1\n"
+        ),
+        test_case={"input": {"value": 41}, "expectedOutput": 42},
+        class_name="Solution",
+        function_name="solve",
+    )
+
+    assert result == {
+        "status": "passed",
+        "correct": True,
+        "actualOutput": 42,
+        "stdout": "",
+    }
+
+
+def test_single_test_reports_incorrect_output_without_suite_grade():
+    result = run_once(
+        {
+            "operation": "test",
+            "sourceCode": "class Solution:\n    def solve(self):\n        return 41\n",
+            "testCase": {"input": {}, "expectedOutput": 42},
+            "className": "Solution",
+            "functionName": "solve",
+        }
+    )
+
+    assert result == {
+        "status": "failed",
+        "correct": False,
+        "actualOutput": 41,
+        "stdout": "",
+    }
+
+
+def test_single_test_reports_runtime_errors_without_trace_data():
+    result = run_single_test(
+        source_code="class Solution:\n    def solve(self):\n        raise ValueError('bad input')\n",
+        test_case={"input": {}, "expectedOutput": 42},
+        class_name="Solution",
+        function_name="solve",
+    )
+
+    assert result == {
+        "status": "error",
+        "correct": False,
+        "stdout": "",
+        "error": "bad input",
+        "errorType": "ValueError",
+    }
 
 
 def test_returns_expected_result_shape_and_preserves_database_case_id(

@@ -3,7 +3,7 @@ import subprocess
 import sys
 from typing import Any
 
-from harness import run_submission, run_traces
+from harness import run_single_test, run_submission, run_traces
 
 
 def run_once(payload: dict[str, Any]) -> dict[str, Any]:
@@ -21,6 +21,14 @@ def run_once(payload: dict[str, Any]) -> dict[str, Any]:
         return run_submission(
             source_code=payload.get("sourceCode"),
             test_cases=payload.get("testCases"),
+            class_name=payload.get("className"),
+            function_name=payload.get("functionName"),
+        )
+
+    if operation == "test":
+        return run_single_test(
+            source_code=payload.get("sourceCode"),
+            test_case=payload.get("testCase"),
             class_name=payload.get("className"),
             function_name=payload.get("functionName"),
         )

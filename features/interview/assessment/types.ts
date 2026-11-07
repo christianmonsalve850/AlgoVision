@@ -91,11 +91,19 @@ export type EditorPanelProps = {
 export type TestcaseTabProps = {
   functionParameters: string[];
   functionParameterDefaults: Record<string, unknown>;
+  onRunTestCase: (
+    input: Record<string, unknown>,
+    expectedOutput: unknown,
+  ) => void;
+  onTestCaseChange: () => void;
+  isRunning: boolean;
 };
 
 export type OutputTabProps = {
   input: string | null;
+  expectedOutput: string | null;
   stdout: string | null;
   output: string | null;
   error: string | null;
+  correct: boolean | null;
 };

@@ -16,6 +16,12 @@ const outputSections = [
     emptyMessage: "Program output will appear here.",
   },
   {
+    label: "Expected output",
+    key: "expectedOutput",
+    Icon: ArrowDownToLine,
+    emptyMessage: "Expected output will appear here.",
+  },
+  {
     label: "Output",
     key: "output",
     Icon: ArrowDownToLine,
@@ -25,11 +31,13 @@ const outputSections = [
 
 export default function OutputTab({
   input,
+  expectedOutput,
   stdout,
   output,
   error,
+  correct,
 }: OutputTabProps) {
-  const values = { input, stdout, output };
+  const values = { input, stdout, expectedOutput, output };
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col">
@@ -42,9 +50,18 @@ export default function OutputTab({
             Execution output
           </h2>
         </div>
-        <span className="shrink-0 rounded-full border border-border bg-muted/40 px-2 py-1 font-mono text-[10px] text-muted-foreground">
-          read only
-        </span>
+        {correct !== null && (
+          <span
+            role="status"
+            className={`shrink-0 rounded-full border px-2 py-1 font-mono text-[10px] ${
+              correct
+                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                : "border-rose-500/30 bg-rose-500/10 text-rose-700 dark:text-rose-300"
+            }`}
+          >
+            {correct ? "Correct" : "Incorrect"}
+          </span>
+        )}
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto">

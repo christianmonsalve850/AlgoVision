@@ -13,8 +13,21 @@ import {
 import { SUPPORTED_LANGUAGES } from "@/features/code-editor/languages";
 import TestcaseTab from "@/features/interview/assessment/components/TestcaseTab";
 import OutputTab from "@/features/interview/assessment/components/OutputTab";
+import { requestRunTestCase } from "@/features/interview/assessment/services/request-run-test-case";
+import type { SingleTestExecutionResult } from "@/lib/docker-runner/types";
 
 type ProblemTab = "testcase" | "output";
+
+interface InterviewExecutionOutput {
+  input: string;
+  expectedOutput: string;
+  result: SingleTestExecutionResult | null;
+}
+
+function formatValue(value: unknown): string {
+  return JSON.stringify(value, null, 2) ?? String(value);
+}
+
 export function EditorPanel({
   code,
   language,
@@ -25,8 +38,53 @@ export function EditorPanel({
 }: EditorPanelProps) {
   const [isOpenConsole, setIsOpenConsole] = useState<boolean>(false);
   const [problemTab, setProblemTab] = useState<ProblemTab>("testcase");
+  const [isRunning, setIsRunning] = useState(false);
+  const [executionOutput, setExecutionOutput] =
+    useState<InterviewExecutionOutput | null>(null);
+  const [executionError, setExecutionError] = useState<string | null>(null);
 
   const panelRef = useRef<PanelImperativeHandle>(null);
+
+  const runTestCase = async (
+    input: Record<string, unknown>,
+    expectedOutput: unknown,
+  ) => {
+    setIsOpenConsole(true);
+    setProblemTab("output");
+    setIsRunning(true);
+    setExecutionError(null);
+    setExecutionOutput({
+      input: formatValue(input),
+      expectedOutput: formatValue(expectedOutput),
+      result: null,
+    });
+
+    try {
+      const result = await requestRunTestCase({
+        problemId,
+        language,
+        sourceCode: code,
+        input,
+        expectedOutput,
+      });
+      setExecutionOutput({
+        input: formatValue(input),
+        expectedOutput: formatValue(expectedOutput),
+        result,
+      });
+    } catch (error) {
+      setExecutionError(
+        error instanceof Error ? error.message : "Failed to run test case.",
+      );
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  const clearExecutionOutput = () => {
+    setExecutionOutput(null);
+    setExecutionError(null);
+  };
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -123,16 +181,35 @@ export function EditorPanel({
             <div className="min-h-0 flex-1 overflow-hidden p-6">
               {problemTab === "testcase" ? (
                 <TestcaseTab
-                  key={problemId}
                   functionParameters={functionParameters}
                   functionParameterDefaults={functionParameterDefaults}
+                  onRunTestCase={(input, expectedOutput) => {
+                    void runTestCase(input, expectedOutput);
+                  }}
+                  onTestCaseChange={clearExecutionOutput}
+                  isRunning={isRunning}
                 />
               ) : (
                 <OutputTab
-                  input={null}
-                  stdout={null}
-                  output={null}
-                  error={null}
+                  input={executionOutput?.input ?? null}
+                  expectedOutput={executionOutput?.expectedOutput ?? null}
+                  stdout={executionOutput?.result?.stdout ?? null}
+                  output={
+                    executionOutput?.result &&
+                    Object.hasOwn(executionOutput.result, "actualOutput")
+                      ? formatValue(executionOutput.result.actualOutput)
+                      : null
+                  }
+                  error={
+                    executionError ??
+                    executionOutput?.result?.error ??
+                    null
+                  }
+                  correct={
+                    executionOutput?.result?.status === "error"
+                      ? null
+                      : (executionOutput?.result?.correct ?? null)
+                  }
                 />
               )}
             </div>

@@ -19,12 +19,23 @@ export interface TraceExecutionPayload extends ExecutionPayloadBase {
     testCases: TraceTestCase[];
 }
 
+export interface SingleTestExecutionPayload extends ExecutionPayloadBase {
+    operation: "test";
+    testCase: {
+        input: Record<string, unknown> | unknown[];
+        expectedOutput: unknown;
+    };
+}
+
 export interface TraceTestCase {
     id: string;
     input: Record<string, unknown> | unknown[];
 }
 
-export type ExecutionPayload = GradeExecutionPayload | TraceExecutionPayload;
+export type ExecutionPayload =
+    | GradeExecutionPayload
+    | TraceExecutionPayload
+    | SingleTestExecutionPayload;
 
 interface GradeTestCaseResult {
     testCaseId: string;
@@ -60,4 +71,16 @@ export interface TraceCaseResult {
     };
 }
 
-export type ExecutionResult = GradeExecutionResult | TraceCaseResult[];
+export interface SingleTestExecutionResult {
+    status: "passed" | "failed" | "error";
+    correct: boolean;
+    actualOutput?: unknown;
+    stdout: string;
+    error?: string;
+    errorType?: string;
+}
+
+export type ExecutionResult =
+    | GradeExecutionResult
+    | TraceCaseResult[]
+    | SingleTestExecutionResult;
