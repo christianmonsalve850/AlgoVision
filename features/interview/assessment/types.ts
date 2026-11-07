@@ -100,10 +100,10 @@ export type TestcaseTabProps = {
 };
 
 export type OutputTabProps = {
-  input: string | null;
-  expectedOutput: string | null;
-  stdout: string | null;
-  output: string | null;
+  input: Record<string, unknown> | null;
+  expectedOutput: unknown | undefined;
+  stdout: string | undefined;
+  output: unknown | undefined;
   error: string | null;
   correct: boolean | null;
 };

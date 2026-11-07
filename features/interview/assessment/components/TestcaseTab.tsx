@@ -60,8 +60,8 @@ export default function TestcaseTab({
   };
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col">
-      <div className="mb-3 flex items-center justify-between gap-4">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-y-auto">
+      <div className="mb-2 flex shrink-0 items-center justify-between gap-4">
         <div>
           <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             Custom test case
@@ -76,8 +76,8 @@ export default function TestcaseTab({
         </span>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-auto rounded-lg border border-border bg-muted/15">
-        <div className="flex shrink-0 items-center gap-2 border-b border-border/70 bg-muted/30 px-3 py-2">
+      <div className="flex shrink-0 flex-col rounded-lg border border-border bg-muted/15">
+        <div className="flex shrink-0 items-center gap-2 border-b border-border/70 bg-muted/30 px-3 py-1.5">
           <Braces className="size-3.5 text-emerald-500" aria-hidden="true" />
           <span className="text-xs font-medium text-foreground">Arguments</span>
           <span className="ml-auto font-mono text-[10px] text-muted-foreground">
@@ -85,10 +85,10 @@ export default function TestcaseTab({
           </span>
         </div>
 
-        <div className="grid gap-3 p-3 sm:grid-cols-2">
+        <div className="grid gap-2 p-2 sm:grid-cols-2">
           {functionParameters.length > 0 ? (
             functionParameters.map((parameter, index) => (
-              <div key={`${parameter}-${index}`} className="space-y-1.5">
+              <div key={`${parameter}-${index}`} className="space-y-1">
                 <label
                   htmlFor={`custom-testcase-parameter-${index}`}
                   className="font-mono text-xs font-medium text-muted-foreground"
@@ -104,7 +104,7 @@ export default function TestcaseTab({
                     updateInput(parameter, event.currentTarget.value)
                   }
                   disabled={isRunning}
-                  className="h-9 w-full rounded-md border border-border bg-background/80 px-3 font-mono text-xs text-foreground outline-none transition-colors focus-visible:border-emerald-500/60 focus-visible:ring-2 focus-visible:ring-emerald-500/20"
+                  className="h-8 w-full rounded-md border border-border bg-background/80 px-2.5 font-mono text-xs text-foreground outline-none transition-colors focus-visible:border-emerald-500/60 focus-visible:ring-2 focus-visible:ring-emerald-500/20"
                 />
               </div>
             ))
@@ -128,8 +128,8 @@ export default function TestcaseTab({
             onChange={(event) => updateExpectedOutput(event.currentTarget.value)}
             disabled={isRunning}
             placeholder='Enter expected output as JSON, e.g. 42'
-            rows={2}
-            className="w-full resize-y rounded-md border border-border bg-background/80 px-3 py-2 font-mono text-xs text-foreground outline-none transition-colors focus-visible:border-emerald-500/60 focus-visible:ring-2 focus-visible:ring-emerald-500/20"
+            rows={1}
+            className="w-full resize-y rounded-md border border-border bg-background/80 px-2.5 py-1.5 font-mono text-xs text-foreground outline-none transition-colors focus-visible:border-emerald-500/60 focus-visible:ring-2 focus-visible:ring-emerald-500/20"
           />
         </div>
       </div>
@@ -142,7 +142,7 @@ export default function TestcaseTab({
         type="button"
         disabled={isRunning}
         onClick={runTestCase}
-        className="mt-3 self-start rounded-md bg-foreground px-3 py-2 text-xs font-semibold text-background transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-2 self-start rounded-md bg-foreground px-3 py-1.5 text-xs font-semibold text-background transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isRunning ? "Running..." : "Run code"}
       </button>

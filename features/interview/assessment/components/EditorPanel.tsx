@@ -19,13 +19,9 @@ import type { SingleTestExecutionResult } from "@/lib/docker-runner/types";
 type ProblemTab = "testcase" | "output";
 
 interface InterviewExecutionOutput {
-  input: string;
-  expectedOutput: string;
+  input: Record<string, unknown>;
+  expectedOutput: unknown;
   result: SingleTestExecutionResult | null;
-}
-
-function formatValue(value: unknown): string {
-  return JSON.stringify(value, null, 2) ?? String(value);
 }
 
 export function EditorPanel({
@@ -54,8 +50,8 @@ export function EditorPanel({
     setIsRunning(true);
     setExecutionError(null);
     setExecutionOutput({
-      input: formatValue(input),
-      expectedOutput: formatValue(expectedOutput),
+      input,
+      expectedOutput,
       result: null,
     });
 
@@ -68,8 +64,8 @@ export function EditorPanel({
         expectedOutput,
       });
       setExecutionOutput({
-        input: formatValue(input),
-        expectedOutput: formatValue(expectedOutput),
+        input,
+        expectedOutput,
         result,
       });
     } catch (error) {
@@ -93,7 +89,7 @@ export function EditorPanel({
         if (panel.isCollapsed()) {
           panel.expand();
         }
-        panel.resize(360);
+        panel.resize(320);
       } else {
         if (!panel.isCollapsed()) {
           panel.collapse();
@@ -178,7 +174,7 @@ export function EditorPanel({
               </div>
             </div>
             {/* Console Content */}
-            <div className="min-h-0 flex-1 overflow-hidden p-6">
+            <div className="min-h-0 flex-1 overflow-hidden p-3">
               {problemTab === "testcase" ? (
                 <TestcaseTab
                   functionParameters={functionParameters}
@@ -192,13 +188,17 @@ export function EditorPanel({
               ) : (
                 <OutputTab
                   input={executionOutput?.input ?? null}
-                  expectedOutput={executionOutput?.expectedOutput ?? null}
-                  stdout={executionOutput?.result?.stdout ?? null}
+                  expectedOutput={
+                    executionOutput
+                      ? executionOutput.expectedOutput
+                      : undefined
+                  }
+                  stdout={executionOutput?.result?.stdout}
                   output={
                     executionOutput?.result &&
                     Object.hasOwn(executionOutput.result, "actualOutput")
-                      ? formatValue(executionOutput.result.actualOutput)
-                      : null
+                      ? executionOutput.result.actualOutput
+                      : undefined
                   }
                   error={
                     executionError ??

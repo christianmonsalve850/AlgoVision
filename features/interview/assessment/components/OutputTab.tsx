@@ -1,31 +1,27 @@
 
 import { AlertCircle, ArrowDownToLine, Braces, Terminal } from "lucide-react";
 import type { OutputTabProps } from "@/features/interview/assessment/types";
+import { formatValue } from "@/features/interview/assessment/utils/format-value";
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
 
 const outputSections = [
-  {
-    label: "Your input",
-    key: "input",
-    Icon: Braces,
-    emptyMessage: "Input will appear here when you run your code.",
-  },
   {
     label: "stdout",
     key: "stdout",
     Icon: Terminal,
-    emptyMessage: "Program output will appear here.",
   },
   {
     label: "Expected output",
     key: "expectedOutput",
     Icon: ArrowDownToLine,
-    emptyMessage: "Expected output will appear here.",
   },
   {
     label: "Output",
     key: "output",
     Icon: ArrowDownToLine,
-    emptyMessage: "The result will appear here.",
   },
 ] as const;
 
@@ -37,11 +33,18 @@ export default function OutputTab({
   error,
   correct,
 }: OutputTabProps) {
-  const values = { input, stdout, expectedOutput, output };
+  const values = { stdout, expectedOutput, output };
+  const inputEntries = isRecord(input) ? Object.entries(input) : null;
+  const visibleOutputSections = outputSections.filter(({ key }) => {
+    const value = values[key];
+    return key === "stdout"
+      ? typeof value === "string" && value.trim().length > 0
+      : value !== null && value !== undefined;
+  });
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col">
-      <div className="mb-3 flex items-center justify-between gap-4">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-y-auto">
+      <div className="mb-2 flex shrink-0 items-center justify-between gap-4">
         <div>
           <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             Run results
@@ -64,12 +67,12 @@ export default function OutputTab({
         )}
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto">
+      <div className="grid shrink-0 grid-cols-1 gap-2 sm:grid-cols-2">
         {error !== null ? (
           <section
             aria-label="Execution error"
             role="alert"
-            className="flex min-h-0 flex-1 items-start gap-3 rounded-lg border border-rose-500/25 bg-rose-500/5 p-3"
+            className="flex items-start gap-3 rounded-lg border border-rose-500/25 bg-rose-500/5 p-2 sm:col-span-2"
           >
             <AlertCircle
               className="mt-0.5 size-4 shrink-0 text-rose-500"
@@ -79,35 +82,78 @@ export default function OutputTab({
               <h3 className="text-xs font-semibold text-rose-700 dark:text-rose-300">
                 Execution error
               </h3>
-              <pre className="mt-2 overflow-auto whitespace-pre-wrap break-words font-mono text-xs leading-5 text-foreground">
+              <pre className="mt-1 max-h-20 overflow-auto whitespace-pre-wrap break-words font-mono text-xs leading-5 text-foreground">
                 {error}
               </pre>
             </div>
           </section>
         ) : (
-          outputSections.map(({ label, key, Icon, emptyMessage }) => (
+          <>
+            {inputEntries && inputEntries.length > 0 && (
             <section
-              key={key}
-              aria-label={label}
-              className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border bg-muted/15"
+              aria-label="Arguments"
+              className="min-w-0 overflow-hidden rounded-lg border border-border bg-muted/15 sm:col-span-2"
             >
-              <div className="flex shrink-0 items-center gap-2 border-b border-border/70 bg-muted/30 px-3 py-2">
-                <Icon
+              <div className="flex items-center gap-2 border-b border-border/70 bg-muted/30 px-2.5 py-1.5">
+                <Braces
                   className="size-3.5 text-emerald-500"
                   aria-hidden="true"
                 />
-                <h3 className="text-xs font-medium text-foreground">{label}</h3>
+                <h3 className="text-xs font-medium text-foreground">
+                  Arguments
+                </h3>
               </div>
-              <textarea
-                aria-label={label}
-                readOnly
-                value={values[key] ?? ""}
-                placeholder={emptyMessage}
-                rows={2}
-                className="min-h-12 w-full flex-1 resize-none bg-transparent px-3 py-2 font-mono text-xs leading-5 text-foreground outline-none placeholder:text-muted-foreground/60"
-              />
+              <dl className="grid gap-1.5 p-2 sm:grid-cols-2">
+                {inputEntries.map(([name, value]) => (
+                  <div
+                    key={name}
+                    className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-baseline gap-2 rounded-md border border-border/60 bg-background/50 px-2 py-1"
+                  >
+                    <dt className="truncate font-mono text-[11px] font-medium text-muted-foreground">
+                      {name}
+                    </dt>
+                    <dd className="min-w-0">
+                      <code className="block max-w-full overflow-x-auto whitespace-nowrap font-mono text-xs leading-4 text-foreground">
+                        {formatValue(value)}
+                      </code>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </section>
-          ))
+            )}
+            {visibleOutputSections.map(({ label, key, Icon }) => (
+              <section
+                key={key}
+                aria-label={label}
+                className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-border bg-muted/15"
+              >
+                <div className="flex shrink-0 items-center gap-2 border-b border-border/70 bg-muted/30 px-2.5 py-1.5">
+                  <Icon
+                    className="size-3.5 text-emerald-500"
+                    aria-hidden="true"
+                  />
+                  <h3 className="text-xs font-medium text-foreground">
+                    {label}
+                  </h3>
+                </div>
+                <pre
+                  aria-label={label}
+                  className={`max-h-20 min-h-8 overflow-auto bg-transparent px-2.5 py-1.5 font-mono text-xs leading-4 text-foreground empty:before:text-muted-foreground/60 ${
+                    key === "stdout"
+                      ? "whitespace-pre-wrap break-words"
+                      : "whitespace-nowrap"
+                  }`}
+                >
+                  {key === "stdout" ? (
+                    String(values[key])
+                  ) : (
+                    formatValue(values[key])
+                  )}
+                </pre>
+              </section>
+            ))}
+          </>
         )}
       </div>
     </div>
