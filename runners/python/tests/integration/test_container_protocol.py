@@ -66,9 +66,20 @@ def test_container_ready_and_request_response_protocol():
             }
         ],
     }
+    single_test_payload = {
+        "operation": "test",
+        "sourceCode": payload["sourceCode"],
+        "className": payload["className"],
+        "functionName": payload["functionName"],
+        "testCase": {
+            "input": {"nums": [2, 7, 11, 15], "target": 9},
+            "expectedOutput": [0, 1],
+        },
+    }
     requests = [
         {"requestId": "container-request-1", "payload": payload},
         {"requestId": "container-request-2", "payload": payload},
+        {"requestId": "container-single-test", "payload": single_test_payload},
     ]
     stdin = "".join(f"{json.dumps(request)}\n" for request in requests)
 
@@ -107,9 +118,17 @@ def test_container_ready_and_request_response_protocol():
     assert [message["requestId"] for message in messages[1:]] == [
         "container-request-1",
         "container-request-2",
+        "container-single-test",
     ]
-    for message in messages[1:]:
+    for message in messages[1:3]:
         assert message["result"]["verdict"] == "accepted"
         assert message["result"]["passed"] == 1
         assert message["result"]["total"] == 1
         assert len(json.dumps(message).encode("utf-8")) <= MAX_OUTPUT_BYTES
+
+    assert messages[3]["result"] == {
+        "status": "passed",
+        "correct": True,
+        "actualOutput": [0, 1],
+        "stdout": "",
+    }

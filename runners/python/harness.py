@@ -266,3 +266,45 @@ def run_submission(
         "total": len(results),
         "results": results,
     }
+
+
+def run_single_test(
+    source_code: str,
+    test_case: dict[str, Any],
+    class_name: str,
+    function_name: str,
+) -> dict[str, Any]:
+    """Execute one custom test case without returning suite grading details."""
+    if not isinstance(test_case, Mapping):
+        raise ValueError("testCase must be an object")
+
+    input_value = test_case.get("input")
+    if not isinstance(input_value, (dict, list)):
+        raise ValueError("testCase.input must be an object or array")
+    if "expectedOutput" not in test_case:
+        raise ValueError("testCase is missing expectedOutput")
+
+    result = run_submission(
+        source_code=source_code,
+        test_cases=[
+            {
+                "input": input_value,
+                "expected_output": test_case["expectedOutput"],
+            }
+        ],
+        class_name=class_name,
+        function_name=function_name,
+    )["results"][0]
+
+    response = {
+        "status": result["status"],
+        "correct": result["passed"],
+        "stdout": result["stdout"],
+    }
+    if result["status"] == "error":
+        response["error"] = result["error"]
+        response["errorType"] = result["errorType"]
+    else:
+        response["actualOutput"] = result["actualOutput"]
+
+    return response

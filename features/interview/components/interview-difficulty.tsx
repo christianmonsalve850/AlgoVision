@@ -3,16 +3,16 @@ import { InterviewDifficultyProps } from "@/features/interview/types";
 export default function InterviewDifficulty({
   difficulty,
   subtext,
-  selectedDifficulty,
+  isSelected,
   onSelectedDifficulty,
   difficultyColor,
 }: InterviewDifficultyProps) {
   return (
     <button
+      type="button"
+      aria-pressed={isSelected}
       className={`flex flex-col border-2 bg-background rounded-lg p-5 gap-2 text-start ${
-        selectedDifficulty === difficulty
-          ? "border-foreground"
-          : "border-border"
+        isSelected ? "border-foreground" : "border-border"
       }`}
       onClick={onSelectedDifficulty}
     >
