@@ -61,7 +61,7 @@ export default function TestcaseTab({
     }
   }, [expectedOutput, functionParameters, inputValues, onRunTestCase]);
 
-  const lastHandledRunRequest = useRef(0);
+  const lastHandledRunRequest = useRef(runRequest);
   useEffect(() => {
     if (runRequest === 0 || lastHandledRunRequest.current === runRequest) {
       return;

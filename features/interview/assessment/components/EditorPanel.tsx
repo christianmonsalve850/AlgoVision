@@ -42,13 +42,17 @@ export function EditorPanel({
   const [executionError, setExecutionError] = useState<string | null>(null);
 
   const panelRef = useRef<PanelImperativeHandle>(null);
+  const hasOutput =
+    (executionOutput?.result !== null &&
+      executionOutput?.result !== undefined) ||
+    executionError !== null;
 
   const runTestCase = async (
     input: Record<string, unknown>,
     expectedOutput: unknown,
   ) => {
     setIsOpenConsole(true);
-    setProblemTab("output");
+    setProblemTab("testcase");
     setIsRunning(true);
     onExecutionRunningChange(true);
     setExecutionError(null);
@@ -71,10 +75,12 @@ export function EditorPanel({
         expectedOutput,
         result,
       });
+      setProblemTab("output");
     } catch (error) {
       setExecutionError(
         error instanceof Error ? error.message : "Failed to run test case.",
       );
+      setProblemTab("output");
     } finally {
       setIsRunning(false);
       onExecutionRunningChange(false);
@@ -84,6 +90,7 @@ export function EditorPanel({
   const clearExecutionOutput = () => {
     setExecutionOutput(null);
     setExecutionError(null);
+    setProblemTab("testcase");
   };
 
   useEffect(() => {
@@ -118,7 +125,10 @@ export function EditorPanel({
               defaultLanguage={SUPPORTED_LANGUAGES[language].monacoLanguage}
               language={SUPPORTED_LANGUAGES[language].monacoLanguage}
               value={code}
-              onChange={onCodeChange}
+              onChange={(value) => {
+                clearExecutionOutput();
+                onCodeChange(value);
+              }}
             />
           </Panel>
 
@@ -146,7 +156,13 @@ export function EditorPanel({
               {/* Tab Buttons go Here */}
               <div className="group flex items-center">
                 <button
-                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent ${problemTab === "output" ? "opacity-50" : ""}`}
+                  type="button"
+                  aria-pressed={problemTab === "testcase"}
+                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm transition-colors ${
+                    problemTab === "testcase"
+                      ? "bg-accent text-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  }`}
                   onClick={() => setProblemTab("testcase")}
                 >
                   <SquareCheck className="p-0.5 text-emerald-400" />
@@ -154,8 +170,21 @@ export function EditorPanel({
                 </button>
                 <div className="h-4 border-r border-border transition-opacity duration-150 group-hover:opacity-0" />
                 <button
-                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm text-foreground hover:bg-accent ${problemTab === "testcase" ? "opacity-50" : ""}`}
-                  onClick={() => setProblemTab("output")}
+                  type="button"
+                  disabled={!hasOutput}
+                  aria-pressed={problemTab === "output"}
+                  className={`flex items-center gap-1 rounded-sm px-2 py-1 text-sm transition-colors ${
+                    !hasOutput
+                      ? "cursor-not-allowed text-muted-foreground opacity-40"
+                      : problemTab === "output"
+                        ? "bg-accent text-foreground"
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  }`}
+                  onClick={() => {
+                    if (hasOutput) {
+                      setProblemTab("output");
+                    }
+                  }}
                 >
                   <CodeXml className="p-0.5 text-emerald-400" />
                   Output
