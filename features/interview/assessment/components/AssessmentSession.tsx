@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEditorSettings } from "@/components/code-editor/hooks/use-editor-settings";
 import { AssessmentNav } from "@/features/interview/assessment/components/AssessmentNav";
 import QuitAssessmentModal from "@/features/interview/assessment/components/QuitAssessmentModal";
 import AssessmentBody from "@/features/interview/assessment/components/AssessmentBody";
@@ -30,28 +31,14 @@ export default function AssessmentSession({
   const [runRequest, setRunRequest] = useState(0);
   const [isExecutionRunning, setIsExecutionRunning] = useState(false);
 
-  // Settings
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settingsLoaded, setSettingsLoaded] = useState(false);
-  const [editorFontSize, setEditorFontSize] = useState(13);
-  const [minimapEnabled, setMinimapEnabled] = useState(false);
-  const [lineNumbersEnabled, setLineNumbersEnabled] = useState(true);
-  const [tabSize, setTabSize] = useState<2 | 4>(4);
-
-  useEffect(() => {
-    const saved = Number(localStorage.getItem("algovision:editor-font-size"));
-    setEditorFontSize(saved >= 11 && saved <= 20 ? saved : 13);
-    setMinimapEnabled(
-      localStorage.getItem("algovision:editor-minimap") === "true",
-    );
-    setLineNumbersEnabled(
-      localStorage.getItem("algovision:editor-line-numbers") !== "false",
-    );
-    setTabSize(
-      localStorage.getItem("algovision:editor-tab-size") === "2" ? 2 : 4,
-    );
-    setSettingsLoaded(true);
-  }, []);
+  const {
+    settings: editorSettings,
+    setFontSize,
+    setMinimapEnabled,
+    setLineNumbersEnabled,
+    setTabSize,
+  } = useEditorSettings();
 
   const abandonAssessment = async () => {
     if (isAbandoning) {
@@ -83,26 +70,6 @@ export default function AssessmentSession({
     }
   }, [sessionId]);
 
-  useEffect(() => {
-    if (!settingsLoaded) {
-      return;
-    }
-
-    localStorage.setItem("algovision:editor-font-size", String(editorFontSize));
-    localStorage.setItem("algovision:editor-minimap", String(minimapEnabled));
-    localStorage.setItem(
-      "algovision:editor-line-numbers",
-      String(lineNumbersEnabled),
-    );
-    localStorage.setItem("algovision:editor-tab-size", String(tabSize));
-  }, [
-    editorFontSize,
-    lineNumbersEnabled,
-    minimapEnabled,
-    settingsLoaded,
-    tabSize,
-  ]);
-
   return (
     <div className="flex h-dvh min-h-0 flex-col overflow-hidden">
       <AssessmentNav
@@ -118,6 +85,7 @@ export default function AssessmentSession({
         problems={problems}
         currentProblemIndex={currentProblemIndex}
         starterCodeMaps={starterCodeMaps}
+        editorSettings={editorSettings}
         runRequest={runRequest}
         onExecutionRunningChange={setIsExecutionRunning}
         onSettingsOpen={() => setSettingsOpen(true)}
@@ -138,13 +106,13 @@ export default function AssessmentSession({
       />
       <SettingsModal
         open={settingsOpen}
-        fontSize={editorFontSize}
-        onFontSizeChange={setEditorFontSize}
-        minimapEnabled={minimapEnabled}
+        fontSize={editorSettings.fontSize}
+        onFontSizeChange={setFontSize}
+        minimapEnabled={editorSettings.minimapEnabled}
         onMinimapChange={setMinimapEnabled}
-        lineNumbersEnabled={lineNumbersEnabled}
+        lineNumbersEnabled={editorSettings.lineNumbersEnabled}
         onLineNumbersChange={setLineNumbersEnabled}
-        tabSize={tabSize}
+        tabSize={editorSettings.tabSize}
         onTabSizeChange={setTabSize}
         onClose={() => setSettingsOpen(false)}
       />

@@ -20,6 +20,7 @@ export default function AssessmentBody({
   problems,
   currentProblemIndex,
   starterCodeMaps,
+  editorSettings,
   runRequest,
   onExecutionRunningChange,
   onSettingsOpen,
@@ -150,6 +151,7 @@ export default function AssessmentBody({
               defaultParameterExpectedOutput={
                 currentProblem?.defaultParameterExpectedOutput
               }
+              editorSettings={editorSettings}
               runRequest={runRequest}
               onExecutionRunningChange={onExecutionRunningChange}
             />

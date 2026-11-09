@@ -16,6 +16,7 @@ import { SubmissionOverlay } from "@/features/practice/problem-page/code-editor/
 import { Spinner } from "@/components/ui/spinner";
 import { ExecutionStatus } from "@/features/practice/problem-page/types";
 import { AIHintsDrawer } from "@/features/practice/problem-page/code-editor/components/ai-hints-drawer";
+import { useEditorSettings } from "@/components/code-editor/hooks/use-editor-settings";
 
 export function ProblemCodeEditor({
   isAiHintsOpen,
@@ -30,6 +31,7 @@ export function ProblemCodeEditor({
   submissionLoadRequest,
 }: ProblemCodeEditorPanelProps) {
   const router = useRouter();
+  const { settings: editorSettings } = useEditorSettings();
   const [ submissionStatus, setSubmissionStatus ] = useState<"success" | "failure" | null>(null);
   const [ executionsStatus, setExecutionStatus ] = useState<ExecutionStatus>("idle");
   const [ submissionRefreshKey, setSubmissionRefreshKey ] = useState(0);
@@ -201,6 +203,10 @@ export function ProblemCodeEditor({
               language={activeLanguage.extension}
               value={code}
               onChange={handleEditorChange}
+              editorFontSize={editorSettings.fontSize}
+              minimapEnabled={editorSettings.minimapEnabled}
+              lineNumbersEnabled={editorSettings.lineNumbersEnabled}
+              tabSize={editorSettings.tabSize}
             />
           </div>
         </div>
