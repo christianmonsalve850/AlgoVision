@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useRef } from "react";
 import { ShieldCheck, X, Minus, Plus, Sun, Moon, Monitor } from "lucide-react";
 import { useTheme } from "@/components/theme/theme-provider";
 
-interface SettingsModalProps {
+interface EditorSettingsModalProps {
   open: boolean;
+  mode: "interview" | "practice";
   minimapEnabled: boolean;
   onMinimapChange: (enabled: boolean) => void;
   fontSize: number;
@@ -18,8 +18,9 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-export default function SettingsModal({
+export default function EditorSettingsModal({
   open,
+  mode,
   fontSize=14,
   onFontSizeChange,
   minimapEnabled=false,
@@ -29,7 +30,7 @@ export default function SettingsModal({
   wordWrapEnabled,
   onWordWrapChange,
   onClose,
-}: SettingsModalProps) {
+}: EditorSettingsModalProps) {
   const { theme, setTheme } = useTheme();
 
   const themeOptions = [
@@ -58,7 +59,7 @@ export default function SettingsModal({
               Workspace
             </div>
             <h2 className="text-lg font-semibold tracking-tight">
-              Assessment settings
+              {mode === "interview" ? "Assessment settings" : "Editor settings"}
             </h2>
           </div>
           <button
@@ -204,8 +205,9 @@ export default function SettingsModal({
           <div className="flex items-start gap-3 rounded-lg bg-muted/70 p-3">
             <ShieldCheck className="mt-0.5 size-4 shrink-0 text-emerald-500" />
             <p className="text-xs leading-5 text-muted-foreground">
-              Display preferences are saved on this device and do not affect
-              your assessment score.
+              {mode === "interview"
+                ? "Display preferences are saved on this device and do not affect your assessment score."
+                : "Display preferences are saved on this device and only change how code appears in the editor."}
             </p>
           </div>
         </div>

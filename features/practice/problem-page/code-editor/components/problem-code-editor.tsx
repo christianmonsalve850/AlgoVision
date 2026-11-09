@@ -2,8 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, Play, RotateCcw, Send, Lightbulb } from "lucide-react";
+import {
+  ChevronDown,
+  Play,
+  RotateCcw,
+  Send,
+  Lightbulb,
+  Settings,
+} from "lucide-react";
 import { MonacoCodeEditor } from "@/components/code-editor/monaco-code-editor";
+import EditorSettingsModal from "@/components/code-editor/EditorSettingsModal";
 import { languageOptions } from "@/features/practice/problem-page/code-editor/constants/languages";
 import type {
   Language,
@@ -31,7 +39,14 @@ export function ProblemCodeEditor({
   submissionLoadRequest,
 }: ProblemCodeEditorPanelProps) {
   const router = useRouter();
-  const { settings: editorSettings } = useEditorSettings();
+  const {
+    settings: editorSettings,
+    setFontSize,
+    setMinimapEnabled,
+    setLineNumbersEnabled,
+    setWordWrapEnabled,
+  } = useEditorSettings();
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [ submissionStatus, setSubmissionStatus ] = useState<"success" | "failure" | null>(null);
   const [ executionsStatus, setExecutionStatus ] = useState<ExecutionStatus>("idle");
   const [ submissionRefreshKey, setSubmissionRefreshKey ] = useState(0);
@@ -158,6 +173,15 @@ export function ProblemCodeEditor({
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            aria-label="Editor settings"
+            title="Editor settings"
+            className="inline-flex items-center gap-2 rounded-lg border border-border p-1.5 text-sm text-foreground transition-colors hover:bg-muted"
+            onClick={() => setSettingsOpen(true)}
+          >
+            <Settings className="size-4.5" />
+          </button>
           <button 
               onClick={() => onAiHintsOpenChange(true)}
               className="inline-flex items-center gap-2 rounded-lg border border-border p-1.5 text-sm text-foreground transition-colors hover:bg-muted"
@@ -211,6 +235,19 @@ export function ProblemCodeEditor({
           </div>
         </div>
       </div>
+      <EditorSettingsModal
+        open={settingsOpen}
+        mode="practice"
+        fontSize={editorSettings.fontSize}
+        onFontSizeChange={setFontSize}
+        minimapEnabled={editorSettings.minimapEnabled}
+        onMinimapChange={setMinimapEnabled}
+        lineNumbersEnabled={editorSettings.lineNumbersEnabled}
+        onLineNumbersChange={setLineNumbersEnabled}
+        wordWrapEnabled={editorSettings.wordWrapEnabled}
+        onWordWrapChange={setWordWrapEnabled}
+        onClose={() => setSettingsOpen(false)}
+      />
     </div>
   );
 }

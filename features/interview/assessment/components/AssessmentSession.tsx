@@ -12,7 +12,7 @@ import {
   requestAbandonSession,
   requestTimeoutSession,
 } from "@/features/interview/services/request-abandon-session";
-import SettingsModal from "@/features/interview/assessment/components/SettingsModal";
+import EditorSettingsModal from "@/components/code-editor/EditorSettingsModal";
 
 export default function AssessmentSession({
   sessionId,
@@ -104,8 +104,9 @@ export default function AssessmentSession({
         isSubmitting={isAbandoning}
         error={abandonError}
       />
-      <SettingsModal
+      <EditorSettingsModal
         open={settingsOpen}
+        mode="interview"
         fontSize={editorSettings.fontSize}
         onFontSizeChange={setFontSize}
         minimapEnabled={editorSettings.minimapEnabled}
