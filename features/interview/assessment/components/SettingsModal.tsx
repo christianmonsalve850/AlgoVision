@@ -13,8 +13,8 @@ interface SettingsModalProps {
   onFontSizeChange: (size: number) => void;
   lineNumbersEnabled: boolean;
   onLineNumbersChange: (enabled: boolean) => void;
-  tabSize: 2 | 4;
-  onTabSizeChange: (size: 2 | 4) => void;
+  wordWrapEnabled: boolean;
+  onWordWrapChange: (enabled: boolean) => void;
   onClose: () => void;
 }
 
@@ -26,8 +26,8 @@ export default function SettingsModal({
   onMinimapChange,
   lineNumbersEnabled=true,
   onLineNumbersChange,
-  tabSize,
-  onTabSizeChange,
+  wordWrapEnabled,
+  onWordWrapChange,
   onClose,
 }: SettingsModalProps) {
   const { theme, setTheme } = useTheme();
@@ -147,7 +147,7 @@ export default function SettingsModal({
             <div className="mb-3">
               <div className="text-sm font-semibold">Editor layout</div>
               <div className="mt-0.5 text-xs text-muted-foreground">
-                Control navigation and indentation
+                Control navigation and code display
               </div>
             </div>
             <div className="divide-y divide-border overflow-hidden rounded-lg border border-border">
@@ -163,6 +163,12 @@ export default function SettingsModal({
                   description: "Display numbers in the editor gutter",
                   enabled: lineNumbersEnabled,
                   onChange: onLineNumbersChange,
+                },
+                {
+                  label: "Word wrap",
+                  description: "Wrap long lines instead of scrolling sideways",
+                  enabled: wordWrapEnabled,
+                  onChange: onWordWrapChange,
                 },
               ].map((setting) => (
                 <div
@@ -192,29 +198,6 @@ export default function SettingsModal({
                   </button>
                 </div>
               ))}
-              <div className="flex items-center justify-between gap-4 bg-background/60 px-3.5 py-3">
-                <div>
-                  <div className="text-xs font-semibold">Tab size</div>
-                  <div className="mt-0.5 text-[11px] text-muted-foreground">
-                    Spaces inserted per indentation level
-                  </div>
-                </div>
-                <div className="flex rounded-md bg-muted p-0.5">
-                  {([2, 4] as const).map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => onTabSizeChange(size)}
-                      className={`min-w-9 rounded px-2 py-1 font-mono text-xs font-semibold transition-colors ${
-                        tabSize === size
-                          ? "bg-card text-foreground shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
 

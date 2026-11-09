@@ -206,7 +206,7 @@ export function ProblemCodeEditor({
               editorFontSize={editorSettings.fontSize}
               minimapEnabled={editorSettings.minimapEnabled}
               lineNumbersEnabled={editorSettings.lineNumbersEnabled}
-              tabSize={editorSettings.tabSize}
+              wordWrapEnabled={editorSettings.wordWrapEnabled}
             />
           </div>
         </div>

@@ -134,7 +134,7 @@ export function EditorPanel({
               editorFontSize={editorSettings.fontSize}
               minimapEnabled={editorSettings.minimapEnabled}
               lineNumbersEnabled={editorSettings.lineNumbersEnabled}
-              tabSize={editorSettings.tabSize}
+              wordWrapEnabled={editorSettings.wordWrapEnabled}
             />
           </Panel>
 

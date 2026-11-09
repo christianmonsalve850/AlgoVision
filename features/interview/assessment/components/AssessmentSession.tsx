@@ -37,7 +37,7 @@ export default function AssessmentSession({
     setFontSize,
     setMinimapEnabled,
     setLineNumbersEnabled,
-    setTabSize,
+    setWordWrapEnabled,
   } = useEditorSettings();
 
   const abandonAssessment = async () => {
@@ -112,8 +112,8 @@ export default function AssessmentSession({
         onMinimapChange={setMinimapEnabled}
         lineNumbersEnabled={editorSettings.lineNumbersEnabled}
         onLineNumbersChange={setLineNumbersEnabled}
-        tabSize={editorSettings.tabSize}
-        onTabSizeChange={setTabSize}
+        wordWrapEnabled={editorSettings.wordWrapEnabled}
+        onWordWrapChange={setWordWrapEnabled}
         onClose={() => setSettingsOpen(false)}
       />
     </div>

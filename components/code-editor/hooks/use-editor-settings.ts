@@ -8,14 +8,14 @@ type UseEditorSettingsReturn = {
   setFontSize: (fontSize: number) => void;
   setMinimapEnabled: (enabled: boolean) => void;
   setLineNumbersEnabled: (enabled: boolean) => void;
-  setTabSize: (tabSize: 2 | 4) => void;
+  setWordWrapEnabled: (enabled: boolean) => void;
 };
 
 const STORAGE_KEYS = {
   fontSize: "algovision:editor-font-size",
   minimapEnabled: "algovision:editor-minimap",
   lineNumbersEnabled: "algovision:editor-line-numbers",
-  tabSize: "algovision:editor-tab-size",
+  wordWrapEnabled: "algovision:editor-word-wrap",
 } as const;
 
 const CHANGE_EVENT = "algovision:editor-settings-change";
@@ -23,9 +23,9 @@ const DEFAULT_SETTINGS: EditorSettings = {
   fontSize: 13,
   minimapEnabled: false,
   lineNumbersEnabled: true,
-  tabSize: 4,
+  wordWrapEnabled: true,
 };
-const DEFAULT_SNAPSHOT = "13:0:1:4";
+const DEFAULT_SNAPSHOT = "13:0:1:1";
 
 function readSettings(): EditorSettings {
   const savedFontSize = Number(localStorage.getItem(STORAGE_KEYS.fontSize));
@@ -38,7 +38,8 @@ function readSettings(): EditorSettings {
       localStorage.getItem(STORAGE_KEYS.minimapEnabled) === "true",
     lineNumbersEnabled:
       localStorage.getItem(STORAGE_KEYS.lineNumbersEnabled) !== "false",
-    tabSize: localStorage.getItem(STORAGE_KEYS.tabSize) === "2" ? 2 : 4,
+    wordWrapEnabled:
+      localStorage.getItem(STORAGE_KEYS.wordWrapEnabled) !== "false",
   };
 }
 
@@ -47,7 +48,7 @@ function serializeSettings(settings: EditorSettings): string {
     settings.fontSize,
     settings.minimapEnabled ? 1 : 0,
     settings.lineNumbersEnabled ? 1 : 0,
-    settings.tabSize,
+    settings.wordWrapEnabled ? 1 : 0,
   ].join(":");
 }
 
@@ -84,18 +85,21 @@ function updateSettings(
     STORAGE_KEYS.lineNumbersEnabled,
     String(settings.lineNumbersEnabled),
   );
-  localStorage.setItem(STORAGE_KEYS.tabSize, String(settings.tabSize));
+  localStorage.setItem(
+    STORAGE_KEYS.wordWrapEnabled,
+    String(settings.wordWrapEnabled),
+  );
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
 
 function parseSnapshot(snapshot: string): EditorSettings {
-  const [fontSize, minimapEnabled, lineNumbersEnabled, tabSize] =
+  const [fontSize, minimapEnabled, lineNumbersEnabled, wordWrapEnabled] =
     snapshot.split(":").map(Number);
   return {
     fontSize,
     minimapEnabled: minimapEnabled === 1,
     lineNumbersEnabled: lineNumbersEnabled === 1,
-    tabSize: tabSize === 2 ? 2 : 4,
+    wordWrapEnabled: wordWrapEnabled === 1,
   };
 }
 
@@ -114,7 +118,7 @@ export function useEditorSettings(): UseEditorSettingsReturn {
       updateSettings((settings) => ({ ...settings, minimapEnabled })),
     setLineNumbersEnabled: (lineNumbersEnabled) =>
       updateSettings((settings) => ({ ...settings, lineNumbersEnabled })),
-    setTabSize: (tabSize) =>
-      updateSettings((settings) => ({ ...settings, tabSize })),
+    setWordWrapEnabled: (wordWrapEnabled) =>
+      updateSettings((settings) => ({ ...settings, wordWrapEnabled })),
   };
 }
