@@ -22,6 +22,7 @@ export default function AssessmentBody({
   starterCodeMaps,
   runRequest,
   onExecutionRunningChange,
+  onSettingsOpen,
 }: AssessmentBodyProps) {
   const [problemTab, setProblemTab] = useState<ProblemTab>("description");
 
@@ -129,6 +130,7 @@ export default function AssessmentBody({
                 aria-label="Editor settings"
                 title="Editor settings"
                 className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                onClick={onSettingsOpen}
               >
                 <Settings aria-hidden="true" className="size-4" />
               </button>

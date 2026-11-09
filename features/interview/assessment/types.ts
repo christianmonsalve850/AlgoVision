@@ -61,6 +61,7 @@ export type AssessmentBodyProps = {
   starterCodeMaps: AssessmentStarterCodeMaps;
   runRequest: number;
   onExecutionRunningChange: (isRunning: boolean) => void;
+  onSettingsOpen: () => void;
 }
 
 export type AssessmentFooterProps = {
