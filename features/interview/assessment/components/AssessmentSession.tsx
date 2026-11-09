@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEditorSettings } from "@/components/code-editor/hooks/use-editor-settings";
 import { AssessmentNav } from "@/features/interview/assessment/components/AssessmentNav";
 import QuitAssessmentModal from "@/features/interview/assessment/components/QuitAssessmentModal";
 import AssessmentBody from "@/features/interview/assessment/components/AssessmentBody";
@@ -11,6 +12,7 @@ import {
   requestAbandonSession,
   requestTimeoutSession,
 } from "@/features/interview/services/request-abandon-session";
+import EditorSettingsModal from "@/components/code-editor/EditorSettingsModal";
 
 export default function AssessmentSession({
   sessionId,
@@ -28,6 +30,15 @@ export default function AssessmentSession({
   const [abandonError, setAbandonError] = useState<string | null>(null);
   const [runRequest, setRunRequest] = useState(0);
   const [isExecutionRunning, setIsExecutionRunning] = useState(false);
+
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const {
+    settings: editorSettings,
+    setFontSize,
+    setMinimapEnabled,
+    setLineNumbersEnabled,
+    setWordWrapEnabled,
+  } = useEditorSettings();
 
   const abandonAssessment = async () => {
     if (isAbandoning) {
@@ -74,8 +85,10 @@ export default function AssessmentSession({
         problems={problems}
         currentProblemIndex={currentProblemIndex}
         starterCodeMaps={starterCodeMaps}
+        editorSettings={editorSettings}
         runRequest={runRequest}
         onExecutionRunningChange={setIsExecutionRunning}
+        onSettingsOpen={() => setSettingsOpen(true)}
       />
       <Footer
         currentProblemIndex={currentProblemIndex}
@@ -90,6 +103,19 @@ export default function AssessmentSession({
         onConfirm={abandonAssessment}
         isSubmitting={isAbandoning}
         error={abandonError}
+      />
+      <EditorSettingsModal
+        open={settingsOpen}
+        mode="interview"
+        fontSize={editorSettings.fontSize}
+        onFontSizeChange={setFontSize}
+        minimapEnabled={editorSettings.minimapEnabled}
+        onMinimapChange={setMinimapEnabled}
+        lineNumbersEnabled={editorSettings.lineNumbersEnabled}
+        onLineNumbersChange={setLineNumbersEnabled}
+        wordWrapEnabled={editorSettings.wordWrapEnabled}
+        onWordWrapChange={setWordWrapEnabled}
+        onClose={() => setSettingsOpen(false)}
       />
     </div>
   );

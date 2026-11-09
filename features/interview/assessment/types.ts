@@ -1,6 +1,7 @@
 
 import type { Difficulty } from "@/features/interview/types";
 import type { Duration } from "@/features/interview/types";
+import type { EditorSettings } from "@/components/code-editor/types";
 import type {
   Language,
   StarterCodeMap,
@@ -59,8 +60,10 @@ export type AssessmentBodyProps = {
   problems: ProblemDescription[];
   currentProblemIndex: number;
   starterCodeMaps: AssessmentStarterCodeMaps;
+  editorSettings: EditorSettings;
   runRequest: number;
   onExecutionRunningChange: (isRunning: boolean) => void;
+  onSettingsOpen: () => void;
 }
 
 export type AssessmentFooterProps = {
@@ -93,6 +96,7 @@ export type EditorPanelProps = {
   functionParameters: string[];
   functionParameterDefaults: Record<string, unknown>;
   defaultParameterExpectedOutput: unknown;
+  editorSettings: EditorSettings;
   runRequest: number;
   onExecutionRunningChange: (isRunning: boolean) => void;
 };

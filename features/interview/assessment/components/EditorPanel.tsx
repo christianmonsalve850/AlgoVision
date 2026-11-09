@@ -32,6 +32,7 @@ export function EditorPanel({
   functionParameters,
   functionParameterDefaults,
   defaultParameterExpectedOutput,
+  editorSettings,
   runRequest,
   onExecutionRunningChange,
 }: EditorPanelProps) {
@@ -130,6 +131,10 @@ export function EditorPanel({
                 clearExecutionOutput();
                 onCodeChange(value);
               }}
+              editorFontSize={editorSettings.fontSize}
+              minimapEnabled={editorSettings.minimapEnabled}
+              lineNumbersEnabled={editorSettings.lineNumbersEnabled}
+              wordWrapEnabled={editorSettings.wordWrapEnabled}
             />
           </Panel>
 

@@ -8,6 +8,10 @@ type MonacoCodeEditorProps = {
   language: string;
   value: string;
   onChange: (value: string | undefined) => void;
+  editorFontSize: number;
+  minimapEnabled: boolean;
+  lineNumbersEnabled: boolean;
+  wordWrapEnabled: boolean;
 };
 
 export function MonacoCodeEditor({
@@ -15,6 +19,10 @@ export function MonacoCodeEditor({
   language,
   value,
   onChange,
+  editorFontSize,
+  minimapEnabled,
+  lineNumbersEnabled,
+  wordWrapEnabled,
 }: MonacoCodeEditorProps) {
   const { resolvedTheme } = useTheme();
 
@@ -26,19 +34,21 @@ export function MonacoCodeEditor({
       value={value}
       onChange={onChange}
       options={{
-        minimap: { enabled: false },
-        fontSize: 14,
-        lineNumbers: "on",
+        minimap: { enabled: minimapEnabled },
+        fontSize: editorFontSize,
+        lineNumbers: lineNumbersEnabled ? "on" : "off",
         scrollBeyondLastLine: false,
         automaticLayout: true,
         roundedSelection: false,
         renderLineHighlight: "all",
         padding: { top: 16, bottom: 16 },
+        detectIndentation: false,
+        insertSpaces: true,
         tabSize: 4,
         fixedOverflowWidgets: true,
         smoothScrolling: true,
         cursorSmoothCaretAnimation: "on",
-        wordWrap: "on",
+        wordWrap: wordWrapEnabled ? "on" : "off",
       }}
       theme={`vs-${resolvedTheme}`}
     />
