@@ -27,6 +27,7 @@ const difficultyClasses: Record<
 
 export function AssessmentNav({
   onQuitOpen,
+  onFinishOpen,
   initialTimeMinutes,
   difficulties,
   sessionStartDate,
@@ -80,9 +81,18 @@ export function AssessmentNav({
       {/* Right Group (takes up equal flex space to balance the left side) */}
       <div className="flex flex-1 justify-end gap-3">
         <button
+          type="button"
+          onClick={onFinishOpen}
+          className="inline-flex h-10 items-center gap-2 rounded-md bg-emerald-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          Finish Assessment
+        </button>
+        <button
+          type="button"
           onClick={onQuitOpen}
-          className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-3 text-sm text-muted-foreground transition-colors hover:border-rose-500/30 hover:bg-rose-500/8 hover:text-rose-600 dark:hover:text-rose-300"
+          className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-3 text-sm text-muted-foreground transition-colors hover:border-rose-500/30 hover:bg-rose-500/8 hover:text-rose-600 dark:hover:text-rose-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Quit assessment"
+          title="Quit assessment"
         >
           <LogOut className="size-4" />
         </button>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEditorSettings } from "@/components/code-editor/hooks/use-editor-settings";
 import { AssessmentNav } from "@/features/interview/assessment/components/AssessmentNav";
 import QuitAssessmentModal from "@/features/interview/assessment/components/QuitAssessmentModal";
+import FinishAssessmentModal from "@/features/interview/assessment/components/FinishAssessmentModal";
 import AssessmentBody from "@/features/interview/assessment/components/AssessmentBody";
 import type { AssessmentSessionProps } from "@/features/interview/assessment/types";
 import Footer from "@/features/interview/assessment/components/Footer";
@@ -25,6 +26,7 @@ export default function AssessmentSession({
 }: AssessmentSessionProps) {
   const router = useRouter();
   const [quitOpen, setQuitOpen] = useState(false);
+  const [finishOpen, setFinishOpen] = useState(false);
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [isAbandoning, setIsAbandoning] = useState(false);
   const [abandonError, setAbandonError] = useState<string | null>(null);
@@ -74,6 +76,7 @@ export default function AssessmentSession({
     <div className="flex h-dvh min-h-0 flex-col overflow-hidden">
       <AssessmentNav
         onQuitOpen={() => setQuitOpen(true)}
+        onFinishOpen={() => setFinishOpen(true)}
         initialTimeMinutes={duration}
         difficulties={difficulties}
         sessionStartDate={sessionStartDate}
@@ -103,6 +106,12 @@ export default function AssessmentSession({
         onConfirm={abandonAssessment}
         isSubmitting={isAbandoning}
         error={abandonError}
+      />
+      <FinishAssessmentModal
+        open={finishOpen}
+        problemCount={problems.length}
+        onCancel={() => setFinishOpen(false)}
+        onConfirm={() => router.replace("/interview")}
       />
       <EditorSettingsModal
         open={settingsOpen}
