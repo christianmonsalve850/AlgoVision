@@ -21,6 +21,7 @@ export type AssessmentSessionProps = {
 
 export interface AssessmentNavProps {
     onQuitOpen: () => void;
+    onFinishOpen: () => void;
     initialTimeMinutes: number;
     difficulties: Difficulty[];
     sessionStartDate: string;
