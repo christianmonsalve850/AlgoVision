@@ -91,7 +91,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { data: executionRequest, error: exectuionRequestInsertError } =
+    const { data: executionRequest, error: executionRequestInsertError } =
       await supabase
         .from("execution_requests")
         .insert({
@@ -99,17 +99,17 @@ export async function POST(request: Request) {
           user_id: user.id,
           language: language,
           status: "pending",
-          mode: "run",
+          mode: "submit",
         })
         .select("id")
         .single();
 
-    if (exectuionRequestInsertError) {
+    if (executionRequestInsertError) {
       console.error("Failed to insert execution metadata into Supabase:", {
-        code: exectuionRequestInsertError.code,
-        message: exectuionRequestInsertError.message,
-        details: exectuionRequestInsertError.details,
-        hint: exectuionRequestInsertError.hint,
+        code: executionRequestInsertError.code,
+        message: executionRequestInsertError.message,
+        details: executionRequestInsertError.details,
+        hint: executionRequestInsertError.hint,
       });
 
       return NextResponse.json(
