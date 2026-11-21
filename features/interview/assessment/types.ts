@@ -56,11 +56,12 @@ export type DescriptionProps = {
 export type ProblemTab = "description" | "guidelines";
 
 export type AssessmentBodyProps = {
-  sessionId: string;
   language: Language;
   problems: ProblemDescription[];
   currentProblemIndex: number;
-  starterCodeMaps: AssessmentStarterCodeMaps;
+  code: string;
+  onCodeChange: (value: string | undefined) => void;
+  onCodeReset: () => void;
   editorSettings: EditorSettings;
   runRequest: number;
   onExecutionRunningChange: (isRunning: boolean) => void;
@@ -72,7 +73,9 @@ export type AssessmentFooterProps = {
   problemCount: number;
   onProblemChange: (index: number) => void;
   onRun: () => void;
+  onSubmit: () => void;
   isRunning: boolean;
+  isSubmitting: boolean;
 };
 
 export interface UseAssessmentEditorReturn {

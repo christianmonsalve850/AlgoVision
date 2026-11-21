@@ -24,13 +24,14 @@ function isInterviewSubmitRequest(
   }
 
   return (
+    typeof value.sessionId === "string" &&
+    value.sessionId.length > 0 &&
     typeof value.problemId === "string" &&
     value.problemId.length > 0 &&
     typeof value.problemOrderIndex === "number" &&
     typeof value.language === "string" &&
     value.language.length > 0 &&
-    typeof value.code === "string" &&
-    (isRecord(value.input) || Array.isArray(value.input))
+    typeof value.code === "string"
   );
 }
 

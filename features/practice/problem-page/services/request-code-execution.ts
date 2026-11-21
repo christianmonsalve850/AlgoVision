@@ -1,6 +1,7 @@
 import type { UseCodeExecuterOptions, SubmissionExecutionSummary, SubmitExecutionOptions, TraceApiCaseResult, RunExecutionOptions } from "@/app/types/api-types";
 import type { TraceStep } from "@/lib/trace-types";
 import type { TraceCaseResult } from "@/lib/docker-runner/types";
+import { parseSubmissionSummary } from "@/lib/api-response-parsers";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -98,27 +99,6 @@ function parseTraceResults(value: unknown): TraceApiCaseResult[] {
                 : {}),
         };
     });
-}
-
-function parseSubmissionSummary(value: unknown): SubmissionExecutionSummary {
-    if (
-        !isRecord(value) ||
-        typeof value.executionId !== "string" ||
-        typeof value.status !== "string" ||
-        typeof value.verdict !== "string" ||
-        typeof value.passed !== "number" ||
-        typeof value.total !== "number"
-    ) {
-        throw new Error("Submission API returned an invalid response.");
-    }
-
-    return {
-        executionId: value.executionId,
-        status: value.status,
-        verdict: value.verdict,
-        passed: value.passed,
-        total: value.total,
-    };
 }
 
 export function requestExecutePython(

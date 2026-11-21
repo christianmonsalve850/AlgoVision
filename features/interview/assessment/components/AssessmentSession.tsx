@@ -14,6 +14,11 @@ import {
   requestTimeoutSession,
 } from "@/features/interview/services/request-abandon-session";
 import EditorSettingsModal from "@/components/code-editor/EditorSettingsModal";
+import { useProblemSubmitter } from "@/features/interview/assessment/hooks/use-problem-submitter";
+import type { ExecutionStatus } from "@/features/practice/problem-page/types";
+import { useAssessmentEditor } from "@/features/interview/assessment/hooks/use-assessment-editor";
+
+const EMPTY_STARTER_CODE_MAP = {};
 
 export default function AssessmentSession({
   sessionId,
@@ -32,6 +37,30 @@ export default function AssessmentSession({
   const [abandonError, setAbandonError] = useState<string | null>(null);
   const [runRequest, setRunRequest] = useState(0);
   const [isExecutionRunning, setIsExecutionRunning] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState<ExecutionStatus>("idle");
+
+  const currentProblem = problems[currentProblemIndex];
+  const {
+    code,
+    handleReset,
+    handleEditorChange,
+  } = useAssessmentEditor({
+    sessionId,
+    problemId: currentProblem?.id ?? "",
+    language,
+    starterCodeMap: currentProblem
+      ? starterCodeMaps[currentProblem.id] ?? EMPTY_STARTER_CODE_MAP
+      : EMPTY_STARTER_CODE_MAP,
+  });
+
+  const { submit } = useProblemSubmitter({
+    sessionId,
+    problemOrderIndex: currentProblemIndex,
+    problemId: currentProblem?.id ?? "",
+    language,
+    code,
+    setExecutionStatus: setSubmissionStatus,
+  });
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const {
@@ -83,11 +112,12 @@ export default function AssessmentSession({
         onExpire={timeoutAssessment}
       />
       <AssessmentBody
-        sessionId={sessionId}
         language={language}
         problems={problems}
         currentProblemIndex={currentProblemIndex}
-        starterCodeMaps={starterCodeMaps}
+        code={code}
+        onCodeChange={handleEditorChange}
+        onCodeReset={handleReset}
         editorSettings={editorSettings}
         runRequest={runRequest}
         onExecutionRunningChange={setIsExecutionRunning}
@@ -98,7 +128,9 @@ export default function AssessmentSession({
         problemCount={problems.length}
         onProblemChange={setCurrentProblemIndex}
         onRun={() => setRunRequest((request) => request + 1)}
+        onSubmit={() => void submit()}
         isRunning={isExecutionRunning}
+        isSubmitting={submissionStatus === "submitting"}
       />
       <QuitAssessmentModal
         open={quitOpen}
