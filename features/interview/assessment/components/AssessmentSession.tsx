@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useEditorSettings } from "@/components/code-editor/hooks/use-editor-settings";
 import { AssessmentNav } from "@/features/interview/assessment/components/AssessmentNav";
@@ -14,6 +14,12 @@ import {
   requestTimeoutSession,
 } from "@/features/interview/services/request-abandon-session";
 import EditorSettingsModal from "@/components/code-editor/EditorSettingsModal";
+import { useProblemSubmitter } from "@/features/interview/assessment/hooks/use-problem-submitter";
+import type { ExecutionStatus } from "@/features/practice/problem-page/types";
+import { useAssessmentEditor } from "@/features/interview/assessment/hooks/use-assessment-editor";
+import { SubmissionOverlay } from "@/features/practice/problem-page/code-editor/components/submission-overlay";
+
+const EMPTY_STARTER_CODE_MAP = {};
 
 export default function AssessmentSession({
   sessionId,
@@ -32,6 +38,50 @@ export default function AssessmentSession({
   const [abandonError, setAbandonError] = useState<string | null>(null);
   const [runRequest, setRunRequest] = useState(0);
   const [isExecutionRunning, setIsExecutionRunning] = useState(false);
+  const [executionStatus, setExecutionStatus] =
+    useState<ExecutionStatus>("idle");
+  const [submissionStatus, setSubmissionStatus] = useState<
+    "success" | "failure" | null
+  >(null);
+  const [submissionRefreshKey, setSubmissionRefreshKey] = useState(0);
+
+  const currentProblem = problems[currentProblemIndex];
+  const {
+    code,
+    handleReset,
+    handleEditorChange,
+  } = useAssessmentEditor({
+    sessionId,
+    problemId: currentProblem?.id ?? "",
+    language,
+    starterCodeMap: currentProblem
+      ? starterCodeMaps[currentProblem.id] ?? EMPTY_STARTER_CODE_MAP
+      : EMPTY_STARTER_CODE_MAP,
+  });
+
+  const { submit } = useProblemSubmitter({
+    sessionId,
+    problemOrderIndex: currentProblemIndex,
+    problemId: currentProblem?.id ?? "",
+    language,
+    code,
+    setExecutionStatus,
+    onSubmitStart: () => {
+      setSubmissionStatus(null);
+    },
+    onSubmitEnd: (result) => {
+      setSubmissionStatus(result.success ? "success" : "failure");
+      if (result.recorded) {
+        setSubmissionRefreshKey((key) => key + 1);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (submissionRefreshKey > 0) {
+      router.refresh();
+    }
+  }, [router, submissionRefreshKey]);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const {
@@ -74,6 +124,11 @@ export default function AssessmentSession({
 
   return (
     <div className="flex h-dvh min-h-0 flex-col overflow-hidden">
+      <SubmissionOverlay
+        status={submissionStatus}
+        onClose={() => setSubmissionStatus(null)}
+        durationMs={2000}
+      />
       <AssessmentNav
         onQuitOpen={() => setQuitOpen(true)}
         onFinishOpen={() => setFinishOpen(true)}
@@ -83,11 +138,12 @@ export default function AssessmentSession({
         onExpire={timeoutAssessment}
       />
       <AssessmentBody
-        sessionId={sessionId}
         language={language}
         problems={problems}
         currentProblemIndex={currentProblemIndex}
-        starterCodeMaps={starterCodeMaps}
+        code={code}
+        onCodeChange={handleEditorChange}
+        onCodeReset={handleReset}
         editorSettings={editorSettings}
         runRequest={runRequest}
         onExecutionRunningChange={setIsExecutionRunning}
@@ -98,7 +154,9 @@ export default function AssessmentSession({
         problemCount={problems.length}
         onProblemChange={setCurrentProblemIndex}
         onRun={() => setRunRequest((request) => request + 1)}
+        onSubmit={() => void submit()}
         isRunning={isExecutionRunning}
+        isSubmitting={executionStatus === "submitting"}
       />
       <QuitAssessmentModal
         open={quitOpen}

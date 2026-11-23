@@ -7,7 +7,9 @@ export default function Footer({
   problemCount,
   onProblemChange,
   onRun,
+  onSubmit,
   isRunning,
+  isSubmitting,
 }: AssessmentFooterProps) {
   const canGoToPreviousProblem = currentProblemIndex > 0;
   const canGoToNextProblem = currentProblemIndex < problemCount - 1;
@@ -44,7 +46,7 @@ export default function Footer({
       <div className="flex items-center justify-self-end gap-4">
         <button
           type="button"
-          disabled={isRunning}
+          disabled={isRunning || isSubmitting}
           onClick={onRun}
           className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
         >
@@ -57,10 +59,16 @@ export default function Footer({
         </button>
         <button
           type="button"
+          disabled={isRunning || isSubmitting}
+          onClick={onSubmit}
           className="inline-flex items-center gap-2 rounded-lg border border-emerald-500 dark:border-emerald-700 bg-emerald-600 px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <Send className="size-3.5" />
-          Submit
+          {isSubmitting ? (
+            <Spinner className="size-3.5" />
+          ) : (
+            <Send className="size-3.5" />
+          )}
+          {isSubmitting ? "Submitting..." : "Submit"}
         </button>
       </div>
     </footer>

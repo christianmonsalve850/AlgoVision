@@ -9,17 +9,15 @@ import type {
   ProblemTab,
   AssessmentBodyProps,
 } from "@/features/interview/assessment/types";
-import { useAssessmentEditor } from "@/features/interview/assessment/hooks/use-assessment-editor";
 import { EditorPanel } from "@/features/interview/assessment/components/EditorPanel";
 
-const EMPTY_STARTER_CODE_MAP = {};
-
 export default function AssessmentBody({
-  sessionId,
   language,
   problems,
   currentProblemIndex,
-  starterCodeMaps,
+  code,
+  onCodeChange,
+  onCodeReset,
   editorSettings,
   runRequest,
   onExecutionRunningChange,
@@ -28,19 +26,6 @@ export default function AssessmentBody({
   const [problemTab, setProblemTab] = useState<ProblemTab>("description");
 
   const currentProblem = problems[currentProblemIndex];
-
-  const {
-    code,
-    handleReset,
-    handleEditorChange,
-  } = useAssessmentEditor({
-    sessionId,
-    problemId: currentProblem?.id ?? "",
-    language,
-    starterCodeMap: currentProblem
-      ? starterCodeMaps[currentProblem.id] ?? EMPTY_STARTER_CODE_MAP
-      : EMPTY_STARTER_CODE_MAP,
-  });
 
   return (
     <section className="flex h-full min-h-0 flex-1">
@@ -121,7 +106,7 @@ export default function AssessmentBody({
                 type="button"
                 aria-label="Reset code"
                 title="Reset code"
-                onClick={handleReset}
+                onClick={onCodeReset}
                 className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <RotateCcw aria-hidden="true" className="size-4" />
@@ -142,7 +127,7 @@ export default function AssessmentBody({
               key={currentProblem?.id}
               code={code}
               language={language}
-              onCodeChange={handleEditorChange}
+              onCodeChange={onCodeChange}
               problemId={currentProblem?.id ?? ""}
               functionParameters={currentProblem?.functionParameters ?? []}
               functionParameterDefaults={
